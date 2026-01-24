@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Outfit:wght@100..900&display=swap');
+@import 'tailwindcss';
+
+@theme {
+    --color-base: #faf4ed;
+    --color-surface: #fffaf3;
+    --color-overlay: #f2e9e1;
+    --color-muted: #9893a5;
+    --color-subtle: #797593;
+    --color-rose-text: #575279;
+    --color-love: #b4637a;
+    --color-gold: #ea9d34;
+    --color-rose: #d7827e;
+    --color-pine: #286983;
+    --color-foam: #56949f;
+    --color-iris: #907aa9;
+
+    --color-cat-rosewater: #dc8a78;
+    --color-cat-flamingo: #dd7878;
+    --color-cat-pink: #ea76cb;
+    --color-cat-mauve: #8839ef;
+    --color-cat-red: #d20f39;
+    --color-cat-maroon: #e64553;
+    --color-cat-peach: #fe640b;
+    --color-cat-yellow: #df8e1d;
+    --color-cat-green: #40a02b;
+    --color-cat-teal: #179287;
+    --color-cat-sky: #04a5e5;
+    --color-cat-sapphire: #209fb5;
+    --color-cat-blue: #1e66f5;
+    --color-cat-lavender: #7287fd;
+
+    --font-sans: 'Outfit', 'Poppins', 'Nunito', 'Lexend', ui-sans-serif, system-ui;
+}
+
+:root {
+    --bg-main: var(--color-base);
+    --fg-main: var(--color-rose-text);
+    --accent: var(--color-iris);
+    --font-main: 'Outfit', 'Poppins', 'Nunito', 'Lexend', ui-sans-serif, system-ui;
+    background-color: var(--bg-main);
+    color: var(--fg-main);
+    font-family: var(--font-main);
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1 {
+    font-size: 4.8rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, var(--color-love), var(--color-iris));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    vertical-align: baseline;
+    outline: none;
+    font-family: inherit;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings: "slnt" 0;
+    box-sizing: border-box;
+    text-rendering: optimizelegibility;
+    font-synthesis: none;
+}
+
+input {
+    padding-left: 4rem !important;
+    /* Forced padding to prevent icon overlap */
+    background-color: var(--color-surface);
+    border: 2px solid var(--color-overlay);
+    font-family: inherit;
+    user-select: none;
+    font-weight: 400;
+    border-radius: 17px;
+    outline: none;
+    color: var(--color-rose-text);
+    font-size: 18px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-right: 14px;
+    width: 100%;
+    text-rendering: optimizelegibility;
+    font-synthesis: none;
+}
+
+input:focus {
+    border-color: var(--color-iris);
+    box-shadow: 0 0 0 4px rgba(144, 122, 169, 0.1);
+    transform: translateY(-1px);
+}
+
+.button {
+    margin-top: 3px;
+    background-color: var(--color-overlay);
+    padding: 9px 24px;
+    text-align: center;
+    border-radius: 15px;
+    color: var(--color-rose-text);
+    border: 2px solid transparent;
+    font-weight: 500;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizelegibility;
+    font-synthesis: none;
+}
+
+.button:hover {
+    background-color: var(--color-iris);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(144, 122, 169, 0.2);
+}
+
+.button:active {
+    transform: translateY(0);
+}
+
+/* Glassmorphism utility */
+.glass {
+    background: rgba(255, 250, 243, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(242, 233, 225, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(87, 82, 121, 0.05);
+}
+
+/* Dynamic Island keyframes */
+@keyframes island-pop {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.dynamic-island {
+    animation: island-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+i.bx {
+    vertical-align: middle;
+    line-height: 1;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';

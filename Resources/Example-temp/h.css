@@ -1,0 +1,20 @@
+h1 {
+    font-size: 4.8rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    -webkit-text-fill-color: rgba(0, 0, 0, 0);
+    background-clip: text;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    vertical-align: baseline;
+    outline: none;
+    font-family: Poppins, sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings: "slnt" 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizelegibility;
+    font-synthesis: none;
+}
