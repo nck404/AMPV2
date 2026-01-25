@@ -38,8 +38,9 @@
 	});
 </script>
 
+<!-- Desktop: Top Dynamic Island -->
 <div
-	class="fixed top-6 left-0 right-0 z-50 flex justify-center px-6 pointer-events-none"
+	class="hidden md:flex fixed top-6 left-0 right-0 z-50 justify-center px-6 pointer-events-none"
 >
 	<nav
 		class="dynamic-island pointer-events-auto flex items-center gap-2 p-1.5 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
@@ -133,6 +134,81 @@
 			{/if}
 		</div>
 	</nav>
+</div>
+
+<!-- Mobile: Bottom Navigation Bar -->
+<div
+	class="md:hidden fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none"
+>
+	<nav
+		class="glass pointer-events-auto flex items-center justify-around w-full max-w-sm px-2 py-3 rounded-[2.5rem] shadow-2xl border border-white/20"
+	>
+		{#each navItems as item}
+			{@const isActive = page.url.pathname === item.path}
+			<a
+				href={item.path}
+				class="flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all {isActive
+					? 'text-iris scale-110'
+					: 'text-muted'}"
+			>
+				<i class="bx {item.icon} text-2xl"></i>
+				<span
+					class="text-[9px] font-black uppercase tracking-tighter transition-all {isActive
+						? 'opacity-100'
+						: 'opacity-0 h-0 w-0 overflow-hidden'}"
+				>
+					{item.name}
+				</span>
+			</a>
+		{/each}
+	</nav>
+</div>
+
+<!-- Mobile: Top Actions Bar -->
+<div
+	class="md:hidden fixed top-4 left-0 right-0 z-50 flex justify-between items-center px-6"
+>
+	<a
+		href="/"
+		class="w-10 h-10 bg-iris text-white rounded-full flex items-center justify-center shadow-lg"
+		><i class="bx bx-atom text-xl"></i></a
+	>
+
+	<div class="flex items-center gap-3">
+		{#if currentUser}
+			<a
+				href="/settings"
+				class="w-10 h-10 glass rounded-full flex items-center justify-center text-rose-text text-xl"
+				><i class="bx bx-cog"></i></a
+			>
+			<a
+				href="/profile"
+				class="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden bg-white"
+			>
+				{#if currentUser.avatar_url}
+					<img
+						src={currentUser.avatar_url.startsWith("http")
+							? currentUser.avatar_url
+							: `http://localhost:5000${currentUser.avatar_url}`}
+						alt=""
+						class="w-full h-full object-cover"
+					/>
+				{:else}
+					<div
+						class="w-full h-full flex items-center justify-center font-bold text-iris bg-iris/5"
+					>
+						{currentUser.username[0]}
+					</div>
+				{/if}
+			</a>
+		{:else}
+			<a
+				href="/login"
+				class="bg-rose-text text-white px-5 py-2 rounded-full text-xs font-black shadow-lg"
+				>BẮT ĐẦU</a
+			>
+		{/if}
+	</div>
 </div>
 
 <style>

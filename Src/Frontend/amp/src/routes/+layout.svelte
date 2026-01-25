@@ -2,6 +2,7 @@
 	import "./layout.css";
 	import favicon from "$lib/assets/favicon.svg";
 	import Navbar from "$lib/components/Navbar.svelte";
+	import CustomCursor from "$lib/components/CustomCursor.svelte";
 	import { page } from "$app/state";
 	import { goto } from "$app/navigation";
 	import { onMount } from "svelte";
@@ -45,8 +46,9 @@
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
+<CustomCursor />
 <Navbar />
 
-<main class="pt-32 min-h-screen">
+<main class="pt-32 pb-32 md:pb-0 min-h-screen">
 	{@render children()}
 </main>

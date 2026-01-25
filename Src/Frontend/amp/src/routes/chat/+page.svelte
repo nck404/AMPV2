@@ -7,6 +7,7 @@
 
     let mounted = $state(false);
     let selectedChatId = $state(null); // 'global' or userId
+    let showMobileSidebar = $state(true);
     let messageInput = $state("");
     let socket;
 
@@ -39,6 +40,7 @@
         const targetId = page.url.searchParams.get("id");
         if (targetId) {
             selectedChatId = parseInt(targetId);
+            showMobileSidebar = false;
             await loadChatHistory(selectedChatId);
         } else {
             selectedChatId = "global";
@@ -53,10 +55,6 @@
             });
 
             socket.on("message", (data) => {
-                // Only add message if it's for current chat
-                // For global: receiver_id is null
-                // For private: sender_id or receiver_id is currentUser.id
-
                 const isGlobalMsg =
                     !data.receiver_id && selectedChatId === "global";
                 const isPrivateMsg =
@@ -97,7 +95,18 @@
                     lastMessage: "Nhấn để bắt đầu trò chuyện",
                     time: "",
                 }));
-                convos = [...convos, ...friendConvos];
+                convos = [
+                    {
+                        id: "global",
+                        name: "Phòng chat chung",
+                        status: "Public",
+                        lastMessage: "Chào mừng bạn đến với AMP!",
+                        time: "Hôm nay",
+                        icon: "bx-globe",
+                        isGlobal: true,
+                    },
+                    ...friendConvos,
+                ];
             }
         } catch (err) {
             console.error(err);
@@ -106,6 +115,7 @@
 
     async function selectChat(id) {
         selectedChatId = id;
+        showMobileSidebar = false;
         await loadChatHistory(id);
     }
 
@@ -122,8 +132,11 @@
                     id: m.id,
                     sender: m.sender_id === currentUser.id ? "me" : "other",
                     sender_name: m.sender_name,
-                    text: m.text,
-                    time: m.time,
+                    text: m.content, // backend uses content
+                    time: new Date(m.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                    }),
                 }));
             }
         } catch (err) {
@@ -184,19 +197,25 @@
     let currentChat = $derived(convos.find((c) => c.id === selectedChatId));
 </script>
 
-<div class="h-[calc(100vh-12rem)] max-w-7xl mx-auto px-6 mb-12">
+<div
+    class="h-[calc(100vh-8rem)] md:h-[calc(100vh-12rem)] max-w-7xl mx-auto px-0 md:px-6 mb-12"
+>
     {#if mounted}
         <div
             in:fade
-            class="bg-surface border border-overlay rounded-[3rem] h-full overflow-hidden flex shadow-2xl shadow-rose-text/5"
+            class="bg-surface border-x md:border border-overlay rounded-none md:rounded-[3rem] h-full overflow-hidden flex shadow-2xl shadow-rose-text/5 relative"
         >
             <!-- Sidebar -->
             <aside
-                class="w-full md:w-80 lg:w-96 border-r border-overlay bg-white/50 backdrop-blur flex flex-col"
+                class="w-full md:w-80 lg:w-96 border-r border-overlay bg-white/50 backdrop-blur flex flex-col {showMobileSidebar
+                    ? 'flex'
+                    : 'hidden md:flex'}"
             >
-                <div class="p-8 space-y-6">
+                <div class="p-6 md:p-8 space-y-6">
                     <div class="flex items-center justify-between">
-                        <h2 class="text-2xl font-bold text-rose-text">
+                        <h2
+                            class="text-xl md:text-2xl font-bold text-rose-text"
+                        >
                             Tin nhắn
                         </h2>
                         <button
@@ -298,15 +317,25 @@
             </aside>
 
             <!-- Main Chat Area -->
-            <main class="flex-1 flex flex-col bg-white">
+            <main
+                class="flex-1 flex flex-col bg-white {showMobileSidebar
+                    ? 'hidden md:flex'
+                    : 'flex'}"
+            >
                 {#if selectedChatId}
-                    <!-- Chat Header -->
                     <header
-                        class="p-6 border-b border-overlay flex items-center justify-between bg-white/50 backdrop-blur"
+                        class="p-4 md:p-6 border-b border-overlay flex items-center justify-between bg-white/50 backdrop-blur"
                     >
-                        <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-3 md:gap-4">
+                            <button
+                                onclick={() => (showMobileSidebar = true)}
+                                class="md:hidden w-8 h-8 flex items-center justify-center text-rose-text hover:bg-overlay rounded-lg transition-all"
+                                aria-label="Quay lại"
+                            >
+                                <i class="bx bx-chevron-left text-3xl"></i>
+                            </button>
                             <div
-                                class="w-12 h-12 bg-overlay rounded-2xl flex items-center justify-center text-2xl text-iris overflow-hidden"
+                                class="w-10 h-10 md:w-12 md:h-12 bg-overlay rounded-xl md:rounded-2xl flex items-center justify-center text-xl md:text-2xl text-iris overflow-hidden"
                             >
                                 {#if currentChat?.avatar_url}
                                     <img
@@ -326,37 +355,34 @@
                                 {/if}
                             </div>
                             <div>
-                                <h3 class="font-bold text-rose-text">
+                                <h3
+                                    class="font-bold text-rose-text text-sm md:text-base line-clamp-1"
+                                >
                                     {currentChat?.name || "Đang tải..."}
                                 </h3>
-                                <span class="text-xs text-cat-green font-medium"
+                                <span
+                                    class="text-[10px] md:text-xs text-cat-green font-medium"
                                     >Online</span
                                 >
                             </div>
                         </div>
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-1 md:gap-2">
                             <button
-                                class="w-10 h-10 hover:bg-overlay rounded-xl flex items-center justify-center transition-colors text-xl"
+                                class="w-9 h-9 md:w-10 md:h-10 hover:bg-overlay rounded-xl flex items-center justify-center transition-colors text-lg md:text-xl"
                                 aria-label="Call"
                                 ><i class="bx bx-phone"></i></button
                             >
                             <button
-                                class="w-10 h-10 hover:bg-overlay rounded-xl flex items-center justify-center transition-colors text-xl"
+                                class="w-9 h-9 md:w-10 md:h-10 hover:bg-overlay rounded-xl flex items-center justify-center transition-colors text-lg md:text-xl"
                                 aria-label="Video Call"
                                 ><i class="bx bx-video"></i></button
-                            >
-                            <button
-                                class="w-10 h-10 hover:bg-overlay rounded-xl flex items-center justify-center transition-colors text-xl"
-                                aria-label="Info"
-                                ><i class="bx bx-info-circle"></i></button
                             >
                         </div>
                     </header>
 
-                    <!-- Messages Area -->
                     <div
                         bind:this={messageContainer}
-                        class="flex-1 overflow-y-auto p-8 space-y-6 bg-surface/30 flex flex-col"
+                        class="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 bg-surface/30 flex flex-col"
                     >
                         {#if messages.length === 0}
                             <div
@@ -394,7 +420,9 @@
                                         {/if}
                                     </div>
                                 {/if}
-                                <div class="max-w-[70%] space-y-1">
+                                <div
+                                    class="max-w-[85%] md:max-w-[70%] space-y-1"
+                                >
                                     {#if msg.sender !== "me" && currentChat?.isGlobal}
                                         <div
                                             class="text-[10px] font-bold text-iris px-1"
@@ -403,7 +431,7 @@
                                         </div>
                                     {/if}
                                     <div
-                                        class="px-5 py-3 rounded-2xl text-sm leading-relaxed shadow-sm {msg.sender ===
+                                        class="px-4 py-2.5 md:px-5 md:py-3 rounded-2xl text-sm leading-relaxed shadow-sm {msg.sender ===
                                         'me'
                                             ? 'bg-iris text-white rounded-br-none'
                                             : 'bg-white border border-overlay text-rose-text rounded-bl-none'}"
@@ -423,20 +451,14 @@
                         {/each}
                     </div>
 
-                    <!-- Input Area -->
-                    <div class="p-6 border-t border-overlay bg-white">
+                    <div class="p-4 md:p-6 border-t border-overlay bg-white">
                         <div
-                            class="flex items-center gap-4 bg-overlay/30 p-2 rounded-2xl"
+                            class="flex items-center gap-2 md:gap-4 bg-overlay/30 p-1.5 md:p-2 rounded-2xl"
                         >
                             <button
-                                class="w-10 h-10 text-2xl hover:scale-110 transition-transform"
+                                class="w-10 h-10 text-xl md:text-2xl hover:scale-110 transition-transform"
                                 aria-label="Emoji"
                                 ><i class="bx bx-smile"></i></button
-                            >
-                            <button
-                                class="w-10 h-10 text-2xl hover:scale-110 transition-transform"
-                                aria-label="Attach File"
-                                ><i class="bx bx-paperclip"></i></button
                             >
                             <input
                                 type="text"
@@ -447,7 +469,7 @@
                             />
                             <button
                                 onclick={sendMessage}
-                                class="w-12 h-12 bg-iris text-white rounded-xl shadow-lg shadow-iris/20 flex items-center justify-center hover:scale-105 active:scale-95 transition-all text-2xl"
+                                class="w-10 h-10 md:w-12 md:h-12 bg-iris text-white rounded-xl shadow-lg shadow-iris/20 flex items-center justify-center hover:scale-105 active:scale-95 transition-all text-xl md:text-2xl"
                                 aria-label="Send Message"
                             >
                                 <i class="bx bx-send"></i>
@@ -483,5 +505,6 @@
     input {
         background: transparent !important;
         padding-left: 0 !important;
+        border: none !important;
     }
 </style>
