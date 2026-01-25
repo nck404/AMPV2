@@ -71,8 +71,13 @@
                                 id: Date.now(),
                                 sender: "other",
                                 sender_name: data.sender_name || "Người dùng",
-                                text: data.text,
-                                time: data.time,
+                                text: data.content || data.text,
+                                time: new Date(
+                                    data.timestamp || Date.now(),
+                                ).toLocaleTimeString([], {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                }),
                             },
                         ];
                     }
@@ -132,11 +137,13 @@
                     id: m.id,
                     sender: m.sender_id === currentUser.id ? "me" : "other",
                     sender_name: m.sender_name,
-                    text: m.content, // backend uses content
-                    time: new Date(m.timestamp).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    }),
+                    text: m.content,
+                    time: m.timestamp
+                        ? new Date(m.timestamp).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                          })
+                        : "Vừa xong",
                 }));
             }
         } catch (err) {
@@ -152,13 +159,16 @@
         if (!messageInput.trim()) return;
 
         const now = new Date();
-        const timeStr = `${now.getHours()}:${now.getMinutes().toString().padStart(2, "0")}`;
+        const timeStr = now.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
 
         const msgData = {
             sender_id: currentUser.id,
             sender_name: currentUser.username,
-            text: messageInput,
-            time: timeStr,
+            content: messageInput,
+            timestamp: now.toISOString(),
             receiver_id: selectedChatId === "global" ? null : selectedChatId,
         };
 

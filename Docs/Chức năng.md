@@ -1,5 +1,4 @@
 BAS - đọc nội dung trên web ( - dành cho người mù )
-
 Routes:
 	- Login
 	- Res
@@ -8,11 +7,8 @@ Routes:
 	- Tuyển dụng
 	- chat với nhau 
 	- Một trang học ngôn ngữ kí hiệu
-
 Process uploading
-
 	chuyển từ hình ảnh ngôn ngữ kí hiệu sang => text 
-
 Account :
 	- bio 
 	- Link ( link tài khoảng mxh)
@@ -34,3 +30,5 @@ Admin:
 	- chỉ có thể ban user, xóa comment, xóa post
 - Businessment :
 	- có thể đăng các đợt tuyển dụng trên trang tuyển dụng, tạo đơn apply,
+Mobile app
+Có thể setting trong profile tình trạng khuyết tật, ngoài ra còn có thể setup CV 

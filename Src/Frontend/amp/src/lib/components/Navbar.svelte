@@ -3,7 +3,7 @@
 	import { page } from "$app/state";
 
 	const navItems = [
-		{ name: "Khám phá", path: "/", icon: "bx-compass" },
+		{ name: "Home", path: "/", icon: "bx-compass" },
 		{ name: "Diễn đàn", path: "/forum", icon: "bx-message-square-detail" },
 		{ name: "Tuyển dụng", path: "/recruitment", icon: "bx-briefcase" },
 		{ name: "Trò chuyện", path: "/chat", icon: "bx-chat" },

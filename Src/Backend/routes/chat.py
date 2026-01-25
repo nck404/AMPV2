@@ -20,10 +20,10 @@ def get_chat_history():
                 (Message.sender_id == current_uid) & (Message.receiver_id == receiver_id),
                 (Message.sender_id == receiver_id) & (Message.receiver_id == current_uid)
             )
-        ).order_by(Message.timestamp.asc()).limit(100).all()
+        ).order_by(Message.created_at.asc()).limit(100).all()
     else:
         # Global chat (receiver_id is null)
-        messages = Message.query.filter_by(receiver_id=None).order_by(Message.timestamp.asc()).limit(100).all()
+        messages = Message.query.filter_by(receiver_id=None).order_by(Message.created_at.asc()).limit(100).all()
     
     result = []
     for msg in messages:
@@ -31,8 +31,8 @@ def get_chat_history():
             "id": msg.id,
             "sender_id": msg.sender_id,
             "sender_name": msg.sender.username,
-            "text": msg.content,
-            "time": msg.timestamp.strftime("%H:%M")
+            "content": msg.content,
+            "timestamp": msg.created_at.isoformat()
         })
     
     return jsonify(result), 200

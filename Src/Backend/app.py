@@ -8,6 +8,7 @@ from routes.auth import auth_bp
 from routes.forum import forum_bp
 from routes.chat import chat_bp
 from routes.social import social_bp
+from routes.tts import tts_bp
 from models import User
 
 load_dotenv()
@@ -40,6 +41,7 @@ def create_app():
     app.register_blueprint(forum_bp, url_prefix='/api/forum')
     app.register_blueprint(chat_bp, url_prefix='/api/chat')
     app.register_blueprint(social_bp, url_prefix='/api/social')
+    app.register_blueprint(tts_bp, url_prefix='/api/tts')
 
     with app.app_context():
         db.create_all()
@@ -59,7 +61,7 @@ def handle_message(data):
     
     # Save to DB
     from models import Message
-    content = data.get('text')
+    content = data.get('content') or data.get('text')
     sender_id = data.get('sender_id')
     receiver_id = data.get('receiver_id')
     

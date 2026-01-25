@@ -3,6 +3,7 @@
 	import favicon from "$lib/assets/favicon.svg";
 	import Navbar from "$lib/components/Navbar.svelte";
 	import CustomCursor from "$lib/components/CustomCursor.svelte";
+	import Toolbox from "$lib/components/Toolbox.svelte";
 	import { page } from "$app/state";
 	import { goto } from "$app/navigation";
 	import { onMount } from "svelte";
@@ -48,6 +49,7 @@
 
 <CustomCursor />
 <Navbar />
+<Toolbox />
 
 <main class="pt-32 pb-32 md:pb-0 min-h-screen">
 	{@render children()}
