@@ -9,6 +9,7 @@ from routes.forum import forum_bp
 from routes.chat import chat_bp
 from routes.social import social_bp
 from routes.tts import tts_bp
+from routes.docs import docs_bp
 from models import User
 
 load_dotenv()
@@ -42,6 +43,7 @@ def create_app():
     app.register_blueprint(chat_bp, url_prefix='/api/chat')
     app.register_blueprint(social_bp, url_prefix='/api/social')
     app.register_blueprint(tts_bp, url_prefix='/api/tts')
+    app.register_blueprint(docs_bp, url_prefix='/api/docs')
 
     with app.app_context():
         db.create_all()

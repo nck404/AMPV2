@@ -213,3 +213,66 @@ def update_password():
     db.session.commit()
     
     return jsonify({"msg": "Password updated successfully"}), 200
+
+# --- ADMIN USER MANAGEMENT ---
+
+@auth_bp.route('/admin/users', methods=['GET'])
+@jwt_required()
+def admin_get_users():
+    admin_id = int(get_jwt_identity())
+    admin = User.query.get(admin_id)
+    if not admin or not admin.is_admin:
+        return jsonify({"msg": "Admin privilege required"}), 403
+    
+    users = User.query.order_by(User.created_at.desc()).all()
+    return jsonify([{
+        "id": u.id,
+        "username": u.username,
+        "email": u.email,
+        "public_id": u.public_id,
+        "is_admin": u.is_admin,
+        "created_at": u.created_at
+    } for u in users]), 200
+
+@auth_bp.route('/admin/users/<int:user_id>/toggle-admin', methods=['POST'])
+@jwt_required()
+def admin_toggle_admin(user_id):
+    admin_id = int(get_jwt_identity())
+    admin = User.query.get(admin_id)
+    if not admin or not admin.is_admin:
+        return jsonify({"msg": "Admin privilege required"}), 403
+    
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
+        
+    if user.id == admin.id:
+        return jsonify({"msg": "Cannot demote yourself"}), 400
+        
+    user.is_admin = not user.is_admin
+    db.session.commit()
+    
+    return jsonify({
+        "msg": f"User {user.username} admin status updated", 
+        "is_admin": user.is_admin
+    }), 200
+
+@auth_bp.route('/admin/users/<int:user_id>', methods=['DELETE'])
+@jwt_required()
+def admin_delete_user(user_id):
+    admin_id = int(get_jwt_identity())
+    admin = User.query.get(admin_id)
+    if not admin or not admin.is_admin:
+        return jsonify({"msg": "Admin privilege required"}), 403
+    
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
+    
+    if user.id == admin.id:
+        return jsonify({"msg": "Cannot delete yourself"}), 400
+        
+    db.session.delete(user)
+    db.session.commit()
+    
+    return jsonify({"msg": "User deleted"}), 200

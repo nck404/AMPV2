@@ -246,10 +246,19 @@
                             <div
                                 class="inline-block bg-white px-4 py-3 rounded-2xl rounded-tl-none shadow-sm relative pr-12"
                             >
-                                <div
-                                    class="font-black text-xs text-rose-text group-hover:text-iris transition-colors cursor-pointer"
-                                >
-                                    @{comment.author.public_id}
+                                <div class="flex items-center gap-2">
+                                    <span
+                                        class="font-black text-xs text-rose-text group-hover:text-iris transition-colors cursor-pointer"
+                                    >
+                                        @{comment.author.public_id}
+                                    </span>
+                                    {#if comment.author.is_admin}
+                                        <span
+                                            class="px-2 py-0.5 bg-gold/10 text-gold text-[8px] font-black rounded-full border border-gold/20 flex items-center gap-0.5 uppercase tracking-tighter"
+                                        >
+                                            <i class="bx bxs-shield-check"></i> Admin
+                                        </span>
+                                    {/if}
                                 </div>
                                 <p
                                     class="text-sm mt-1 leading-relaxed text-subtle"

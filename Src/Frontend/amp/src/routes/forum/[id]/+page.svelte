@@ -128,8 +128,18 @@
                             {/if}
                         </div>
                         <div class="flex-1">
-                            <div class="font-black text-rose-text text-lg">
-                                @{post.author.public_id}
+                            <div class="flex items-center gap-2">
+                                <div class="font-black text-rose-text text-lg">
+                                    @{post.author.public_id}
+                                </div>
+                                {#if post.author.is_admin}
+                                    <span
+                                        class="px-3 py-1 bg-gold text-white text-[10px] font-black rounded-full shadow-lg shadow-gold/20 flex items-center gap-1 uppercase"
+                                    >
+                                        <i class="bx bxs-shield-check"></i> Quản
+                                        trị viên
+                                    </span>
+                                {/if}
                             </div>
                             <div
                                 class="text-xs font-bold text-muted uppercase tracking-widest"

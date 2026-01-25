@@ -68,3 +68,12 @@ class Friendship(db.Model):
 
     user = db.relationship('User', foreign_keys=[user_id], backref='friendships')
     friend = db.relationship('User', foreign_keys=[friend_id])
+
+class Documentation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    slug = db.Column(db.String(200), unique=True, nullable=False)
+    category = db.Column(db.String(100), default="Hướng dẫn")
+    content = db.Column(db.Text, nullable=False) # Markdown
+    order = db.Column(db.Integer, default=0)
+    last_updated = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())

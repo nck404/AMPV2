@@ -8,6 +8,7 @@
 		{ name: "Tuyển dụng", path: "/recruitment", icon: "bx-briefcase" },
 		{ name: "Trò chuyện", path: "/chat", icon: "bx-chat" },
 		{ name: "Học tập", path: "/sign-language", icon: "bx-book-open" },
+		{ name: "Docs", path: "/docs", icon: "bx-book-content" },
 	];
 
 	let scrolled = $state(false);
@@ -85,10 +86,21 @@
 		<!-- Action icons -->
 		<div class="flex items-center gap-1">
 			{#if currentUser}
+				{#if currentUser.is_admin}
+					<a
+						href="/admin"
+						class="nav-item p-2 rounded-full hover:bg-gold/10 text-gold transition-all"
+						title="Bảng điều trị (Admin)"
+						aria-label="Admin Dashboard"
+					>
+						<i class="bx bx-shield-quarter text-2xl"></i>
+					</a>
+				{/if}
 				<a
 					href="/settings"
 					class="nav-item p-2 rounded-full hover:bg-iris/10 transition-all"
 					aria-label="Cài đặt"
+					title="Cài đặt"
 				>
 					<i class="bx bx-cog text-2xl"></i>
 				</a>

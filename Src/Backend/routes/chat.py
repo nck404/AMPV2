@@ -31,6 +31,7 @@ def get_chat_history():
             "id": msg.id,
             "sender_id": msg.sender_id,
             "sender_name": msg.sender.username,
+            "sender_is_admin": msg.sender.is_admin,
             "content": msg.content,
             "timestamp": msg.created_at.isoformat()
         })

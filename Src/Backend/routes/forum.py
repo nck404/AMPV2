@@ -30,7 +30,8 @@ def get_posts():
             "author": {
                 "username": post.author.username,
                 "public_id": post.author.public_id,
-                "avatar_url": post.author.avatar_url
+                "avatar_url": post.author.avatar_url,
+                "is_admin": post.author.is_admin
             }
         })
     return jsonify(result), 200
@@ -92,7 +93,8 @@ def get_post(post_id):
         "author": {
             "username": post.author.username,
             "public_id": post.author.public_id,
-            "avatar_url": post.author.avatar_url
+            "avatar_url": post.author.avatar_url,
+            "is_admin": post.author.is_admin
         }
     }), 200
 
@@ -127,7 +129,8 @@ def get_comments(post_id):
             "author": {
                 "username": c.author.username,
                 "public_id": c.author.public_id,
-                "avatar_url": c.author.avatar_url
+                "avatar_url": c.author.avatar_url,
+                "is_admin": c.author.is_admin
             },
             "replies": [serialize_comment(reply) for reply in c.replies.all()]
         }

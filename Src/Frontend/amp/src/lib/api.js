@@ -92,5 +92,21 @@ export const api = {
 
         handleUnauthorized(response);
         return await response.json();
+    },
+
+    async delete(endpoint) {
+        const token = getToken();
+        const headers = {};
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await fetch(`${PUBLIC_API_DOMAIN}${endpoint}`, {
+            method: 'DELETE',
+            headers
+        });
+
+        handleUnauthorized(response);
+        return await response.json();
     }
 };

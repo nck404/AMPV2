@@ -435,9 +435,22 @@
                                 >
                                     {#if msg.sender !== "me" && currentChat?.isGlobal}
                                         <div
-                                            class="text-[10px] font-bold text-iris px-1"
+                                            class="flex items-center gap-2 px-1 mb-0.5"
                                         >
-                                            {msg.sender_name}
+                                            <span
+                                                class="text-[10px] font-bold text-iris"
+                                            >
+                                                {msg.sender_name}
+                                            </span>
+                                            {#if msg.sender_is_admin}
+                                                <span
+                                                    class="px-1.5 py-0.5 bg-gold/10 text-gold text-[7px] font-black rounded-md border border-gold/20 flex items-center gap-0.5 uppercase tracking-tighter"
+                                                >
+                                                    <i
+                                                        class="bx bxs-shield-check"
+                                                    ></i> Admin
+                                                </span>
+                                            {/if}
                                         </div>
                                     {/if}
                                     <div
