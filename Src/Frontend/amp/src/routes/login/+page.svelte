@@ -168,9 +168,26 @@
                         >
                     </div>
 
+                    <div
+                        class="text-center text-xs text-muted font-medium pb-2"
+                    >
+                        Bằng cách đăng nhập, bạn đồng ý với
+                        <a
+                            href="/terms"
+                            class="text-iris font-bold hover:underline whitespace-nowrap"
+                            >Điều khoản</a
+                        >
+                        và
+                        <a
+                            href="/privacy"
+                            class="text-iris font-bold hover:underline whitespace-nowrap"
+                            >Chính sách</a
+                        >.
+                    </div>
+
                     <button
                         type="submit"
-                        class="button w-full py-5 text-xl mt-2 group relative overflow-hidden active:scale-[0.98]"
+                        class="button w-full py-5 text-xl mt-4 group relative overflow-hidden active:scale-[0.98]"
                         disabled={loading}
                     >
                         {#if loading}

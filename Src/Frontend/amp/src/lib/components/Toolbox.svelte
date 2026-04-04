@@ -5,6 +5,7 @@
     import VirtualKeyboard from "./VirtualKeyboard.svelte";
 
     let showAssistant = $state(false);
+    let { isCustomCursorActive = $bindable(true) } = $props();
     let showKeyboard = $state(false);
     let isVisible = $state(false);
     let isScreenReaderActive = $state(false);
@@ -33,6 +34,10 @@
         isVisible = !isVisible;
     }
 
+    function toggleCustomCursor() {
+        isCustomCursorActive = !isCustomCursorActive;
+    }
+
     function toggleScreenReader() {
         if (!isScreenReaderActive) {
             if (!audioUnlocked) {
@@ -40,9 +45,11 @@
                 return;
             }
             isScreenReaderActive = true;
+            localStorage.setItem("screen-reader-active", "true");
             speak("Chế độ đọc màn hình đã bật");
         } else {
             isScreenReaderActive = false;
+            localStorage.setItem("screen-reader-active", "false");
             if (audioPlayer) audioPlayer.pause();
             speak("Chế độ đọc màn hình đã tắt");
             highlightRect.opacity = 0;
@@ -53,6 +60,7 @@
         audioUnlocked = true;
         showActivationModal = false;
         isScreenReaderActive = true;
+        localStorage.setItem("screen-reader-active", "true");
 
         // Play a silent sound to unlock audio context
         if (audioPlayer) {
@@ -90,6 +98,15 @@
     onMount(() => {
         audioPlayer = new Audio();
 
+        if (localStorage.getItem("screen-reader-active") === "true") {
+            showActivationModal = true;
+        }
+
+        const handleOpenToolbox = () => {
+            isVisible = true;
+        };
+        window.addEventListener("amp-open-toolbox", handleOpenToolbox);
+
         const handleKeyDown = (e) => {
             if (e.ctrlKey && e.key.toLowerCase() === "i") {
                 e.preventDefault();
@@ -104,6 +121,12 @@
 
         const handleClickOutside = (e) => {
             const wrapper = document.getElementById("dock-wrapper");
+            if (
+                e.target.closest(".onboarding-overlay") ||
+                e.target.closest(".tooltip-box")
+            ) {
+                return;
+            }
             if (isVisible && wrapper && !wrapper.contains(e.target)) {
                 isVisible = false;
             }
@@ -157,6 +180,7 @@
             window.removeEventListener("keydown", handleKeyDown);
             window.removeEventListener("click", handleClickOutside);
             window.removeEventListener("mousemove", handleMouseMove);
+            window.removeEventListener("amp-open-toolbox", handleOpenToolbox);
         };
     });
 </script>
@@ -165,10 +189,10 @@
 <div
     class="reading-highlight"
     style="
-        top: {highlightRect.top}px; 
-        left: {highlightRect.left}px; 
-        width: {highlightRect.width}px; 
-        height: {highlightRect.height}px; 
+        top: {highlightRect.top}px;
+        left: {highlightRect.left}px;
+        width: {highlightRect.width}px;
+        height: {highlightRect.height}px;
         opacity: {highlightRect.opacity};
     "
 ></div>
@@ -230,6 +254,7 @@
         <div class="dock-content flex items-center gap-4 px-4 py-2">
             <!-- Assistant Button -->
             <button
+                id="tour-assistant-btn"
                 onclick={toggleAssistant}
                 class="dock-item group"
                 title="AI Assistant"
@@ -248,6 +273,7 @@
 
             <!-- Keyboard Button -->
             <button
+                id="tour-keyboard-btn"
                 onclick={toggleKeyboard}
                 class="dock-item group"
                 title="Virtual Keyboard"
@@ -266,6 +292,7 @@
 
             <!-- Screen Reader Toggle -->
             <button
+                id="tour-reader-btn"
                 onclick={toggleScreenReader}
                 class="dock-item group"
                 title="Audio Reader (Ctrl + J)"
@@ -283,11 +310,35 @@
                 </div>
                 <span class="label text-gold">Đọc</span>
             </button>
+
+            <div class="dock-divider"></div>
+
+            <!-- Custom Cursor Toggle -->
+            <button
+                id="tour-cursor-btn"
+                onclick={toggleCustomCursor}
+                class="dock-item group"
+                title="Custom Cursor"
+            >
+                <div
+                    class="icon-box bg-pine {isCustomCursorActive
+                        ? 'active shadow-pine'
+                        : ''}"
+                >
+                    <i
+                        class="bx {isCustomCursorActive
+                            ? 'bx-mouse'
+                            : 'bx-block'}"
+                    ></i>
+                </div>
+                <span class="label text-pine">Chuột</span>
+            </button>
         </div>
     </div>
 
     <!-- Clickable Handle Indicator -->
     <button
+        id="tour-dock-trigger"
         class="dock-trigger mt-1"
         class:active-trigger={isVisible}
         onclick={(e) => {
@@ -412,6 +463,9 @@
     .bg-gold {
         background: var(--color-gold);
     }
+    .bg-pine {
+        background: var(--color-pine, #31748f);
+    }
 
     .icon-box.active {
         transform: scale(1.1);
@@ -427,6 +481,9 @@
     }
     .shadow-love {
         box-shadow: 0 8px 16px -4px var(--color-love);
+    }
+    .shadow-pine {
+        box-shadow: 0 8px 16px -4px var(--color-pine, #31748f);
     }
 
     .label {
@@ -445,6 +502,9 @@
     }
     .text-gold {
         color: var(--color-gold);
+    }
+    .text-pine {
+        color: var(--color-pine, #31748f);
     }
 
     .dock-divider {

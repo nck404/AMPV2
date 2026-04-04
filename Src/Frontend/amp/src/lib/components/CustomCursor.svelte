@@ -85,7 +85,7 @@
         height: 40px;
         margin-left: -20px;
         margin-top: -20px;
-        z-index: 99999;
+        z-index: 999999;
         pointer-events: none;
         transition:
             opacity 0.3s,

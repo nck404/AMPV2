@@ -11,7 +11,21 @@
 
     // Appearance Settings
     let selectedFont = $state("Inter");
-    const fonts = ["Inter", "Roboto", "Outfit", "Playfair Display"];
+    let selectedFontSize = $state("16px");
+    const fonts = [
+        "Inter",
+        "Roboto",
+        "Outfit",
+        "Poppins",
+        "Quicksand",
+        "Playfair Display",
+    ];
+    const fontSizes = [
+        { label: "Nhỏ", value: "14px" },
+        { label: "Mặc định", value: "16px" },
+        { label: "Lớn", value: "18px" },
+        { label: "Rất lớn", value: "20px" },
+    ];
 
     // Account Settings
     let email = $state("");
@@ -25,6 +39,12 @@
         if (storedFont) {
             selectedFont = storedFont;
             applyFont(storedFont);
+        }
+
+        const storedFontSize = localStorage.getItem("preferred-font-size");
+        if (storedFontSize) {
+            selectedFontSize = storedFontSize;
+            applyFontSize(storedFontSize);
         }
 
         const userData = localStorage.getItem("user");
@@ -41,6 +61,11 @@
             `'${font}', sans-serif`,
         );
         localStorage.setItem("preferred-font", font);
+    }
+
+    function applyFontSize(size) {
+        document.documentElement.style.fontSize = size;
+        localStorage.setItem("preferred-font-size", size);
     }
 
     async function updateEmail() {
@@ -99,146 +124,173 @@
     }
 </script>
 
-<div class="max-w-6xl mx-auto px-6 py-12">
+<div class="max-w-5xl mx-auto p-4 md:p-8 py-12">
     {#if mounted}
-        <div in:fly={{ y: 20 }} class="flex flex-col lg:flex-row gap-12">
+        <div
+            in:fly={{ y: 10, duration: 200 }}
+            class="flex flex-col md:flex-row bg-white/40 backdrop-blur-md rounded-[2.5rem] border border-white/60 shadow-2xl shadow-rose-text/5 overflow-hidden min-h-[600px]"
+        >
             <!-- Sidebar -->
-            <aside class="w-full lg:w-64 space-y-2">
-                <h1 class="text-3xl font-black text-rose-text mb-8 px-4">
-                    Cài đặt
-                </h1>
+            <aside
+                class="w-full md:w-64 bg-white/30 border-r border-white/50 p-6 space-y-2"
+            >
+                <div class="mb-4 px-4">
+                    <span
+                        class="text-[10px] font-black text-muted uppercase tracking-widest"
+                    >
+                        Cài đặt hệ thống
+                    </span>
+                </div>
 
                 <button
                     onclick={() => (activeSection = "appearance")}
-                    class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all {activeSection ===
-                    'appearance'
-                        ? 'bg-iris text-white shadow-xl shadow-iris/20'
-                        : 'text-subtle hover:bg-overlay/50'}"
+                    class={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all ${activeSection === "appearance" ? "bg-iris text-white shadow-md shadow-iris/20 scale-[1.02]" : "text-subtle hover:text-rose-text hover:bg-white/50"}`}
                 >
                     <i class="bx bx-palette text-xl"></i> Giao diện
                 </button>
 
                 <button
                     onclick={() => (activeSection = "account")}
-                    class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all {activeSection ===
-                    'account'
-                        ? 'bg-iris text-white shadow-xl shadow-iris/20'
-                        : 'text-subtle hover:bg-overlay/50'}"
+                    class={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all ${activeSection === "account" ? "bg-iris text-white shadow-md shadow-iris/20 scale-[1.02]" : "text-subtle hover:text-rose-text hover:bg-white/50"}`}
                 >
                     <i class="bx bx-user-circle text-xl"></i> Tài khoản
                 </button>
 
                 <button
                     onclick={() => (activeSection = "notifications")}
-                    class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all {activeSection ===
-                    'notifications'
-                        ? 'bg-iris text-white shadow-xl shadow-iris/20'
-                        : 'text-subtle hover:bg-overlay/50'}"
+                    class={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all ${activeSection === "notifications" ? "bg-iris text-white shadow-md shadow-iris/20 scale-[1.02]" : "text-subtle hover:text-rose-text hover:bg-white/50"}`}
                 >
                     <i class="bx bx-bell text-xl"></i> Thông báo
                 </button>
             </aside>
 
             <!-- Content Area -->
-            <main class="flex-1 space-y-8">
+            <main class="flex-1 p-8 md:p-10 overflow-y-auto bg-white/20">
                 {#if message.text}
                     <div
-                        in:fade
-                        class="p-4 rounded-2xl font-bold text-sm text-center {message.type ===
-                        'success'
-                            ? 'bg-cat-green/10 text-cat-green border border-cat-green/20'
-                            : 'bg-love/10 text-love border border-love/20'}"
+                        in:fade={{ duration: 150 }}
+                        class={`px-4 py-2 mb-6 rounded-lg font-medium text-sm ${message.type === "success" ? "bg-cat-green/10 text-cat-green border border-cat-green/20" : "bg-love/10 text-love border border-love/20"}`}
                     >
                         {message.text}
                     </div>
                 {/if}
 
                 {#if activeSection === "appearance"}
-                    <div
-                        in:fade
-                        class="glass p-10 rounded-[3rem] border border-white/60 space-y-8"
-                    >
-                        <div>
-                            <h2 class="text-2xl font-black text-rose-text mb-2">
-                                Kiểu chữ (Typography)
-                            </h2>
-                            <p class="text-subtle text-sm">
-                                Chọn font chữ phù hợp với sở thích của bạn trên
-                                toàn hệ thống.
-                            </p>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {#each fonts as font}
-                                <button
-                                    onclick={() => {
-                                        selectedFont = font;
-                                        applyFont(font);
-                                    }}
-                                    class="p-6 rounded-3xl border-2 transition-all text-left flex items-center justify-between group {selectedFont ===
-                                    font
-                                        ? 'border-iris bg-iris/5'
-                                        : 'border-overlay hover:border-iris/30 bg-white/50'}"
+                    <div in:fade={{ duration: 150 }} class="space-y-8">
+                        <!-- Chọn kiểu chữ -->
+                        <div class="space-y-4">
+                            <div>
+                                <h2
+                                    class="text-lg font-bold text-rose-text mb-1"
                                 >
-                                    <div>
-                                        <div
-                                            class="text-lg font-bold text-rose-text"
-                                            style="font-family: '{font}'"
-                                        >
-                                            {font}
+                                    Kiểu chữ
+                                </h2>
+                                <p class="text-subtle text-xs">
+                                    Chọn font chữ hiển thị trên toàn hệ thống.
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3 max-w-lg">
+                                {#each fonts as font}
+                                    <button
+                                        onclick={() => {
+                                            selectedFont = font;
+                                            applyFont(font);
+                                        }}
+                                        class={`p-4 rounded-2xl border-2 transition-all text-left flex items-center justify-between group ${selectedFont === font ? "border-iris bg-iris/5 shadow-md shadow-iris/10 scale-[1.02]" : "border-transparent hover:border-iris/30 bg-white/50"}`}
+                                    >
+                                        <div>
+                                            <div
+                                                class="text-sm font-semibold text-rose-text"
+                                                style="font-family: '{font}'"
+                                            >
+                                                {font}
+                                            </div>
                                         </div>
-                                        <div
-                                            class="text-[10px] text-muted uppercase tracking-widest mt-1"
-                                        >
-                                            Font hệ thống
-                                        </div>
-                                    </div>
-                                    {#if selectedFont === font}
-                                        <div
-                                            class="w-6 h-6 bg-iris text-white rounded-full flex items-center justify-center"
-                                        >
-                                            <i class="bx bx-check"></i>
-                                        </div>
-                                    {/if}
-                                </button>
-                            {/each}
+                                        {#if selectedFont === font}
+                                            <div
+                                                class="text-iris flex items-center justify-center"
+                                            >
+                                                <i class="bx bx-check text-xl"
+                                                ></i>
+                                            </div>
+                                        {/if}
+                                    </button>
+                                {/each}
+                            </div>
                         </div>
 
+                        <!-- Chọn cỡ chữ -->
+                        <div class="space-y-4">
+                            <div>
+                                <h2
+                                    class="text-lg font-bold text-rose-text mb-1"
+                                >
+                                    Cỡ chữ
+                                </h2>
+                                <p class="text-subtle text-xs">
+                                    Điều chỉnh kích thước chữ trên toàn hệ
+                                    thống.
+                                </p>
+                            </div>
+
+                            <div class="flex flex-wrap gap-3 max-w-lg">
+                                {#each fontSizes as size}
+                                    <button
+                                        onclick={() => {
+                                            selectedFontSize = size.value;
+                                            applyFontSize(size.value);
+                                        }}
+                                        class={`px-4 py-2 rounded-xl border-2 transition-all flex items-center justify-center font-bold text-sm ${selectedFontSize === size.value ? "border-iris bg-iris text-white shadow-md shadow-iris/20 scale-[1.02]" : "border-transparent bg-white/50 text-subtle hover:text-rose-text hover:border-iris/30 hover:bg-white"}`}
+                                    >
+                                        {size.label}
+                                    </button>
+                                {/each}
+                            </div>
+                        </div>
+
+                        <!-- Preview Box -->
                         <div
-                            class="p-6 bg-overlay/20 rounded-2xl border border-dashed border-muted/30"
+                            class="p-4 bg-black/5 rounded-lg border border-dashed border-black/10 max-w-lg"
                         >
                             <p
-                                class="text-sm italic text-muted"
-                                style="font-family: '{selectedFont}'"
+                                class="text-muted leading-relaxed transition-all"
+                                style="font-family: '{selectedFont}'; font-size: {selectedFontSize ===
+                                '14px'
+                                    ? '0.875rem'
+                                    : selectedFontSize === '16px'
+                                      ? '1rem'
+                                      : selectedFontSize === '18px'
+                                        ? '1.125rem'
+                                        : '1.25rem'};"
                             >
-                                "The quick brown fox jumps over the lazy dog.
-                                Đây là văn bản mẫu để bạn kiểm tra độ hiển thị
-                                của font chữ {selectedFont}."
+                                Văn bản mẫu để kiểm tra hiển thị font {selectedFont}.
+                                The quick brown fox jumps over the lazy dog.
                             </p>
                         </div>
                     </div>
                 {/if}
 
                 {#if activeSection === "account"}
-                    <div in:fade class="space-y-8">
+                    <div in:fade={{ duration: 150 }} class="space-y-8 max-w-md">
                         <!-- Email Section -->
-                        <div
-                            class="glass p-10 rounded-[3rem] border border-white/60 space-y-6"
-                        >
-                            <h2 class="text-2xl font-black text-rose-text">
+                        <div class="space-y-4">
+                            <h2
+                                class="text-lg font-bold text-rose-text border-b border-black/5 pb-2"
+                            >
                                 Địa chỉ Email
                             </h2>
-                            <div class="flex flex-col md:flex-row gap-4">
+                            <div class="flex flex-col sm:flex-row gap-3">
                                 <input
                                     type="email"
                                     bind:value={email}
                                     placeholder="your-email@example.com"
-                                    class="flex-1 h-14 bg-white border border-overlay rounded-2xl px-6 outline-none focus:border-iris transition-all font-bold"
+                                    class="flex-1 h-12 bg-white/50 border-2 border-transparent rounded-2xl px-4 text-sm outline-none focus:border-iris focus:bg-white transition-all shadow-sm"
                                 />
                                 <button
                                     onclick={updateEmail}
                                     disabled={loading}
-                                    class="button px-10 h-14"
+                                    class="h-12 px-6 bg-iris text-white text-sm font-bold rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-md shadow-iris/20 disabled:opacity-50"
                                 >
                                     Cập nhật
                                 </button>
@@ -246,61 +298,57 @@
                         </div>
 
                         <!-- Password Section -->
-                        <div
-                            class="glass p-10 rounded-[3rem] border border-white/60 space-y-6"
-                        >
-                            <h2 class="text-2xl font-black text-rose-text">
+                        <div class="space-y-4">
+                            <h2
+                                class="text-lg font-bold text-rose-text border-b border-black/5 pb-2"
+                            >
                                 Đổi mật khẩu
                             </h2>
-                            <div class="space-y-4">
+                            <div class="space-y-3">
                                 <div class="space-y-1">
                                     <label
                                         for="oldPassword"
-                                        class="text-[10px] font-black text-muted uppercase tracking-widest px-1"
+                                        class="text-xs font-medium text-muted"
                                         >Mật khẩu hiện tại</label
                                     >
                                     <input
                                         id="oldPassword"
                                         type="password"
                                         bind:value={oldPassword}
-                                        class="w-full h-14 bg-white border border-overlay rounded-2xl px-6 outline-none focus:border-iris transition-all font-bold"
+                                        class="w-full h-12 bg-white/50 border-2 border-transparent rounded-2xl px-4 text-sm outline-none focus:border-iris focus:bg-white transition-all shadow-sm"
                                     />
                                 </div>
-                                <div
-                                    class="grid grid-cols-1 md:grid-cols-2 gap-4"
-                                >
-                                    <div class="space-y-1">
-                                        <label
-                                            for="newPassword"
-                                            class="text-[10px] font-black text-muted uppercase tracking-widest px-1"
-                                            >Mật khẩu mới</label
-                                        >
-                                        <input
-                                            id="newPassword"
-                                            type="password"
-                                            bind:value={newPassword}
-                                            class="w-full h-14 bg-white border border-overlay rounded-2xl px-6 outline-none focus:border-iris transition-all font-bold"
-                                        />
-                                    </div>
-                                    <div class="space-y-1">
-                                        <label
-                                            for="confirmPassword"
-                                            class="text-[10px] font-black text-muted uppercase tracking-widest px-1"
-                                            >Xác nhận mật khẩu</label
-                                        >
-                                        <input
-                                            id="confirmPassword"
-                                            type="password"
-                                            bind:value={confirmPassword}
-                                            class="w-full h-14 bg-white border border-overlay rounded-2xl px-6 outline-none focus:border-iris transition-all font-bold"
-                                        />
-                                    </div>
+                                <div class="space-y-1">
+                                    <label
+                                        for="newPassword"
+                                        class="text-xs font-medium text-muted"
+                                        >Mật khẩu mới</label
+                                    >
+                                    <input
+                                        id="newPassword"
+                                        type="password"
+                                        bind:value={newPassword}
+                                        class="w-full h-12 bg-white/50 border-2 border-transparent rounded-2xl px-4 text-sm outline-none focus:border-iris focus:bg-white transition-all shadow-sm"
+                                    />
                                 </div>
-                                <div class="flex justify-end pt-4">
+                                <div class="space-y-1">
+                                    <label
+                                        for="confirmPassword"
+                                        class="text-xs font-medium text-muted"
+                                        >Xác nhận mật khẩu</label
+                                    >
+                                    <input
+                                        id="confirmPassword"
+                                        type="password"
+                                        bind:value={confirmPassword}
+                                        class="w-full h-12 bg-white/50 border-2 border-transparent rounded-2xl px-4 text-sm outline-none focus:border-iris focus:bg-white transition-all shadow-sm"
+                                    />
+                                </div>
+                                <div class="pt-4">
                                     <button
                                         onclick={updatePassword}
                                         disabled={loading}
-                                        class="button px-10 h-14"
+                                        class="h-12 px-6 bg-iris text-white text-sm font-bold rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-md shadow-iris/20 disabled:opacity-50"
                                     >
                                         Lưu thay đổi
                                     </button>
@@ -312,18 +360,15 @@
 
                 {#if activeSection === "notifications"}
                     <div
-                        in:fade
-                        class="glass p-10 rounded-[3rem] border border-white/60 text-center space-y-4 py-20"
+                        in:fade={{ duration: 150 }}
+                        class="flex flex-col items-center justify-center h-full text-center space-y-3 opacity-60 mt-10"
                     >
-                        <div class="text-6xl opacity-20">
-                            <i class="bx bx-bell-off"></i>
-                        </div>
-                        <h2 class="text-2xl font-black text-rose-text">
+                        <i class="bx bx-bell-off text-4xl"></i>
+                        <h2 class="text-base font-bold text-rose-text">
                             Tính năng đang phát triển
                         </h2>
-                        <p class="text-muted max-w-xs mx-auto text-sm">
-                            Hệ thống thông báo đẩy (Push Notifications) sẽ sớm
-                            ra mắt trong các bản cập nhật tiếp theo.
+                        <p class="text-xs text-muted max-w-xs">
+                            Hệ thống thông báo đẩy sẽ sớm ra mắt.
                         </p>
                     </div>
                 {/if}

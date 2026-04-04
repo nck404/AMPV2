@@ -32,3 +32,7 @@ Admin:
 	- có thể đăng các đợt tuyển dụng trên trang tuyển dụng, tạo đơn apply,
 Mobile app
 Có thể setting trong profile tình trạng khuyết tật, ngoài ra còn có thể setup CV 
+
+
+
+t nên làm app tốc ký kiểu làm tổ hợp phím riêng cho người việt để học gõ nhanh hơn và thêm speak để làm nó thành máy nói cho người câm

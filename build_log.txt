@@ -1,0 +1,498 @@
+
+> amp@0.0.1 build
+> vite build
+
+[36mvite v7.3.1 [32mbuilding ssr environment for production...[36m[39m
+transforming...
+9:10:49 PM [vite-plugin-svelte] src/routes/admin/docs/editor/+page.svelte:99:16 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+ 97:         <header class="flex items-center justify-between mb-8">
+ 98:             <div class="flex items-center gap-4">
+ 99:                 <a
+                        ^
+100:                     href="/admin/docs"
+101:                     class="w-12 h-12 flex items-center justify-center bg-surface border border-overlay rounded-2xl text-muted hover:text-iris transition-all"
+9:10:49 PM [vite-plugin-svelte] src/routes/admin/docs/editor/+page.svelte:140:24 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+138:                 >
+139:                     <div class="space-y-1">
+140:                         <label
+                              ^
+141:                             class="text-xs font-bold text-muted uppercase ml-2"
+142:                             >Tiêu đề</label
+9:10:49 PM [vite-plugin-svelte] src/routes/admin/docs/editor/+page.svelte:153:24 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+151:                     </div>
+152:                     <div class="space-y-1">
+153:                         <label
+                              ^
+154:                             class="text-xs font-bold text-muted uppercase ml-2"
+155:                             >Slug (URL)</label
+9:10:49 PM [vite-plugin-svelte] src/routes/admin/docs/editor/+page.svelte:165:24 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+163:                     </div>
+164:                     <div class="space-y-1">
+165:                         <label
+                              ^
+166:                             class="text-xs font-bold text-muted uppercase ml-2"
+167:                             >Danh mục</label
+9:10:49 PM [vite-plugin-svelte] src/routes/admin/docs/editor/+page.svelte:176:24 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+174:                     </div>
+175:                     <div class="space-y-1">
+176:                         <label
+                              ^
+177:                             class="text-xs font-bold text-muted uppercase ml-2"
+178:                             >Thứ tự hiển thị</label
+9:10:49 PM [vite-plugin-svelte] src/routes/admin/users/+page.svelte:71:16 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+69:         >
+70:             <div class="flex items-center gap-4">
+71:                 <a
+                       ^
+72:                     href="/admin"
+73:                     class="w-12 h-12 flex items-center justify-center bg-surface border border-overlay rounded-2xl text-muted hover:text-iris transition-all"
+9:10:49 PM [vite-plugin-svelte] src/routes/profile/+page.svelte:197:28 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+195:                                 Chỉnh sửa hồ sơ
+196:                             </h2>
+197:                             <button
+                                        ^
+198:                                 type="button"
+199:                                 onclick={cancelEditing}
+9:10:49 PM [vite-plugin-svelte] src/routes/profile/+page.svelte:280:32 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+278:                         <div class="flex flex-col gap-3">
+279:                             <div class="flex items-center justify-between">
+280:                                 <label class="text-sm font-bold text-muted"
+                                      ^
+281:                                     >Liên kết mạng xã hội</label
+282:                                 >
+9:10:50 PM [vite-plugin-svelte] src/routes/sign-language/+page.svelte:410:28 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+408:                         <!-- Navigation Header -->
+409:                         <div class="flex items-center gap-4">
+410:                             <button
+                                         ^
+411:                                 onclick={closeLesson}
+412:                                 class="w-10 h-10 rounded-xl bg-surface border border-overlay flex items-center justify-center hover:bg-iris hover:text-white transition-all shadow-sm"
+9:10:50 PM [vite-plugin-svelte] src/routes/sign-language/+page.svelte:11:8 `videoElement` is updated, but is not declared with `$state(...)`. Changing its value will not correctly trigger updates
+https://svelte.dev/e/non_reactive_update
+ 9:     let selectedCategory = $state("Bảng chữ cái");
+10:     let activeLesson = $state(null);
+11:     let videoElement;
+                        ^
+12:     let canvasElement;
+13:     let illustrationCanvas; // Canvas for the "Teacher"
+9:10:50 PM [vite-plugin-svelte] src/routes/sign-language/+page.svelte:12:8 `canvasElement` is updated, but is not declared with `$state(...)`. Changing its value will not correctly trigger updates
+https://svelte.dev/e/non_reactive_update
+10:     let activeLesson = $state(null);
+11:     let videoElement;
+12:     let canvasElement;
+                         ^
+13:     let illustrationCanvas; // Canvas for the "Teacher"
+14:     let camera;
+9:10:50 PM [vite-plugin-svelte] src/routes/sign-language/+page.svelte:13:8 `illustrationCanvas` is updated, but is not declared with `$state(...)`. Changing its value will not correctly trigger updates
+https://svelte.dev/e/non_reactive_update
+11:     let videoElement;
+12:     let canvasElement;
+13:     let illustrationCanvas; // Canvas for the "Teacher"
+                              ^
+14:     let camera;
+15:     let hands;
+9:10:50 PM [vite-plugin-svelte] src/lib/components/Navbar.svelte:90:20 '#' is not a valid href attribute
+https://svelte.dev/e/a11y_invalid_attribute
+88:             {#if currentUser}
+89:                 <a
+90:                     href="#"
+                                ^
+91:                     class="nav-item p-2 rounded-full hover:bg-iris/10 transition-all relative"
+92:                     aria-label="Thông báo hệ thống"
+9:10:50 PM [vite-plugin-svelte] src/lib/components/Navbar.svelte:202:4 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+200:     class="md:hidden fixed top-4 left-0 right-0 z-50 flex justify-between items-center px-6"
+201: >
+202:     <a
+          ^
+203:         href="/"
+204:         class="w-10 h-10 bg-iris text-white rounded-full flex items-center justify-center shadow-lg"
+9:10:50 PM [vite-plugin-svelte] src/lib/components/Navbar.svelte:210:12 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+208:     <div class="flex items-center gap-3">
+209:         {#if currentUser}
+210:             <a
+                   ^
+211:                 href="#"
+212:                 class="w-10 h-10 glass rounded-full flex items-center justify-center text-rose-text text-xl relative"
+9:10:50 PM [vite-plugin-svelte] src/lib/components/Navbar.svelte:211:16 '#' is not a valid href attribute
+https://svelte.dev/e/a11y_invalid_attribute
+209:         {#if currentUser}
+210:             <a
+211:                 href="#"
+                             ^
+212:                 class="w-10 h-10 glass rounded-full flex items-center justify-center text-rose-text text-xl relative"
+213:                 ><i class="bx bx-bell"></i>
+9:10:50 PM [vite-plugin-svelte] src/lib/components/Navbar.svelte:218:12 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+216:                 ></span>
+217:             </a>
+218:             <a
+                  ^
+219:                 href="/settings"
+220:                 class="w-10 h-10 glass rounded-full flex items-center justify-center text-rose-text text-xl"
+9:10:50 PM [vite-plugin-svelte] src/lib/components/CommentSection.svelte:105:16 `<div>` with a mouseleave handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions
+103:             <!-- Reaction Picker Post -->
+104:             {#if activePicker?.type === "post"}
+105:                 <div
+                          ^
+106:                     in:fly={{ y: 10 }}
+107:                     class="absolute bottom-full mb-2 left-0 bg-white shadow-2xl border border-overlay rounded-full px-4 py-2 flex items-center gap-2 z-50 animate-in fade-in zoom-in slide-in-from-bottom-2 duration-200"
+9:10:50 PM [vite-plugin-svelte] src/lib/components/CommentSection.svelte:325:40 `<div>` with a mouseleave handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions
+323: 
+324:                                     {#if activePicker?.type === "comment" && activePicker?.id === comment.id}
+325:                                         <div
+                                                  ^
+326:                                             in:fly={{ y: 10 }}
+327:                                             class="absolute bottom-full mb-2 left-0 bg-white shadow-2xl border border-overlay rounded-full px-3 py-1.5 flex items-center gap-1.5 z-50"
+9:10:50 PM [vite-plugin-svelte] src/lib/components/FloatingAssistant.svelte:258:20 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+256:                         class="flex-1 bg-transparent border-none focus:ring-0 text-sm outline-none px-2 py-1.5"
+257:                     />
+258:                     <button
+                                ^
+259:                         onclick={sendMessage}
+260:                         class="w-8 h-8 bg-iris text-white rounded-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all"
+[33m"HAND_CONNECTIONS" is imported from external module "@mediapipe/hands" but never used in "src/routes/sign-language/+page.svelte".[39m
+[33m"drawConnectors" and "drawLandmarks" are imported from external module "@mediapipe/drawing_utils" but never used in "src/routes/sign-language/+page.svelte".[39m
+[32m✓[39m 262 modules transformed.
+rendering chunks...
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+9:10:52 PM [vite-plugin-svelte] src/routes/admin/users/+page.svelte:71:16 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+69:         >
+70:             <div class="flex items-center gap-4">
+71:                 <a
+                       ^
+72:                     href="/admin"
+73:                     class="w-12 h-12 flex items-center justify-center bg-surface border border-overlay rounded-2xl text-muted hover:text-iris transition-all"
+9:10:52 PM [vite-plugin-svelte] src/routes/admin/docs/editor/+page.svelte:99:16 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+ 97:         <header class="flex items-center justify-between mb-8">
+ 98:             <div class="flex items-center gap-4">
+ 99:                 <a
+                        ^
+100:                     href="/admin/docs"
+101:                     class="w-12 h-12 flex items-center justify-center bg-surface border border-overlay rounded-2xl text-muted hover:text-iris transition-all"
+9:10:52 PM [vite-plugin-svelte] src/routes/admin/docs/editor/+page.svelte:140:24 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+138:                 >
+139:                     <div class="space-y-1">
+140:                         <label
+                              ^
+141:                             class="text-xs font-bold text-muted uppercase ml-2"
+142:                             >Tiêu đề</label
+9:10:52 PM [vite-plugin-svelte] src/routes/admin/docs/editor/+page.svelte:153:24 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+151:                     </div>
+152:                     <div class="space-y-1">
+153:                         <label
+                              ^
+154:                             class="text-xs font-bold text-muted uppercase ml-2"
+155:                             >Slug (URL)</label
+9:10:52 PM [vite-plugin-svelte] src/routes/admin/docs/editor/+page.svelte:165:24 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+163:                     </div>
+164:                     <div class="space-y-1">
+165:                         <label
+                              ^
+166:                             class="text-xs font-bold text-muted uppercase ml-2"
+167:                             >Danh mục</label
+9:10:52 PM [vite-plugin-svelte] src/routes/admin/docs/editor/+page.svelte:176:24 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+174:                     </div>
+175:                     <div class="space-y-1">
+176:                         <label
+                              ^
+177:                             class="text-xs font-bold text-muted uppercase ml-2"
+178:                             >Thứ tự hiển thị</label
+9:10:53 PM [vite-plugin-svelte] src/routes/profile/+page.svelte:197:28 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+195:                                 Chỉnh sửa hồ sơ
+196:                             </h2>
+197:                             <button
+                                        ^
+198:                                 type="button"
+199:                                 onclick={cancelEditing}
+9:10:53 PM [vite-plugin-svelte] src/routes/profile/+page.svelte:280:32 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+278:                         <div class="flex flex-col gap-3">
+279:                             <div class="flex items-center justify-between">
+280:                                 <label class="text-sm font-bold text-muted"
+                                      ^
+281:                                     >Liên kết mạng xã hội</label
+282:                                 >
+9:10:53 PM [vite-plugin-svelte] src/routes/sign-language/+page.svelte:410:28 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+408:                         <!-- Navigation Header -->
+409:                         <div class="flex items-center gap-4">
+410:                             <button
+                                         ^
+411:                                 onclick={closeLesson}
+412:                                 class="w-10 h-10 rounded-xl bg-surface border border-overlay flex items-center justify-center hover:bg-iris hover:text-white transition-all shadow-sm"
+9:10:53 PM [vite-plugin-svelte] src/routes/sign-language/+page.svelte:11:8 `videoElement` is updated, but is not declared with `$state(...)`. Changing its value will not correctly trigger updates
+https://svelte.dev/e/non_reactive_update
+ 9:     let selectedCategory = $state("Bảng chữ cái");
+10:     let activeLesson = $state(null);
+11:     let videoElement;
+                        ^
+12:     let canvasElement;
+13:     let illustrationCanvas; // Canvas for the "Teacher"
+9:10:53 PM [vite-plugin-svelte] src/routes/sign-language/+page.svelte:12:8 `canvasElement` is updated, but is not declared with `$state(...)`. Changing its value will not correctly trigger updates
+https://svelte.dev/e/non_reactive_update
+10:     let activeLesson = $state(null);
+11:     let videoElement;
+12:     let canvasElement;
+                         ^
+13:     let illustrationCanvas; // Canvas for the "Teacher"
+14:     let camera;
+9:10:53 PM [vite-plugin-svelte] src/routes/sign-language/+page.svelte:13:8 `illustrationCanvas` is updated, but is not declared with `$state(...)`. Changing its value will not correctly trigger updates
+https://svelte.dev/e/non_reactive_update
+11:     let videoElement;
+12:     let canvasElement;
+13:     let illustrationCanvas; // Canvas for the "Teacher"
+                              ^
+14:     let camera;
+15:     let hands;
+9:10:53 PM [vite-plugin-svelte] src/lib/components/CommentSection.svelte:105:16 `<div>` with a mouseleave handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions
+103:             <!-- Reaction Picker Post -->
+104:             {#if activePicker?.type === "post"}
+105:                 <div
+                          ^
+106:                     in:fly={{ y: 10 }}
+107:                     class="absolute bottom-full mb-2 left-0 bg-white shadow-2xl border border-overlay rounded-full px-4 py-2 flex items-center gap-2 z-50 animate-in fade-in zoom-in slide-in-from-bottom-2 duration-200"
+9:10:53 PM [vite-plugin-svelte] src/lib/components/CommentSection.svelte:325:40 `<div>` with a mouseleave handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions
+323: 
+324:                                     {#if activePicker?.type === "comment" && activePicker?.id === comment.id}
+325:                                         <div
+                                                  ^
+326:                                             in:fly={{ y: 10 }}
+327:                                             class="absolute bottom-full mb-2 left-0 bg-white shadow-2xl border border-overlay rounded-full px-3 py-1.5 flex items-center gap-1.5 z-50"
+9:10:53 PM [vite-plugin-svelte] src/lib/components/Navbar.svelte:90:20 '#' is not a valid href attribute
+https://svelte.dev/e/a11y_invalid_attribute
+88:             {#if currentUser}
+89:                 <a
+90:                     href="#"
+                                ^
+91:                     class="nav-item p-2 rounded-full hover:bg-iris/10 transition-all relative"
+92:                     aria-label="Thông báo hệ thống"
+9:10:53 PM [vite-plugin-svelte] src/lib/components/Navbar.svelte:202:4 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+200:     class="md:hidden fixed top-4 left-0 right-0 z-50 flex justify-between items-center px-6"
+201: >
+202:     <a
+          ^
+203:         href="/"
+204:         class="w-10 h-10 bg-iris text-white rounded-full flex items-center justify-center shadow-lg"
+9:10:53 PM [vite-plugin-svelte] src/lib/components/Navbar.svelte:210:12 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+208:     <div class="flex items-center gap-3">
+209:         {#if currentUser}
+210:             <a
+                   ^
+211:                 href="#"
+212:                 class="w-10 h-10 glass rounded-full flex items-center justify-center text-rose-text text-xl relative"
+9:10:53 PM [vite-plugin-svelte] src/lib/components/Navbar.svelte:211:16 '#' is not a valid href attribute
+https://svelte.dev/e/a11y_invalid_attribute
+209:         {#if currentUser}
+210:             <a
+211:                 href="#"
+                             ^
+212:                 class="w-10 h-10 glass rounded-full flex items-center justify-center text-rose-text text-xl relative"
+213:                 ><i class="bx bx-bell"></i>
+9:10:53 PM [vite-plugin-svelte] src/lib/components/Navbar.svelte:218:12 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+216:                 ></span>
+217:             </a>
+218:             <a
+                  ^
+219:                 href="/settings"
+220:                 class="w-10 h-10 glass rounded-full flex items-center justify-center text-rose-text text-xl"
+9:10:54 PM [vite-plugin-svelte] src/lib/components/FloatingAssistant.svelte:258:20 Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label
+256:                         class="flex-1 bg-transparent border-none focus:ring-0 text-sm outline-none px-2 py-1.5"
+257:                     />
+258:                     <button
+                                ^
+259:                         onclick={sendMessage}
+260:                         class="w-8 h-8 bg-iris text-white rounded-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all"
+[32m✓[39m 237 modules transformed.
+rendering chunks...
+computing gzip size...
+[2m.svelte-kit/output/client/[22m[32m_app/version.json                       [39m[1m[2m 0.03 kB[22m[1m[22m[2m │ gzip:  0.05 kB[22m
+[2m.svelte-kit/output/client/[22m[32m.vite/manifest.json                     [39m[1m[2m15.83 kB[22m[1m[22m[2m │ gzip:  1.67 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/10.dUVLfusD.css   [39m[1m[2m 0.05 kB[22m[1m[22m[2m │ gzip:  0.06 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/16.DqgNujAc.css   [39m[1m[2m 0.05 kB[22m[1m[22m[2m │ gzip:  0.07 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/13.ccWaicO1.css   [39m[1m[2m 0.06 kB[22m[1m[22m[2m │ gzip:  0.07 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/14.vVEs8sFc.css   [39m[1m[2m 0.08 kB[22m[1m[22m[2m │ gzip:  0.09 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/19.DcdQK_j1.css   [39m[1m[2m 0.08 kB[22m[1m[22m[2m │ gzip:  0.09 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/7.BNvo--yj.css    [39m[1m[2m 0.10 kB[22m[1m[22m[2m │ gzip:  0.10 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/5.oBIXUv0P.css    [39m[1m[2m 0.17 kB[22m[1m[22m[2m │ gzip:  0.14 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/8.Q-u_27qX.css    [39m[1m[2m 0.19 kB[22m[1m[22m[2m │ gzip:  0.14 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/2.iMpifVj_.css    [39m[1m[2m 0.21 kB[22m[1m[22m[2m │ gzip:  0.16 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/9.CRHNyCDI.css    [39m[1m[2m 0.33 kB[22m[1m[22m[2m │ gzip:  0.21 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/20.DRAkEUli.css   [39m[1m[2m 0.44 kB[22m[1m[22m[2m │ gzip:  0.19 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/11.DjOCNi3h.css   [39m[1m[2m 0.54 kB[22m[1m[22m[2m │ gzip:  0.27 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/12.D-nzoi5b.css   [39m[1m[2m 1.02 kB[22m[1m[22m[2m │ gzip:  0.42 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/0.CNNOKKrL.css    [39m[1m[2m98.41 kB[22m[1m[22m[2m │ gzip: 16.07 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/CjYptNqI.js       [39m[1m[2m 0.03 kB[22m[1m[22m[2m │ gzip:  0.05 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/BONSCA8B.js       [39m[1m[2m 0.06 kB[22m[1m[22m[2m │ gzip:  0.07 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/entry/start.D14G7_XA.js  [39m[1m[2m 0.08 kB[22m[1m[22m[2m │ gzip:  0.09 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/5bEjbyZ1.js       [39m[1m[2m 0.26 kB[22m[1m[22m[2m │ gzip:  0.20 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/CGBn85V8.js       [39m[1m[2m 0.30 kB[22m[1m[22m[2m │ gzip:  0.22 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/DjUg0kXs.js       [39m[1m[2m 0.30 kB[22m[1m[22m[2m │ gzip:  0.17 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/gw9gr58D.js       [39m[1m[2m 0.36 kB[22m[1m[22m[2m │ gzip:  0.27 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/ZjzFyN8s.js       [39m[1m[2m 0.62 kB[22m[1m[22m[2m │ gzip:  0.41 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/Cp13aiDx.js       [39m[1m[2m 0.74 kB[22m[1m[22m[2m │ gzip:  0.46 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/1.9bJ2-Epe.js      [39m[1m[2m 0.89 kB[22m[1m[22m[2m │ gzip:  0.53 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/DR2sn3Yu.js       [39m[1m[2m 0.93 kB[22m[1m[22m[2m │ gzip:  0.54 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/DUenQIwy.js       [39m[1m[2m 0.98 kB[22m[1m[22m[2m │ gzip:  0.58 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/Dfnsw9zZ.js       [39m[1m[2m 1.00 kB[22m[1m[22m[2m │ gzip:  0.52 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/BQcxGaEJ.js       [39m[1m[2m 1.15 kB[22m[1m[22m[2m │ gzip:  0.42 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/Cj6wI3p5.js       [39m[1m[2m 1.83 kB[22m[1m[22m[2m │ gzip:  0.84 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/9.CyBub8Zm.js      [39m[1m[2m 2.78 kB[22m[1m[22m[2m │ gzip:  1.45 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/15.Cy0YCBql.js     [39m[1m[2m 2.86 kB[22m[1m[22m[2m │ gzip:  1.29 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/8.BaRzwWQ_.js      [39m[1m[2m 3.34 kB[22m[1m[22m[2m │ gzip:  1.66 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/BFqyhOqq.js       [39m[1m[2m 3.69 kB[22m[1m[22m[2m │ gzip:  1.81 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/C-FSmr4K.js       [39m[1m[2m 3.83 kB[22m[1m[22m[2m │ gzip:  1.81 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/3.C40DecyH.js      [39m[1m[2m 4.01 kB[22m[1m[22m[2m │ gzip:  1.89 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/4.BolYwMG7.js      [39m[1m[2m 4.44 kB[22m[1m[22m[2m │ gzip:  1.92 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/11.DBM2jS_z.js     [39m[1m[2m 5.09 kB[22m[1m[22m[2m │ gzip:  2.29 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/5.D-fMCmVR.js      [39m[1m[2m 5.62 kB[22m[1m[22m[2m │ gzip:  2.44 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/6.rwccVN_e.js      [39m[1m[2m 5.91 kB[22m[1m[22m[2m │ gzip:  2.51 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/13.DhYXH0u9.js     [39m[1m[2m 5.99 kB[22m[1m[22m[2m │ gzip:  2.43 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/10.pcSptibi.js     [39m[1m[2m 6.42 kB[22m[1m[22m[2m │ gzip:  2.83 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/17.DNe_Cm6C.js     [39m[1m[2m 6.49 kB[22m[1m[22m[2m │ gzip:  2.72 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/2.B1z5v7fI.js      [39m[1m[2m 6.92 kB[22m[1m[22m[2m │ gzip:  2.77 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/B-VnLWzp.js       [39m[1m[2m 7.18 kB[22m[1m[22m[2m │ gzip:  3.20 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/14.Bj2ssx69.js     [39m[1m[2m 7.29 kB[22m[1m[22m[2m │ gzip:  2.93 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/18.XR_Hyggx.js     [39m[1m[2m 7.58 kB[22m[1m[22m[2m │ gzip:  2.69 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/entry/app.DiYoOfVT.js    [39m[1m[2m 8.87 kB[22m[1m[22m[2m │ gzip:  3.49 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/21.Cm_iWxPT.js     [39m[1m[2m10.95 kB[22m[1m[22m[2m │ gzip:  3.73 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/7.CGRqaJz4.js      [39m[1m[2m12.21 kB[22m[1m[22m[2m │ gzip:  4.59 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/19.D2BFbSH0.js     [39m[1m[2m14.40 kB[22m[1m[22m[2m │ gzip:  3.81 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/16.50DEt8C0.js     [39m[1m[2m14.97 kB[22m[1m[22m[2m │ gzip:  5.38 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/12.DyTlLvLW.js     [39m[1m[2m15.81 kB[22m[1m[22m[2m │ gzip:  5.45 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/xTmQNepG.js       [39m[1m[2m22.42 kB[22m[1m[22m[2m │ gzip:  8.92 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/Bavqwotx.js       [39m[1m[2m26.17 kB[22m[1m[22m[2m │ gzip: 10.29 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/0.BG4e4K_j.js      [39m[1m[2m31.52 kB[22m[1m[22m[2m │ gzip: 11.03 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/20.C0PE_74r.js     [39m[1m[2m65.13 kB[22m[1m[22m[2m │ gzip: 24.48 kB[22m
+[32m✓ built in 3.03s[39m
+[2m.svelte-kit/output/server/[22m[32m.vite/manifest.json                              [39m[1m[2m 10.95 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.dUVLfusD.css         [39m[1m[2m  0.05 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.DqgNujAc.css         [39m[1m[2m  0.05 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.ccWaicO1.css         [39m[1m[2m  0.06 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.vVEs8sFc.css         [39m[1m[2m  0.08 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.DcdQK_j1.css         [39m[1m[2m  0.08 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.BNvo--yj.css         [39m[1m[2m  0.10 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.C8IZTZAG.css         [39m[1m[2m  0.14 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.Q-u_27qX.css         [39m[1m[2m  0.19 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.iMpifVj_.css         [39m[1m[2m  0.21 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.CRHNyCDI.css         [39m[1m[2m  0.33 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.DRAkEUli.css         [39m[1m[2m  0.44 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.DjOCNi3h.css         [39m[1m[2m  0.54 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.DcXd_HWx.css         [39m[1m[2m  0.92 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_layout.HSz42BCt.css       [39m[1m[2m 96.74 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/index-server.js                           [39m[1m[2m  0.17 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/privacy/_page.svelte.js            [39m[1m[2m  0.28 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/recruitment/_page.svelte.js        [39m[1m[2m  0.28 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/terms/_page.svelte.js              [39m[1m[2m  0.28 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36minternal.js                                      [39m[1m[2m  0.33 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/equality.js                               [39m[1m[2m  0.33 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/fallbacks/error.svelte.js                [39m[1m[2m  0.34 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/index3.js                                 [39m[1m[2m  0.35 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/state.svelte.js                           [39m[1m[2m  0.37 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/sign-language/_page.svelte.js      [39m[1m[2m  0.37 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/forum/_page.svelte.js              [39m[1m[2m  0.46 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/people/_page.svelte.js             [39m[1m[2m  0.46 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/profile/_page.svelte.js            [39m[1m[2m  0.46 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/forum/create/_page.svelte.js       [39m[1m[2m  0.47 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/register/_page.svelte.js           [39m[1m[2m  0.49 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/forum/_id_/_page.svelte.js         [39m[1m[2m  0.51 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/client.js                                 [39m[1m[2m  0.52 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/login/_page.svelte.js              [39m[1m[2m  0.53 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/escaping.js                               [39m[1m[2m  0.53 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/settings/_page.svelte.js           [39m[1m[2m  0.60 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/environment.js                            [39m[1m[2m  0.66 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/utils2.js                                 [39m[1m[2m  0.91 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/chat/_page.svelte.js               [39m[1m[2m  0.99 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/docs/_slug_/_page.svelte.js        [39m[1m[2m  1.11 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/utils.js                                  [39m[1m[2m  1.15 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/context.js                                [39m[1m[2m  1.18 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/index2.js                                 [39m[1m[2m  1.44 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/docs/_page.svelte.js               [39m[1m[2m  1.49 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/admin/docs/_page.svelte.js         [39m[1m[2m  1.72 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/admin/users/_page.svelte.js        [39m[1m[2m  2.22 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/utils3.js                                 [39m[1m[2m  2.55 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/admin/docs/editor/_page.svelte.js  [39m[1m[2m  4.15 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/admin/_page.svelte.js              [39m[1m[2m  4.38 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/_page.svelte.js                    [39m[1m[2m  4.87 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/exports.js                                [39m[1m[2m  5.59 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/_layout.svelte.js                  [39m[1m[2m 11.98 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mremote-entry.js                                  [39m[1m[2m 18.23 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/shared.js                                 [39m[1m[2m 32.17 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/index.js                                  [39m[1m[2m 40.11 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/internal.js                               [39m[1m[2m 76.98 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mindex.js                                         [39m[1m[2m136.91 kB[22m[1m[22m
+[32m✓ built in 6.47s[39m
+
+Run npm run preview to preview your production build locally.
+
+> Using @sveltejs/adapter-static
+  @sveltejs/adapter-static: all routes must be fully prerenderable, but found the following routes that are dynamic:
+    - src\routes/
+    - src\routes/admin
+    - src\routes/admin/docs
+    - src\routes/admin/docs/editor
+    - src\routes/admin/users
+    - src\routes/chat
+    - src\routes/docs
+    - src\routes/docs/[slug]
+    - src\routes/forum
+    - src\routes/forum/create
+    - src\routes/forum/[id]
+    - src\routes/login
+    - src\routes/people
+    - src\routes/privacy
+    - src\routes/profile
+    - src\routes/recruitment
+    - src\routes/register
+    - src\routes/settings
+    - src\routes/sign-language
+    - src\routes/terms
+  
+  You have the following options:
+    - set the `fallback` option — see https://svelte.dev/docs/kit/single-page-apps#usage for more info.
+    - add `export const prerender = true` to your root `+layout.js/.ts` or `+layout.server.js/.ts` file. This will try to prerender all pages.
+    - add `export const prerender = true` to any `+server.js/ts` files that are not fetched by page `load` functions.
+    - adjust the `prerender.entries` config option (routes with parameters are not part of entry points by default) — see https://svelte.dev/docs/kit/configuration#prerender for more info.
+    - pass `strict: false` to `adapter-static` to ignore this error. Only do this if you are sure you don't need the routes in question in your final app, as they will be unavailable. See https://github.com/sveltejs/kit/tree/main/packages/adapter-static#strict for more info.
+  
+  If this doesn't help, you may need to use a different adapter. @sveltejs/adapter-static can only be used for sites that don't need a server for dynamic rendering, and can run on just a static file server.
+  See https://svelte.dev/docs/kit/page-options#prerender for more details
+[31merror during build:
+Error: Encountered dynamic routes
+    at adapt (file:///D:/Project/AMPV2/Src/Frontend/amp/node_modules/.pnpm/@sveltejs+adapter-static@3._b145622078eb0e4876895c3091bcaa44/node_modules/@sveltejs/adapter-static/index.js:38:12)
+    at adapt (file:///D:/Project/AMPV2/Src/Frontend/amp/node_modules/.pnpm/@sveltejs+kit@2.50.1_@svelt_f63c192d77c0b7471b2d20fbb093f5d1/node_modules/@sveltejs/kit/src/core/adapt/index.js:41:8)
+    at finalise (file:///D:/Project/AMPV2/Src/Frontend/amp/node_modules/.pnpm/@sveltejs+kit@2.50.1_@svelt_f63c192d77c0b7471b2d20fbb093f5d1/node_modules/@sveltejs/kit/src/exports/vite/index.js:1337:13)
+    at async Object.handler (file:///D:/Project/AMPV2/Src/Frontend/amp/node_modules/.pnpm/@sveltejs+kit@2.50.1_@svelt_f63c192d77c0b7471b2d20fbb093f5d1/node_modules/@sveltejs/kit/src/exports/vite/index.js:1368:5)
+    at async PluginDriver.hookParallel (file:///D:/Project/AMPV2/Src/Frontend/amp/node_modules/.pnpm/rollup@4.56.0/node_modules/rollup/dist/es/shared/node-entry.js:22431:17)
+    at async Object.close (file:///D:/Project/AMPV2/Src/Frontend/amp/node_modules/.pnpm/rollup@4.56.0/node_modules/rollup/dist/es/shared/node-entry.js:23450:13)
+    at async buildEnvironment (file:///D:/Project/AMPV2/Src/Frontend/amp/node_modules/.pnpm/vite@7.3.1_jiti@2.6.1_lightningcss@1.30.2/node_modules/vite/dist/node/chunks/config.js:33555:15)
+    at async Object.build (file:///D:/Project/AMPV2/Src/Frontend/amp/node_modules/.pnpm/vite@7.3.1_jiti@2.6.1_lightningcss@1.30.2/node_modules/vite/dist/node/chunks/config.js:33900:19)
+    at async Object.buildApp (file:///D:/Project/AMPV2/Src/Frontend/amp/node_modules/.pnpm/vite@7.3.1_jiti@2.6.1_lightningcss@1.30.2/node_modules/vite/dist/node/chunks/config.js:33897:153)
+    at async CAC.<anonymous> (file:///D:/Project/AMPV2/Src/Frontend/amp/node_modules/.pnpm/vite@7.3.1_jiti@2.6.1_lightningcss@1.30.2/node_modules/vite/dist/node/cli.js:629:3)[39m
