@@ -96,7 +96,7 @@
                         <label
                             for="name"
                             class="text-sm font-black text-rose-text/70 ml-1 uppercase tracking-wider"
-                            >Họ và tên</label
+                            >Username</label
                         >
                         <div class="relative group">
                             <span
