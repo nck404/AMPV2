@@ -11,3 +11,5 @@ google-generativeai
 flask-socketio
 eventlet
 gTTS
+pyOpenSSL>=23.0.0
+cryptography>=41.0.0
