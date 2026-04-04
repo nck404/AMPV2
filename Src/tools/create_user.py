@@ -8,7 +8,7 @@ backend_dir = os.path.join(current_dir, "..", "Backend")
 sys.path.insert(0, backend_dir)
 
 try:
-    from app import app
+    from app import create_app
     from extensions import db
     from models import User
 except ImportError as e:
@@ -20,6 +20,9 @@ except ImportError as e:
 
 
 def create_user(username, email, password, role):
+    # Change working directory to Backend so DB path resolves correctly
+    os.chdir(backend_dir)
+    app = create_app()
     with app.app_context():
         # Check if user already exists
         existing_user = User.query.filter(

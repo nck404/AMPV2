@@ -8,6 +8,7 @@
         { name: "Tuyển dụng", path: "/recruitment", icon: "bx-briefcase" },
         { name: "Trò chuyện", path: "/chat", icon: "bx-chat" },
         { name: "Học tập", path: "/sign-language", icon: "bx-book-open" },
+        { name: "Tạo CV", path: "/cv", icon: "bx-id-card" },
         { name: "Docs", path: "/docs", icon: "bx-book-content" },
     ];
 

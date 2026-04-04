@@ -1,16 +1,68 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Outfit:wght@400;700;900&family=Playfair+Display:wght@400;700;900&family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
-		<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-		<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-		<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-		%sveltekit.head%
-	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
-	</body>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Outfit:wght@400;700;900&family=Playfair+Display:wght@400;700;900&family=Roboto:wght@400;700;900&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+            rel="stylesheet"
+        />
+        <script
+            src="https://www.google.com/recaptcha/api.js"
+            async
+            defer
+        ></script>
+        <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <title>AMP - Mạng Xã Hội & Hỗ Trợ Người Khuyết Tật</title>
+        <meta
+            name="title"
+            content="AMP - Mạng Xã Hội & Hỗ Trợ Người Khuyết Tật"
+        />
+        <meta
+            name="description"
+            content="AMP là nền tảng mạng xã hội, diễn đàn và cơ hội việc làm chuyên biệt dành cho người khiếm thính, khiếm thị và người khuyết tật tại Việt Nam."
+        />
+        <meta
+            name="keywords"
+            content="AMP, người khuyết tật, mạng xã hội, việc làm, khiếm thính, khiếm thị, từ thiện, cộng đồng"
+        />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://amp.tfai.lol/" />
+        <meta
+            property="og:title"
+            content="AMP - Mạng Xã Hội & Hỗ Trợ Người Khuyết Tật"
+        />
+        <meta
+            property="og:description"
+            content="AMP là nền tảng mạng xã hội, diễn đàn và cơ hội việc làm chuyên biệt dành cho người khiếm thính, khiếm thị và người khuyết tật tại Việt Nam."
+        />
+        <meta property="og:image" content="%sveltekit.assets%/favicon.png" />
+
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://amp.tfai.lol/" />
+        <meta
+            property="twitter:title"
+            content="AMP - Mạng Xã Hội & Hỗ Trợ Người Khuyết Tật"
+        />
+        <meta
+            property="twitter:description"
+            content="AMP là nền tảng mạng xã hội, diễn đàn và cơ hội việc làm chuyên biệt dành cho người khiếm thính, khiếm thị và người khuyết tật tại Việt Nam."
+        />
+        <meta
+            property="twitter:image"
+            content="%sveltekit.assets%/favicon.png"
+        />
+        %sveltekit.head%
+    </head>
+    <body data-sveltekit-preload-data="hover">
+        <div style="display: contents">%sveltekit.body%</div>
+    </body>
 </html>

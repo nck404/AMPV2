@@ -78,14 +78,15 @@
                 <div
                     class="flex flex-wrap items-center justify-center lg:justify-start gap-4"
                 >
-                    <button class="button px-10 py-4 text-lg">
+                    <a href="/register" class="button px-10 py-4 text-lg">
                         <i class="bx bx-rocket mr-2"></i> Bắt đầu ngay
-                    </button>
-                    <button
+                    </a>
+                    <a
+                        href="/about"
                         class="px-8 py-3 rounded-xl border-2 border-overlay text-rose-text font-medium hover:bg-overlay/50 transition-all flex items-center gap-2"
                     >
                         <i class="bx bx-info-circle"></i> Tìm hiểu thêm
-                    </button>
+                    </a>
                 </div>
 
                 <div
@@ -112,7 +113,7 @@
 
             <div
                 in:fly={{ x: 30, duration: 1000, delay: 200 }}
-                class="flex-1 relative"
+                class="flex-1 relative w-full max-w-lg lg:max-w-none mx-auto mt-12 lg:mt-0"
             >
                 <div
                     class="relative z-10 rounded-[2rem] overflow-hidden shadow-2xl shadow-rose-text/10 border border-white/20"
@@ -198,7 +199,9 @@
                         Phản hồi AI thời gian thực
                     </li>
                 </ul>
-                <button class="button mt-4">Trải nghiệm ngay</button>
+                <a href="/sign-language" class="button mt-4 inline-flex"
+                    >Trải nghiệm ngay</a
+                >
             </div>
             <div class="flex-1 relative">
                 <div
@@ -239,7 +242,8 @@
 
 <style>
     :global(body) {
-        background-image: radial-gradient(
+        background-image:
+            radial-gradient(
                 circle at 10% 20%,
                 rgba(144, 122, 169, 0.03) 0%,
                 transparent 20%
