@@ -25,7 +25,7 @@ def create_app():
     app = Flask(__name__, static_folder="static")
     CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-    print("--- Backend Neural Core starting on port 5000 ---")
+    print("--- Backend Neural Core starting on port 6333 ---")
 
     # Configuration
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(

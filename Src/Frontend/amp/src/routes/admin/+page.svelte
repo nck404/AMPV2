@@ -246,13 +246,13 @@
                             </tr>
                         {/each}
                         {#if users.length === 0}
-                            <tr
-                                ><td
+                            <tr>
+                                <td
                                     colspan="6"
                                     class="px-4 py-4 text-center text-gray-500"
                                     >Không có dữ liệu</td
-                                ></tr
-                            >
+                                >
+                            </tr>
                         {/if}
                     </tbody>
                 </table>
@@ -290,13 +290,13 @@
                             </tr>
                         {/each}
                         {#if posts.length === 0}
-                            <tr
-                                ><td
+                            <tr>
+                                <td
                                     colspan="5"
                                     class="px-4 py-4 text-center text-gray-500"
                                     >Không có dữ liệu</td
-                                ></tr
-                            >
+                                >
+                            </tr>
                         {/if}
                     </tbody>
                 </table>
@@ -352,13 +352,13 @@
                             </tr>
                         {/each}
                         {#if jobs.length === 0}
-                            <tr
-                                ><td
+                            <tr>
+                                <td
                                     colspan="5"
                                     class="px-4 py-4 text-center text-gray-500"
                                     >Không có dữ liệu</td
-                                ></tr
-                            >
+                                >
+                            </tr>
                         {/if}
                     </tbody>
                 </table>

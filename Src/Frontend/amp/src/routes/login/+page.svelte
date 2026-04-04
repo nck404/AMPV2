@@ -50,7 +50,7 @@
             <div
                 class="glass p-8 md:p-12 rounded-[3.5rem] shadow-2xl shadow-rose-text/5 border border-white/40"
             >
-                <div class="text-center mb-10">
+                <div class="text-center mb-6">
                     <div
                         class="w-20 h-20 bg-iris/10 rounded-[2rem] flex items-center justify-center text-5xl mx-auto mb-6 text-iris shadow-inner"
                     >
@@ -64,25 +64,27 @@
                     <p class="text-muted text-lg">Chào mừng bạn trở lại</p>
                 </div>
 
-                {#if errorMsg}
-                    <div
-                        in:fade
-                        class="mb-6 p-4 bg-love/10 border border-love/20 rounded-2xl text-love text-sm font-bold flex items-center gap-3"
-                    >
-                        <i class="bx bx-error-circle text-2xl"></i>
-                        {errorMsg}
-                    </div>
-                {/if}
+                <div class="min-h-[64px] mb-4 flex flex-col justify-end">
+                    {#if errorMsg}
+                        <div
+                            in:fade
+                            class="p-4 bg-love/10 border border-love/20 rounded-2xl text-love text-sm font-bold flex items-center gap-3 w-full"
+                        >
+                            <i class="bx bx-error-circle text-2xl"></i>
+                            {errorMsg}
+                        </div>
+                    {/if}
 
-                {#if successMsg}
-                    <div
-                        in:fade
-                        class="mb-6 p-4 bg-cat-green/10 border border-cat-green/20 rounded-2xl text-cat-green text-sm font-bold flex items-center gap-3"
-                    >
-                        <i class="bx bx-check-circle text-2xl"></i>
-                        {successMsg}
-                    </div>
-                {/if}
+                    {#if successMsg}
+                        <div
+                            in:fade
+                            class="p-4 bg-cat-green/10 border border-cat-green/20 rounded-2xl text-cat-green text-sm font-bold flex items-center gap-3 w-full"
+                        >
+                            <i class="bx bx-check-circle text-2xl"></i>
+                            {successMsg}
+                        </div>
+                    {/if}
+                </div>
 
                 <form onsubmit={handleLogin} class="space-y-6">
                     <div class="space-y-2">
