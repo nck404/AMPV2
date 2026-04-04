@@ -10,3 +10,4 @@ flask-migrate
 google-generativeai
 flask-socketio
 eventlet
+gTTS
