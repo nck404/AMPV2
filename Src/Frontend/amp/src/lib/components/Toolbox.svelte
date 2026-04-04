@@ -2,6 +2,7 @@
     import { fly, fade, scale } from "svelte/transition";
     import { onMount } from "svelte";
     import FloatingAssistant from "./FloatingAssistant.svelte";
+    import { PUBLIC_API_DOMAIN } from "$env/static/public";
     import VirtualKeyboard from "./VirtualKeyboard.svelte";
 
     let showAssistant = $state(false);
@@ -80,10 +81,7 @@
     function speak(text) {
         if (!text || text === lastReadText || !audioUnlocked) return;
 
-        // Gọi API Backend của chính mình để lấy giọng đọc tiếng Việt chuẩn
-        // PUBLIC_API_DOMAIN thường là http://localhost:5000/api
-        // Endpoint mới là /tts/speak
-        const url = `http://localhost:5000/api/tts/speak?text=${encodeURIComponent(text)}`;
+        const url = `${PUBLIC_API_DOMAIN}/tts/speak?text=${encodeURIComponent(text)}`;
 
         if (audioPlayer) {
             audioPlayer.src = url;

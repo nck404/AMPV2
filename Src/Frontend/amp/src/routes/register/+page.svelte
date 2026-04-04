@@ -13,6 +13,7 @@
     let mounted = $state(false);
     let errorMsg = $state("");
     let agree = $state(false);
+    let recaptchaChecked = $state(false);
 
     onMount(() => {
         mounted = true;
@@ -24,6 +25,11 @@
 
         if (!agree) {
             errorMsg = "Bạn cần đồng ý với các điều khoản dịch vụ!";
+            return;
+        }
+
+        if (!recaptchaChecked) {
+            errorMsg = "Vui lòng xác nhận bạn không phải là người máy!";
             return;
         }
 
@@ -192,15 +198,21 @@
 
                     <!-- Mock reCAPTCHA for Test Mode -->
                     <div class="py-2">
-                        <div
-                            class="bg-surface/50 border border-overlay/50 rounded-2xl p-4 flex items-center justify-between group hover:border-iris/30 transition-all cursor-pointer"
+                        <button
+                            type="button"
+                            onclick={() => (recaptchaChecked = true)}
+                            class="w-full bg-surface/50 border border-overlay/50 rounded-2xl p-4 flex items-center justify-between group hover:border-iris/30 transition-all cursor-pointer"
                         >
                             <div class="flex items-center gap-3">
                                 <div
-                                    class="w-6 h-6 border-2 border-overlay/50 rounded flex items-center justify-center text-iris bg-white"
+                                    class="w-6 h-6 border-2 {recaptchaChecked
+                                        ? 'border-cat-green bg-cat-green text-white'
+                                        : 'border-overlay/50 bg-white text-iris'} rounded flex items-center justify-center transition-all"
                                 >
                                     <i
-                                        class="bx bx-check text-xl opacity-0 group-hover:opacity-100 transition-opacity"
+                                        class="bx bx-check text-xl {recaptchaChecked
+                                            ? 'opacity-100'
+                                            : 'opacity-0 group-hover:opacity-50'} transition-opacity"
                                     ></i>
                                 </div>
                                 <span
@@ -216,7 +228,7 @@
                                     >reCAPTCHA</span
                                 >
                             </div>
-                        </div>
+                        </button>
                     </div>
 
                     <div class="flex items-center gap-3 py-2 px-1">
