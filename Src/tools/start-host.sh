@@ -49,6 +49,17 @@ fi
 
 cd "$BACKEND_DIR" || exit 1
 
+# [NEW] Apply Database Migrations
+echo -e "  -> ${YELLOW}Migrating database schema...${NC}"
+export FLASK_APP=app.py
+if command -v flask &>/dev/null; then
+    flask db upgrade
+elif command -v python3 &>/dev/null; then
+    python3 -m flask db upgrade
+else
+    python -m flask db upgrade
+fi
+
 # Kill any existing processes running on port 6333 to prevent "address already in use"
 fuser -k 6333/tcp 2>/dev/null
 sleep 1
