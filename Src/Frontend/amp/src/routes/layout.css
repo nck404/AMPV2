@@ -79,6 +79,7 @@ body {
 
 /* Custom Cursor Base - Only for precise pointers */
 @media (pointer: fine) {
+
     html,
     body,
     *,
@@ -113,12 +114,10 @@ h1 {
 }
 
 input {
-    padding-left: 4rem !important;
-    /* Forced padding to prevent icon overlap */
+    padding-left: 14px;
     background-color: var(--color-surface);
     border: 2px solid var(--color-overlay);
     font-family: inherit;
-    user-select: none;
     font-weight: 400;
     border-radius: 17px;
     outline: none;
@@ -131,6 +130,10 @@ input {
     width: 100%;
     text-rendering: optimizelegibility;
     font-synthesis: none;
+}
+
+.input-icon {
+    padding-left: 4rem !important;
 }
 
 input:focus {

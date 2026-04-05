@@ -214,65 +214,36 @@ def update_password():
     
     return jsonify({"msg": "Password updated successfully"}), 200
 
-# --- ADMIN USER MANAGEMENT ---
-
-@auth_bp.route('/admin/users', methods=['GET'])
+@auth_bp.route('/notifications', methods=['GET'])
 @jwt_required()
-def admin_get_users():
-    admin_id = int(get_jwt_identity())
-    admin = User.query.get(admin_id)
-    if not admin or not admin.is_admin:
-        return jsonify({"msg": "Admin privilege required"}), 403
+def get_user_notifications():
+    user_id = int(get_jwt_identity())
+    from models import Notification
+    from sqlalchemy import or_
     
-    users = User.query.order_by(User.created_at.desc()).all()
-    return jsonify([{
-        "id": u.id,
-        "username": u.username,
-        "email": u.email,
-        "public_id": u.public_id,
-        "is_admin": u.is_admin,
-        "created_at": u.created_at
-    } for u in users]), 200
+    # Get personal notifications OR global notifications (user_id is NULL)
+    notifs = Notification.query.filter(
+        or_(Notification.user_id == user_id, Notification.user_id == None)
+    ).order_by(Notification.created_at.desc()).limit(20).all()
+    
+    output = []
+    for n in notifs:
+        output.append({
+            "id": n.id,
+            "title": n.title,
+            "content": n.content,
+            "type": n.type,
+            "is_read": n.is_read,
+            "created_at": n.created_at.isoformat()
+        })
+    return jsonify({"notifications": output}), 200
 
-@auth_bp.route('/admin/users/<int:user_id>/toggle-admin', methods=['POST'])
+@auth_bp.route('/notifications/read-all', methods=['PUT'])
 @jwt_required()
-def admin_toggle_admin(user_id):
-    admin_id = int(get_jwt_identity())
-    admin = User.query.get(admin_id)
-    if not admin or not admin.is_admin:
-        return jsonify({"msg": "Admin privilege required"}), 403
-    
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({"msg": "User not found"}), 404
-        
-    if user.id == admin.id:
-        return jsonify({"msg": "Cannot demote yourself"}), 400
-        
-    user.is_admin = not user.is_admin
+def mark_all_notifications_read():
+    user_id = int(get_jwt_identity())
+    from models import Notification
+    # Only mark user-specific ones for now
+    Notification.query.filter_by(user_id=user_id, is_read=False).update({"is_read": True})
     db.session.commit()
-    
-    return jsonify({
-        "msg": f"User {user.username} admin status updated", 
-        "is_admin": user.is_admin
-    }), 200
-
-@auth_bp.route('/admin/users/<int:user_id>', methods=['DELETE'])
-@jwt_required()
-def admin_delete_user(user_id):
-    admin_id = int(get_jwt_identity())
-    admin = User.query.get(admin_id)
-    if not admin or not admin.is_admin:
-        return jsonify({"msg": "Admin privilege required"}), 403
-    
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({"msg": "User not found"}), 404
-    
-    if user.id == admin.id:
-        return jsonify({"msg": "Cannot delete yourself"}), 400
-        
-    db.session.delete(user)
-    db.session.commit()
-    
-    return jsonify({"msg": "User deleted"}), 200
+    return jsonify({"msg": "Notifications updated"}), 200

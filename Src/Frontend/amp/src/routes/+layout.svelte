@@ -9,6 +9,7 @@
     import { page } from "$app/state";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
+    import { api } from "$lib/api.js";
 
     let { children } = $props();
 
@@ -41,12 +42,17 @@
                 goto("/login?error=unauthorized");
             }
 
-            // Optional: Deep link validation - if token exists on protected route,
-            // the individual pages already call /me.
-            // If they return 401, api.js will handle redirect.
-
             if ((path === "/login" || path === "/register") && token) {
                 goto("/profile");
+            }
+
+            // Route Lockdown Check
+            if (path !== "/maintenance" && path !== "/admin") {
+                api.get(`/admin/check-route?path=${path}`).then(res => {
+                    if (res.locked) {
+                        goto(`/maintenance?from=${path}`);
+                    }
+                });
             }
         }
     });

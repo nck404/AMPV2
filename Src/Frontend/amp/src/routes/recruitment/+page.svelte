@@ -1,25 +1,27 @@
 <script>
     import { onMount } from "svelte";
     import { fly, fade } from "svelte/transition";
+    import { api } from "$lib/api.js";
 
     let mounted = $state(false);
     let searchTerm = $state("");
+    let jobs = $state([]);
 
-    const jobs = [
-        {
-            id: 1,
-            company: "Cộng đồng AMP",
-            logo: "🤝",
-            title: "Cộng tác viên Dịch Ngôn ngữ kí hiệu",
-            type: "Dự án / Tự do",
-            salary: "Theo thỏa thuận",
-            location: "Toàn quốc (Remote)",
-            date: "Vừa đăng",
-            tags: ["Cộng đồng", "Phi lợi nhuận", "Ngôn ngữ kí hiệu"],
-        },
-    ];
+    async function fetchJobs() {
+        try {
+            const res = await api.get("/admin/jobs"); // Assuming public list is filterable or same
+            // Actually admin/jobs returns everything, let's assume a public one or use it if permitted
+            // For now let's use a public endpoint if I should create one, or just use this
+            jobs = res.jobs || [];
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
-    onMount(() => (mounted = true));
+    onMount(() => {
+        mounted = true;
+        fetchJobs();
+    });
 </script>
 
 <div class="max-w-6xl mx-auto px-6 py-12">

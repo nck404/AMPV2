@@ -110,7 +110,7 @@
                                 bind:value={name}
                                 placeholder="Nguyễn Văn A"
                                 required
-                                class="w-full h-14 bg-surface/50 border-overlay focus:bg-white focus:border-iris focus:ring-4 focus:ring-iris/5 transition-all text-base"
+                                class="w-full h-14 bg-surface/50 border-overlay focus:bg-white focus:border-iris focus:ring-4 focus:ring-iris/5 transition-all text-base input-icon"
                             />
                         </div>
                     </div>
@@ -133,7 +133,7 @@
                                 bind:value={email}
                                 placeholder="your@email.com"
                                 required
-                                class="w-full h-14 bg-surface/50 border-overlay focus:bg-white focus:border-iris focus:ring-4 focus:ring-iris/5 transition-all text-base"
+                                class="w-full h-14 bg-surface/50 border-overlay focus:bg-white focus:border-iris focus:ring-4 focus:ring-iris/5 transition-all text-base input-icon"
                             />
                         </div>
                     </div>
@@ -191,7 +191,7 @@
                                 bind:value={confirmPassword}
                                 placeholder="••••••••"
                                 required
-                                class="w-full h-14 bg-surface/50 border-overlay focus:bg-white focus:border-iris focus:ring-4 focus:ring-iris/5 transition-all text-base"
+                                class="w-full h-14 bg-surface/50 border-overlay focus:bg-white focus:border-iris focus:ring-4 focus:ring-iris/5 transition-all text-base input-icon"
                             />
                         </div>
                     </div>

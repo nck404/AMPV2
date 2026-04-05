@@ -2,7 +2,7 @@ import os
 from datetime import timedelta
 
 from dotenv import load_dotenv
-from extensions import db, jwt, socketio
+from extensions import db, jwt, socketio, migrate
 from flask import Flask
 from flask_cors import CORS
 from models import User
@@ -41,6 +41,7 @@ def create_app():
     db.init_app(app)
     jwt.init_app(app)
     socketio.init_app(app)
+    migrate.init_app(app, db)
 
     # Register blueprints
     app.register_blueprint(auth_bp, url_prefix="/api")
@@ -51,8 +52,7 @@ def create_app():
     app.register_blueprint(docs_bp, url_prefix="/api/docs")
     app.register_blueprint(admin_bp, url_prefix="/api/admin")
 
-    with app.app_context():
-        db.create_all()
+    # Removed db.create_all() in favor of migrations
 
     return app
 

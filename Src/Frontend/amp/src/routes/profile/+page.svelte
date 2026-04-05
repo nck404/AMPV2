@@ -205,7 +205,7 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Username -->
-                            <div class="flex flex-col gap-2">
+                            <div class="flex flex-col gap-1">
                                 <label
                                     for="username"
                                     class="text-sm font-bold text-muted"
@@ -222,7 +222,7 @@
                             </div>
 
                             <!-- Email (Readonly) -->
-                            <div class="flex flex-col gap-2">
+                            <div class="flex flex-col gap-1">
                                 <label
                                     for="email"
                                     class="text-sm font-bold text-muted"
@@ -240,7 +240,7 @@
                             </div>
 
                             <!-- Public ID -->
-                            <div class="flex flex-col gap-2">
+                            <div class="flex flex-col gap-1">
                                 <label
                                     for="public_id"
                                     class="text-sm font-bold text-muted"
@@ -260,7 +260,7 @@
                         </div>
 
                         <!-- Bio -->
-                        <div class="flex flex-col gap-2">
+                        <div class="flex flex-col gap-1">
                             <label
                                 for="bio"
                                 class="text-sm font-bold text-muted"

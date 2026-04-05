@@ -246,7 +246,7 @@
                         <input
                             type="text"
                             placeholder="Tìm kiếm hội thoại..."
-                            class="w-full pl-11 py-3 bg-overlay/30 rounded-2xl border-transparent focus:bg-white focus:border-iris/30 text-sm outline-none transition-all"
+                            class="w-full pl-12 py-3 bg-overlay/30 rounded-2xl border-transparent focus:bg-white focus:border-iris/30 text-sm outline-none transition-all input-icon"
                         />
                     </div>
                 </div>
@@ -524,10 +524,3 @@
     {/if}
 </div>
 
-<style>
-    input {
-        background: transparent !important;
-        padding-left: 0 !important;
-        border: none !important;
-    }
-</style>

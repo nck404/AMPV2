@@ -11,6 +11,8 @@ class User(db.Model):
     bio = db.Column(db.String(255), default="Đam mê công nghệ và mong muốn đóng góp cho cộng đồng.")
     avatar_url = db.Column(db.String(255))
     is_admin = db.Column(db.Boolean, default=False)
+    is_banned = db.Column(db.Boolean, default=False)
+    role = db.Column(db.String(20), default="user") # user, business, admin
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     def set_password(self, password):
@@ -82,3 +84,28 @@ class SystemConfig(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     key = db.Column(db.String(255), unique=True, nullable=False)
     value = db.Column(db.Text, nullable=False)
+
+class Job(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    company = db.Column(db.String(200), nullable=False)
+    location = db.Column(db.String(200))
+    salary = db.Column(db.String(100))
+    type = db.Column(db.String(100)) # Full-time, Remote, etc.
+    description = db.Column(db.Text)
+    status = db.Column(db.String(20), default='pending') # pending, approved
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    author = db.relationship('User', backref='jobs')
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True) # NULL means global notification
+    title = db.Column(db.String(200), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    type = db.Column(db.String(50), default="info") # info, warning, success, admin
+    is_read = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    user = db.relationship('User', backref='notifications')

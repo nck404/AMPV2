@@ -109,7 +109,7 @@
                     bind:value={searchQuery}
                     oninput={onInput}
                     placeholder="Tìm kiếm theo tên hoặc @public_id..."
-                    class="w-full h-16 bg-white border-2 border-overlay rounded-[2rem] pl-16 pr-8 text-lg font-bold outline-none focus:border-iris focus:shadow-xl focus:shadow-iris/5 transition-all"
+                    class="w-full h-16 bg-white border-2 border-overlay rounded-[2rem] pl-12 pr-8 text-lg font-bold outline-none focus:border-iris focus:shadow-xl focus:shadow-iris/5 transition-all"
                 />
             </div>
 
@@ -289,6 +289,6 @@
 <style>
     input {
         background: white !important;
-        padding-left: 4rem !important;
+        padding-left: 3rem !important;
     }
 </style>
