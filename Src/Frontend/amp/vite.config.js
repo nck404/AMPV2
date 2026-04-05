@@ -6,5 +6,15 @@ export default defineConfig({
   plugins: [tailwindcss(), sveltekit()],
   server: {
     allowedHosts: ["amp.tfai.lol"],
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:6333",
+        changeOrigin: true,
+      },
+      "/socket.io": {
+        target: "http://127.0.0.1:6333",
+        ws: true,
+      },
+    },
   },
 });
