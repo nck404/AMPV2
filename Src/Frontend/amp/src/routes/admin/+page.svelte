@@ -123,16 +123,16 @@
 
 <div class="container mx-auto p-4 max-w-6xl">
     <div class="mb-6 flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+        <h1 class="text-2xl font-bold text-rose-text">Admin Dashboard</h1>
     </div>
 
     <!-- Navigation Tabs -->
-    <div class="mb-6 flex space-x-2 border-b pb-2">
+    <div class="mb-6 flex space-x-2 border-b border-white/10 pb-2">
         <button
             class="px-4 py-2 text-sm font-medium rounded-t-md transition-colors {activeTab ===
             'users'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}"
+                ? 'bg-iris text-white'
+                : 'glass text-rose-text hover:bg-white/10'}"
             onclick={() => (activeTab = "users")}
         >
             Quản lý Người dùng
@@ -140,8 +140,8 @@
         <button
             class="px-4 py-2 text-sm font-medium rounded-t-md transition-colors {activeTab ===
             'posts'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}"
+                ? 'bg-iris text-white'
+                : 'glass text-rose-text hover:bg-white/10'}"
             onclick={() => (activeTab = "posts")}
         >
             Quản lý Bài đăng
@@ -149,8 +149,8 @@
         <button
             class="px-4 py-2 text-sm font-medium rounded-t-md transition-colors {activeTab ===
             'jobs'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}"
+                ? 'bg-iris text-white'
+                : 'glass text-rose-text hover:bg-white/10'}"
             onclick={() => (activeTab = "jobs")}
         >
             Quản lý Tuyển dụng
@@ -159,26 +159,26 @@
 
     <!-- Tab Content -->
     <div
-        class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+        class="glass rounded-lg shadow-sm border border-white/10 overflow-hidden"
     >
         {#if activeTab === "users"}
             <div
-                class="p-4 border-b flex justify-between items-center bg-gray-50"
+                class="p-4 border-b border-white/10 flex justify-between items-center glass"
             >
-                <h2 class="text-lg font-semibold text-gray-700">
+                <h2 class="text-lg font-semibold text-rose-text">
                     Danh sách người dùng
                 </h2>
                 <button
                     onclick={() => (showAddUserModal = true)}
-                    class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition-colors"
+                    class="button px-4 py-2 bg-iris text-white text-sm font-medium rounded hover:opacity-80 transition-colors"
                 >
                     + Thêm tài khoản
                 </button>
             </div>
             <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-600">
+                <table class="w-full text-sm text-left text-rose-text/80">
                     <thead
-                        class="text-xs text-gray-700 uppercase bg-gray-50 border-b"
+                        class="text-xs text-rose-text uppercase glass border-b border-white/10"
                     >
                         <tr>
                             <th class="px-4 py-2">ID</th>
@@ -191,7 +191,9 @@
                     </thead>
                     <tbody>
                         {#each users as user}
-                            <tr class="border-b hover:bg-gray-50">
+                            <tr
+                                class="border-b border-white/10 hover:bg-white/5"
+                            >
                                 <td class="px-4 py-2 font-medium">{user.id}</td>
                                 <td class="px-4 py-2">{user.name}</td>
                                 <td class="px-4 py-2">{user.email}</td>
@@ -199,10 +201,10 @@
                                     <span
                                         class="px-2 py-0.5 rounded text-xs font-medium uppercase
                                         {user.role === 'admin'
-                                            ? 'bg-red-100 text-red-800'
+                                            ? 'bg-red-500/20 text-red-400'
                                             : user.role === 'business'
-                                              ? 'bg-yellow-100 text-yellow-800'
-                                              : 'bg-gray-100 text-gray-800'}"
+                                              ? 'bg-yellow-500/20 text-yellow-400'
+                                              : 'bg-white/10 text-rose-text'}"
                                     >
                                         {user.role}
                                     </span>
@@ -211,8 +213,8 @@
                                     <span
                                         class="px-2 py-0.5 rounded text-xs font-medium {user.status ===
                                         'active'
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-red-100 text-red-800'}"
+                                            ? 'bg-green-500/20 text-green-400'
+                                            : 'bg-red-500/20 text-red-400'}"
                                     >
                                         {user.status}
                                     </span>
@@ -222,16 +224,16 @@
                                         <button
                                             onclick={() =>
                                                 grantBusiness(user.id)}
-                                            class="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100"
+                                            class="button text-xs px-2 py-1 bg-iris/20 text-iris rounded hover:bg-iris/30"
                                             >Cấp Business</button
                                         >
                                     {/if}
                                     <button
                                         onclick={() => toggleBan(user.id)}
-                                        class="text-xs px-2 py-1 {user.status ===
+                                        class="button text-xs px-2 py-1 {user.status ===
                                         'active'
-                                            ? 'bg-orange-50 text-orange-600 hover:bg-orange-100'
-                                            : 'bg-green-50 text-green-600 hover:bg-green-100'} rounded"
+                                            ? 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30'
+                                            : 'bg-green-500/20 text-green-400 hover:bg-green-500/30'} rounded"
                                     >
                                         {user.status === "active"
                                             ? "Ban"
@@ -239,7 +241,7 @@
                                     </button>
                                     <button
                                         onclick={() => deleteUser(user.id)}
-                                        class="text-xs px-2 py-1 bg-red-50 text-red-600 rounded hover:bg-red-100"
+                                        class="button text-xs px-2 py-1 bg-red-500/20 text-red-400 rounded hover:bg-red-500/30"
                                         >Xóa</button
                                     >
                                 </td>
@@ -249,9 +251,10 @@
                             <tr>
                                 <td
                                     colspan="6"
-                                    class="px-4 py-4 text-center text-gray-500"
-                                    >Không có dữ liệu</td
+                                    class="px-4 py-4 text-center text-rose-text/50"
                                 >
+                                    Không có dữ liệu
+                                </td>
                             </tr>
                         {/if}
                     </tbody>
@@ -261,9 +264,9 @@
 
         {#if activeTab === "posts"}
             <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-600">
+                <table class="w-full text-sm text-left text-rose-text/80">
                     <thead
-                        class="text-xs text-gray-700 uppercase bg-gray-50 border-b"
+                        class="text-xs text-rose-text uppercase glass border-b border-white/10"
                     >
                         <tr>
                             <th class="px-4 py-2">ID</th>
@@ -275,7 +278,9 @@
                     </thead>
                     <tbody>
                         {#each posts as post}
-                            <tr class="border-b hover:bg-gray-50">
+                            <tr
+                                class="border-b border-white/10 hover:bg-white/5"
+                            >
                                 <td class="px-4 py-2 font-medium">{post.id}</td>
                                 <td class="px-4 py-2">{post.title}</td>
                                 <td class="px-4 py-2">{post.author}</td>
@@ -283,7 +288,7 @@
                                 <td class="px-4 py-2 text-right">
                                     <button
                                         onclick={() => deletePost(post.id)}
-                                        class="text-xs px-2 py-1 bg-red-50 text-red-600 rounded hover:bg-red-100"
+                                        class="button text-xs px-2 py-1 bg-red-500/20 text-red-400 rounded hover:bg-red-500/30"
                                         >Xóa bài</button
                                     >
                                 </td>
@@ -293,9 +298,10 @@
                             <tr>
                                 <td
                                     colspan="5"
-                                    class="px-4 py-4 text-center text-gray-500"
-                                    >Không có dữ liệu</td
+                                    class="px-4 py-4 text-center text-rose-text/50"
                                 >
+                                    Không có dữ liệu
+                                </td>
                             </tr>
                         {/if}
                     </tbody>
@@ -305,9 +311,9 @@
 
         {#if activeTab === "jobs"}
             <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-600">
+                <table class="w-full text-sm text-left text-rose-text/80">
                     <thead
-                        class="text-xs text-gray-700 uppercase bg-gray-50 border-b"
+                        class="text-xs text-rose-text uppercase glass border-b border-white/10"
                     >
                         <tr>
                             <th class="px-4 py-2">ID</th>
@@ -319,7 +325,9 @@
                     </thead>
                     <tbody>
                         {#each jobs as job}
-                            <tr class="border-b hover:bg-gray-50">
+                            <tr
+                                class="border-b border-white/10 hover:bg-white/5"
+                            >
                                 <td class="px-4 py-2 font-medium">{job.id}</td>
                                 <td class="px-4 py-2">{job.title}</td>
                                 <td class="px-4 py-2">{job.company}</td>
@@ -327,8 +335,8 @@
                                     <span
                                         class="px-2 py-0.5 rounded text-xs {job.status ===
                                         'approved'
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-yellow-100 text-yellow-800'}"
+                                            ? 'bg-green-500/20 text-green-400'
+                                            : 'bg-yellow-500/20 text-yellow-400'}"
                                     >
                                         {job.status === "approved"
                                             ? "Đã duyệt"
@@ -339,13 +347,13 @@
                                     {#if job.status === "pending"}
                                         <button
                                             onclick={() => approveJob(job.id)}
-                                            class="text-xs px-2 py-1 bg-green-50 text-green-600 rounded hover:bg-green-100"
+                                            class="button text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded hover:bg-green-500/30"
                                             >Duyệt</button
                                         >
                                     {/if}
                                     <button
                                         onclick={() => deleteJob(job.id)}
-                                        class="text-xs px-2 py-1 bg-red-50 text-red-600 rounded hover:bg-red-100"
+                                        class="button text-xs px-2 py-1 bg-red-500/20 text-red-400 rounded hover:bg-red-500/30"
                                         >Xóa tin</button
                                     >
                                 </td>
@@ -355,9 +363,10 @@
                             <tr>
                                 <td
                                     colspan="5"
-                                    class="px-4 py-4 text-center text-gray-500"
-                                    >Không có dữ liệu</td
+                                    class="px-4 py-4 text-center text-rose-text/50"
                                 >
+                                    Không có dữ liệu
+                                </td>
                             </tr>
                         {/if}
                     </tbody>
@@ -370,17 +379,19 @@
 <!-- Modal Thêm Tài Khoản -->
 {#if showAddUserModal}
     <div
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
     >
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">
+        <div
+            class="glass rounded-lg shadow-lg w-full max-w-md p-6 relative border border-white/10"
+        >
+            <h3 class="text-xl font-bold text-rose-text mb-4">
                 Thêm tài khoản mới
             </h3>
 
             <form onsubmit={handleAddUser}>
                 <div class="mb-4">
                     <label
-                        class="block text-sm font-medium text-gray-700 mb-1"
+                        class="block text-sm font-medium text-rose-text/80 mb-1"
                         for="username">Tên (Username)</label
                     >
                     <input
@@ -388,14 +399,14 @@
                         type="text"
                         required
                         bind:value={newUser.name}
-                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="w-full px-3 py-2 bg-white/5 border border-white/10 text-rose-text rounded focus:outline-none focus:ring-2 focus:ring-iris"
                         placeholder="Nhập tên người dùng"
                     />
                 </div>
 
                 <div class="mb-4">
                     <label
-                        class="block text-sm font-medium text-gray-700 mb-1"
+                        class="block text-sm font-medium text-rose-text/80 mb-1"
                         for="email">Email</label
                     >
                     <input
@@ -403,14 +414,14 @@
                         type="email"
                         required
                         bind:value={newUser.email}
-                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="w-full px-3 py-2 bg-white/5 border border-white/10 text-rose-text rounded focus:outline-none focus:ring-2 focus:ring-iris"
                         placeholder="Nhập địa chỉ email"
                     />
                 </div>
 
                 <div class="mb-4">
                     <label
-                        class="block text-sm font-medium text-gray-700 mb-1"
+                        class="block text-sm font-medium text-rose-text/80 mb-1"
                         for="password">Mật khẩu</label
                     >
                     <input
@@ -418,25 +429,30 @@
                         type="password"
                         required
                         bind:value={newUser.password}
-                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="w-full px-3 py-2 bg-white/5 border border-white/10 text-rose-text rounded focus:outline-none focus:ring-2 focus:ring-iris"
                         placeholder="Nhập mật khẩu"
                     />
                 </div>
 
                 <div class="mb-6">
                     <label
-                        class="block text-sm font-medium text-gray-700 mb-1"
+                        class="block text-sm font-medium text-rose-text/80 mb-1"
                         for="role">Vai trò (Role)</label
                     >
                     <select
                         id="role"
                         bind:value={newUser.role}
-                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="w-full px-3 py-2 bg-white/5 border border-white/10 text-rose-text rounded focus:outline-none focus:ring-2 focus:ring-iris"
                     >
-                        <option value="user">User (Người dùng)</option>
-                        <option value="business">Business (Doanh nghiệp)</option
+                        <option value="user" class="text-gray-900"
+                            >User (Người dùng)</option
                         >
-                        <option value="admin">Admin (Quản trị viên)</option>
+                        <option value="business" class="text-gray-900"
+                            >Business (Doanh nghiệp)</option
+                        >
+                        <option value="admin" class="text-gray-900"
+                            >Admin (Quản trị viên)</option
+                        >
                     </select>
                 </div>
 
@@ -444,13 +460,13 @@
                     <button
                         type="button"
                         onclick={() => (showAddUserModal = false)}
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
+                        class="button px-4 py-2 text-sm font-medium text-rose-text glass rounded hover:bg-white/10"
                     >
                         Hủy
                     </button>
                     <button
                         type="submit"
-                        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700"
+                        class="button px-4 py-2 text-sm font-medium text-white bg-iris rounded hover:bg-iris/80"
                     >
                         Thêm tài khoản
                     </button>
