@@ -25,6 +25,17 @@
     let isToolsDropdownOpen = $state(false);
     let isNotificationsOpen = $state(false);
     let notifications = $state([]);
+    let unreadChatCount = $state(0);
+
+    async function fetchUnreadChatCount() {
+        if (!currentUser) return;
+        try {
+            const data = await api.get("/chat/unread-count");
+            unreadChatCount = data.unread_count || 0;
+        } catch (e) {
+            console.error("Failed to fetch unread chat count", e);
+        }
+    }
 
     async function fetchNotifications() {
         if (!currentUser) return;
@@ -48,6 +59,7 @@
             if (userData) {
                 currentUser = JSON.parse(userData);
                 fetchNotifications();
+                fetchUnreadChatCount();
             } else {
                 currentUser = null;
             }
@@ -56,6 +68,7 @@
         updateUserData();
 
         window.addEventListener("user-updated", updateUserData);
+        window.addEventListener("chat-updated", fetchUnreadChatCount);
 
         const handleScroll = () => {
             scrolled = window.scrollY > 20;
@@ -81,6 +94,7 @@
         return () => {
             window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("user-updated", updateUserData);
+            window.removeEventListener("chat-updated", fetchUnreadChatCount);
             window.removeEventListener("mousedown", handleClickOutside);
         };
     });
@@ -113,6 +127,11 @@
                     <span class="text-sm font-bold whitespace-nowrap label">{item.name}</span>
                     {#if isActive}
                         <div class="absolute inset-0 bg-iris/10 rounded-full -z-10"></div>
+                    {/if}
+                    {#if item.path === '/chat' && unreadChatCount > 0}
+                        <span class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-love text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white shadow-sm animate-pulse">
+                            {unreadChatCount > 99 ? '99+' : unreadChatCount}
+                        </span>
                     {/if}
                 </a>
             {/each}
@@ -262,12 +281,17 @@
             {@const isActive = page.url.pathname === item.path}
             <a
                 href={item.path}
-                class="flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all {isActive ? 'text-iris scale-110' : 'text-muted'}"
+                class="flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all relative {isActive ? 'text-iris scale-110' : 'text-muted'}"
             >
                 <i class="bx {item.icon} text-2xl"></i>
                 <span class="text-[9px] font-black uppercase tracking-tighter transition-all {isActive ? 'opacity-100' : 'opacity-0 h-0 w-0 overflow-hidden'}">
                     {item.name}
                 </span>
+                {#if item.path === '/chat' && unreadChatCount > 0}
+                    <span class="absolute top-1 right-2 min-w-[16px] h-[16px] px-1 bg-love text-white text-[8px] font-black rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                        {unreadChatCount > 99 ? '99+' : unreadChatCount}
+                    </span>
+                {/if}
             </a>
         {/each}
 

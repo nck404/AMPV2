@@ -80,6 +80,19 @@
                                 }),
                             },
                         ];
+                        
+                        // If we are currently in this chat, mark as read
+                        if (selectedChatId === data.sender_id) {
+                            api.post("/chat/mark-read", { sender_id: data.sender_id });
+                        }
+                    }
+                } else if (data.receiver_id === currentUser.id) {
+                    // Message for us but not in current chat - update sidebar badge
+                    const convoIndex = convos.findIndex(c => c.id === data.sender_id);
+                    if (convoIndex !== -1) {
+                        convos[convoIndex].unread_count = (convos[convoIndex].unread_count || 0) + 1;
+                        // Trigger Navbar update
+                        window.dispatchEvent(new CustomEvent("chat-updated"));
                     }
                 }
             });
@@ -98,6 +111,7 @@
                     icon: "bx-user",
                     isGlobal: false,
                     lastMessage: "Nhấn để bắt đầu trò chuyện",
+                    unread_count: f.unread_count || 0,
                     time: "",
                 }));
                 convos = [
@@ -121,6 +135,22 @@
     async function selectChat(id) {
         selectedChatId = id;
         showMobileSidebar = false;
+        
+        // Mark as read if private chat
+        if (id !== "global") {
+            try {
+                await api.post("/chat/mark-read", { sender_id: id });
+                const convoIndex = convos.findIndex(c => c.id === id);
+                if (convoIndex !== -1) {
+                    convos[convoIndex].unread_count = 0;
+                }
+                // Notify Navbar
+                window.dispatchEvent(new CustomEvent("chat-updated"));
+            } catch (err) {
+                console.error("Failed to mark messages as read", err);
+            }
+        }
+        
         await loadChatHistory(id);
     }
 
@@ -273,6 +303,11 @@
                                     />
                                 {:else}
                                     <i class="bx {chat.icon}"></i>
+                                {/if}
+                                {#if chat.unread_count > 0}
+                                    <span class="absolute -top-1 -right-1 w-5 h-5 bg-love text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white animate-bounce-short">
+                                        {chat.unread_count > 9 ? '9+' : chat.unread_count}
+                                    </span>
                                 {/if}
                             </div>
                             <div class="flex-1 text-left min-w-0">

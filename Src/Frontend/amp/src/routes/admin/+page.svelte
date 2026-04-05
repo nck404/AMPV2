@@ -305,7 +305,7 @@
                         type="text" 
                         placeholder="Tìm kiếm theo tên hoặc email..." 
                         bind:value={userSearchTerm}
-                        class="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-rose-text focus:outline-none focus:ring-2 focus:ring-iris/50 transition-all"
+                        class="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-rose-text focus:outline-none focus:ring-2 focus:ring-iris/50 transition-all input-icon"
                     />
                 </div>
                 <button

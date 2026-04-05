@@ -26,6 +26,7 @@ class Message(db.Model):
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     content = db.Column(db.Text, nullable=False)
+    is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     sender = db.relationship('User', foreign_keys=[sender_id])

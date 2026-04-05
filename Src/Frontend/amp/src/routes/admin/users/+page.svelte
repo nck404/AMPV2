@@ -94,7 +94,7 @@
                     type="text"
                     bind:value={searchTerm}
                     placeholder="Tìm kiếm username, email..."
-                    class="w-full pl-12 pr-4 py-3.5 bg-surface border border-overlay rounded-2xl outline-none focus:border-iris transition-all shadow-sm text-sm"
+                    class="w-full pl-12 pr-4 py-3.5 bg-surface border border-overlay rounded-2xl outline-none focus:border-iris transition-all shadow-sm text-sm input-icon"
                 />
             </div>
         </header>

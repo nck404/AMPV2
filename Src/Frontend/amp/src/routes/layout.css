@@ -31,7 +31,7 @@
     --color-cat-lavender: #7287fd;
 
     --font-sans:
-        "Outfit", "Poppins", "Quicksand", "Nunito", "Lexend", ui-sans-serif,
+        "Quicksand", "Outfit", "Poppins", "Nunito", "Lexend", ui-sans-serif,
         system-ui;
 }
 
@@ -40,7 +40,7 @@
     --fg-main: var(--color-rose-text);
     --accent: var(--color-iris);
     --font-main:
-        "Outfit", "Poppins", "Quicksand", "Nunito", "Lexend", ui-sans-serif,
+        "Quicksand", "Outfit", "Poppins", "Nunito", "Lexend", ui-sans-serif,
         system-ui;
     background-color: var(--bg-main);
     color: var(--fg-main);
@@ -212,3 +212,12 @@ input[type="checkbox"] {
 
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+@keyframes bounce-short {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+.animate-bounce-short {
+    animation: bounce-short 1s ease-in-out infinite;
+}

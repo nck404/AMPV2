@@ -37,3 +37,22 @@ def get_chat_history():
         })
     
     return jsonify(result), 200
+
+@chat_bp.route('/unread-count', methods=['GET'])
+@jwt_required()
+def get_unread_count():
+    current_uid = int(get_jwt_identity())
+    count = Message.query.filter_by(receiver_id=current_uid, is_read=False).count()
+    return jsonify({"unread_count": count}), 200
+
+@chat_bp.route('/mark-read', methods=['POST'])
+@jwt_required()
+def mark_messages_read():
+    current_uid = int(get_jwt_identity())
+    sender_id = request.json.get('sender_id')
+    
+    if sender_id:
+        Message.query.filter_by(receiver_id=current_uid, sender_id=sender_id, is_read=False).update({Message.is_read: True})
+        db.session.commit()
+        return jsonify({"message": "Messages marked as read"}), 200
+    return jsonify({"error": "sender_id is required"}), 400

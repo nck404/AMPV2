@@ -100,14 +100,21 @@ def get_friends():
         Friendship.status == 'accepted'
     ).all()
     
-    result = []
+    from models import Message
     for f in friendships:
         friend = f.friend if f.user_id == current_user_id else f.user
+        unread_count = Message.query.filter_by(
+            sender_id=friend.id, 
+            receiver_id=current_user_id, 
+            is_read=False
+        ).count()
+        
         result.append({
             "id": friend.id,
             "username": friend.username,
             "public_id": friend.public_id,
-            "avatar_url": friend.avatar_url
+            "avatar_url": friend.avatar_url,
+            "unread_count": unread_count
         })
         
     return jsonify(result), 200
