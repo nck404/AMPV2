@@ -65,7 +65,7 @@ echo -e "  -> ${GREEN}Backend running in background (PID: $BACKEND_PID)${NC}"
 # ---------------------------------------------------------
 # [2/2] Start Frontend (SvelteKit/Vite)
 # ---------------------------------------------------------
-echo -e "\n${CYAN}[2/2]${NC} Launching Frontend on 0.0.0.0:5173..."
+echo -e "\n${CYAN}[2/2]${NC} Building and Launching Frontend on 0.0.0.0:5173..."
 
 if [ -d "$PROJECT_ROOT/src/frontend/amp" ]; then
     FRONTEND_DIR="$PROJECT_ROOT/src/frontend/amp"
@@ -84,9 +84,13 @@ sleep 1
 
 # Start Frontend in background using nohup and bind to 0.0.0.0 via --host
 if command -v pnpm &>/dev/null; then
-    nohup pnpm run dev -- --host 0.0.0.0 > frontend_host.log 2>&1 &
+    echo -e "  -> ${YELLOW}Building frontend for production...${NC}"
+    pnpm run build
+    nohup pnpm run preview -- --host 0.0.0.0 --port 5173 > frontend_host.log 2>&1 &
 elif command -v npm &>/dev/null; then
-    nohup npm run dev -- --host 0.0.0.0 > frontend_host.log 2>&1 &
+    echo -e "  -> ${YELLOW}Building frontend for production...${NC}"
+    npm run build
+    nohup npm run preview -- --host 0.0.0.0 --port 5173 > frontend_host.log 2>&1 &
 else
     echo -e "${RED}Error: Package manager not found.${NC}"
     exit 1

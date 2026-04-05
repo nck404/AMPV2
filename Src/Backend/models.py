@@ -9,7 +9,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
     public_id = db.Column(db.String(20), unique=True, nullable=False)
     bio = db.Column(db.String(255), default="Đam mê công nghệ và mong muốn đóng góp cho cộng đồng.")
-    avatar_url = db.Column(db.String(255)) 
+    avatar_url = db.Column(db.String(255))
     is_admin = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
@@ -25,7 +25,7 @@ class Message(db.Model):
     receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    
+
     sender = db.relationship('User', foreign_keys=[sender_id])
 
 class Post(db.Model):
@@ -36,7 +36,7 @@ class Post(db.Model):
     tags = db.Column(db.String(200))
     upvotes = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    
+
     author = db.relationship('User', backref='posts')
 
 class Comment(db.Model):
@@ -46,7 +46,7 @@ class Comment(db.Model):
     parent_id = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable=True)
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    
+
     author = db.relationship('User', backref='comments')
     replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[id]), lazy='dynamic')
 
@@ -56,7 +56,7 @@ class Reaction(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=True)
     comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable=True)
     type = db.Column(db.String(20), nullable=False) # like, love, haha, wow, sad, angry
-    
+
     user = db.relationship('User', backref='reactions')
 
 class Friendship(db.Model):
@@ -77,3 +77,8 @@ class Documentation(db.Model):
     content = db.Column(db.Text, nullable=False) # Markdown
     order = db.Column(db.Integer, default=0)
     last_updated = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+
+class SystemConfig(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(255), unique=True, nullable=False)
+    value = db.Column(db.Text, nullable=False)

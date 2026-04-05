@@ -6,6 +6,7 @@ from extensions import db, jwt, socketio
 from flask import Flask
 from flask_cors import CORS
 from models import User
+from routes.admin import admin_bp
 from routes.auth import auth_bp
 from routes.chat import chat_bp
 from routes.docs import docs_bp
@@ -48,6 +49,7 @@ def create_app():
     app.register_blueprint(social_bp, url_prefix="/api/social")
     app.register_blueprint(tts_bp, url_prefix="/api/tts")
     app.register_blueprint(docs_bp, url_prefix="/api/docs")
+    app.register_blueprint(admin_bp, url_prefix="/api/admin")
 
     with app.app_context():
         db.create_all()

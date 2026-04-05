@@ -48,7 +48,7 @@
         }
 
         if (typeof io !== "undefined") {
-            socket = io("http://localhost:5000");
+            socket = io();
 
             socket.on("connect", () => {
                 console.log("Connected to Chat Server");

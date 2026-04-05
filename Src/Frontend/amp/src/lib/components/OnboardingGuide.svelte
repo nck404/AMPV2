@@ -6,6 +6,7 @@
     let currentStep = $state(0);
     let targetRect = $state({ top: 0, left: 0, width: 0, height: 0 });
     let tooltipPos = $state({ top: 0, left: 0, transform: "translate(0, 0)" });
+    let isAnimating = $state(false);
 
     // Định nghĩa các bước hướng dẫn
     const steps = [
@@ -85,6 +86,7 @@
     function updateHighlight() {
         if (!isVisible || currentStep >= steps.length) return;
 
+        isAnimating = true;
         const step = steps[currentStep];
 
         if (step.action === "open-toolbox") {
@@ -151,8 +153,13 @@
                         if (tooltipPos.left > window.innerWidth - 160) {
                             tooltipPos.left = window.innerWidth - 160;
                         }
+
+                        setTimeout(() => {
+                            isAnimating = false;
+                        }, 500);
                     }, 300);
                 } else {
+                    isAnimating = false;
                     // Nếu không tìm thấy phần tử, tự động bỏ qua bước này
                     console.warn(
                         `Onboarding: Element not found for selector ${step.selector}`,
@@ -165,6 +172,7 @@
     }
 
     function nextStep() {
+        if (isAnimating) return;
         if (currentStep < steps.length - 1) {
             currentStep++;
             updateHighlight();
@@ -174,6 +182,7 @@
     }
 
     function prevStep() {
+        if (isAnimating) return;
         if (currentStep > 0) {
             currentStep--;
             updateHighlight();
@@ -235,14 +244,16 @@
                     {#if currentStep > 0}
                         <button
                             onclick={prevStep}
-                            class="px-4 py-2 rounded-xl text-sm font-bold text-rose-text bg-surface hover:bg-overlay transition-colors"
+                            disabled={isAnimating}
+                            class="px-4 py-2 rounded-xl text-sm font-bold text-rose-text bg-surface hover:bg-overlay transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             Trở lại
                         </button>
                     {/if}
                     <button
                         onclick={nextStep}
-                        class="px-5 py-2 rounded-xl text-sm font-bold text-white bg-iris hover:scale-105 active:scale-95 transition-all shadow-lg shadow-iris/30"
+                        disabled={isAnimating}
+                        class="px-5 py-2 rounded-xl text-sm font-bold text-white bg-iris hover:scale-105 active:scale-95 transition-all shadow-lg shadow-iris/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100"
                     >
                         {currentStep === steps.length - 1
                             ? "Hoàn tất"
