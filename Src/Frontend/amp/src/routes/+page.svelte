@@ -115,7 +115,7 @@
                     </div>
                     <div>
                         <div class="text-3xl font-black text-rose-text">0.8s</div>
-                        <div class="text-xs font-bold text-muted uppercase tracking-widest">Phản hồi số tiền</div>
+                        <div class="text-xs font-bold text-muted uppercase tracking-widest">Tốc độ phản hồi</div>
                     </div>
                 </div>
             </div>
