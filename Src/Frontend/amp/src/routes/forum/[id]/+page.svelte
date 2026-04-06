@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { fly, fade } from "svelte/transition";
-    import { api } from "$lib/api";
+    import { api, STATIC_BASE } from "$lib/api";
     import { page } from "$app/state";
     import { goto } from "$app/navigation";
     import CommentSection from "$lib/components/CommentSection.svelte";
@@ -115,7 +115,7 @@
                                         "http",
                                     )
                                         ? post.author.avatar_url
-                                        : `http://localhost:5000${post.author.avatar_url}`}
+                                        : `${STATIC_BASE}${post.author.avatar_url}`}
                                     alt="Avatar"
                                     class="w-full h-full object-cover"
                                 />

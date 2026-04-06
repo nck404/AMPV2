@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { fly, fade } from "svelte/transition";
-    import { api } from "$lib/api";
+    import { api, STATIC_BASE } from "$lib/api";
 
     let { post } = $props();
     let mounted = $state(false);
@@ -233,7 +233,7 @@
                                         "http",
                                     )
                                         ? comment.author.avatar_url
-                                        : `http://localhost:5000${comment.author.avatar_url}`}
+                                        : `${STATIC_BASE}${comment.author.avatar_url}`}
                                     alt="Avatar"
                                     class="w-full h-full object-cover"
                                 />
@@ -374,7 +374,7 @@
                                                         )
                                                             ? reply.author
                                                                   .avatar_url
-                                                            : `http://localhost:5000${reply.author.avatar_url}`}
+                                                            : `${STATIC_BASE}${reply.author.avatar_url}`}
                                                         alt="Avatar"
                                                         class="w-full h-full object-cover"
                                                     />

@@ -1,6 +1,13 @@
 import { PUBLIC_API_DOMAIN } from '$env/static/public';
 
 /**
+ * Static base for uploads (avatars, images, etc.)
+ */
+export const STATIC_BASE = PUBLIC_API_DOMAIN.startsWith('http') 
+    ? (new URL(PUBLIC_API_DOMAIN)).origin 
+    : '';
+
+/**
  * Gets the auth token from localStorage
  */
 const getToken = () => {

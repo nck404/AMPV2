@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { fly, fade } from "svelte/transition";
-    import { api } from "$lib/api";
+    import { api, STATIC_BASE } from "$lib/api";
     import { goto } from "$app/navigation";
 
     let mounted = $state(false);
@@ -277,8 +277,8 @@
                         <!-- Social Links -->
                         <div class="flex flex-col gap-3">
                             <div class="flex items-center justify-between">
-                                <label class="text-sm font-bold text-muted"
-                                    >Liên kết mạng xã hội</label
+                                <span class="text-sm font-bold text-muted"
+                                    >Liên kết mạng xã hội</span
                                 >
                                 <button
                                     type="button"
@@ -391,7 +391,7 @@
                                     <img
                                         src={user.avatar_url.startsWith("http")
                                             ? user.avatar_url
-                                            : `http://localhost:5000${user.avatar_url}`}
+                                            : `${STATIC_BASE}${user.avatar_url}`}
                                         alt="Avatar"
                                         class="w-full h-full object-cover"
                                     />

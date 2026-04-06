@@ -3,7 +3,7 @@
     import { page } from "$app/state";
     import { fly } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
-    import { api } from "$lib/api.js";
+    import { api, STATIC_BASE } from "$lib/api.js";
 
     const navItems = [
         { name: "Home", path: "/", icon: "bx-compass" },
@@ -249,7 +249,7 @@
                             <img
                                 src={currentUser.avatar_url.startsWith("http")
                                     ? currentUser.avatar_url
-                                    : `http://localhost:5000${currentUser.avatar_url}`}
+                                    : `${STATIC_BASE}${currentUser.avatar_url}`}
                                 alt=""
                                 class="w-full h-full object-cover"
                             />
@@ -393,7 +393,7 @@
                     <img
                         src={currentUser.avatar_url.startsWith("http")
                             ? currentUser.avatar_url
-                            : `http://localhost:5000${currentUser.avatar_url}`}
+                            : `${STATIC_BASE}${currentUser.avatar_url}`}
                         alt=""
                         class="w-full h-full object-cover"
                     />

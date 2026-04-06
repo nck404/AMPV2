@@ -1,7 +1,7 @@
 <script>
     import { onMount, onDestroy } from "svelte";
     import { fly, fade } from "svelte/transition";
-    import { api } from "$lib/api";
+    import { api, STATIC_BASE } from "$lib/api";
     import { page } from "$app/state";
     import { goto } from "$app/navigation";
 
@@ -297,7 +297,7 @@
                                     <img
                                         src={chat.avatar_url.startsWith("http")
                                             ? chat.avatar_url
-                                            : `http://localhost:5000${chat.avatar_url}`}
+                                            : `${STATIC_BASE}${chat.avatar_url}`}
                                         alt=""
                                         class="w-full h-full object-cover"
                                     />
@@ -341,7 +341,7 @@
                                         "http",
                                     )
                                         ? currentUser.avatar_url
-                                        : `http://localhost:5000${currentUser.avatar_url}`}
+                                        : `${STATIC_BASE}${currentUser.avatar_url}`}
                                     alt="Avatar"
                                     class="w-full h-full object-cover"
                                 />
@@ -388,7 +388,7 @@
                                             "http",
                                         )
                                             ? currentChat.avatar_url
-                                            : `http://localhost:5000${currentChat.avatar_url}`}
+                                            : `${STATIC_BASE}${currentChat.avatar_url}`}
                                         alt=""
                                         class="w-full h-full object-cover"
                                     />
@@ -456,7 +456,7 @@
                                                     "http",
                                                 )
                                                     ? currentChat.avatar_url
-                                                    : `http://localhost:5000${currentChat.avatar_url}`}
+                                                    : `${STATIC_BASE}${currentChat.avatar_url}`}
                                                 alt=""
                                                 class="w-full h-full object-cover"
                                             />

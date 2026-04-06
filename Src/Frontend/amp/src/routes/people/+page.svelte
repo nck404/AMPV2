@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { fly, fade } from "svelte/transition";
-    import { api } from "$lib/api";
+    import { api, STATIC_BASE } from "$lib/api";
     import { goto } from "$app/navigation";
 
     let mounted = $state(false);
@@ -140,7 +140,7 @@
                                                     "http",
                                                 )
                                                     ? req.avatar_url
-                                                    : `http://localhost:5000${req.avatar_url}`}
+                                                    : `${STATIC_BASE}${req.avatar_url}`}
                                                 alt="Avatar"
                                                 class="w-full h-full object-cover"
                                             />
@@ -216,7 +216,7 @@
                                                         "http",
                                                     )
                                                         ? user.avatar_url
-                                                        : `http://localhost:5000${user.avatar_url}`}
+                                                        : `${STATIC_BASE}${user.avatar_url}`}
                                                     alt="Avatar"
                                                     class="w-full h-full object-cover"
                                                 />
