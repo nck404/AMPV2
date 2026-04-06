@@ -100,6 +100,7 @@ def get_friends():
         Friendship.status == 'accepted'
     ).all()
     
+    result = []
     from models import Message
     for f in friendships:
         friend = f.friend if f.user_id == current_user_id else f.user

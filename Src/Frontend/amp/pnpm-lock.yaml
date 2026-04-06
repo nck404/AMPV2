@@ -17,6 +17,9 @@ importers:
       '@mediapipe/hands':
         specifier: ^0.4.1675469240
         version: 0.4.1675469240
+      cropperjs:
+        specifier: ^1.6.2
+        version: 1.6.2
     devDependencies:
       '@sveltejs/adapter-static':
         specifier: ^3.0.10
@@ -536,6 +539,9 @@ packages:
   cookie@0.6.0:
     resolution: {integrity: sha512-U71cyTamuh1CRNCfpGY6to28lxvNwPG4Guz/EVjgf3Jmzv0vlDp1atT9eS5dDjMYHucpHbWns6Lwf3BKz6svdw==}
     engines: {node: '>= 0.6'}
+
+  cropperjs@1.6.2:
+    resolution: {integrity: sha512-nhymn9GdnV3CqiEHJVai54TULFAE3VshJTXSqSJKa8yXAKyBKDWdhHarnlIPrshJ0WMFTGuFvG02YjLXfPiuOA==}
 
   cssesc@3.0.0:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
@@ -1152,6 +1158,8 @@ snapshots:
   clsx@2.1.1: {}
 
   cookie@0.6.0: {}
+
+  cropperjs@1.6.2: {}
 
   cssesc@3.0.0: {}
 

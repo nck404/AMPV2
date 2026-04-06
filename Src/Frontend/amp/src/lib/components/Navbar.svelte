@@ -1,7 +1,8 @@
 <script>
     import { onMount } from "svelte";
+    let innerWidth = $state(0);
     import { page } from "$app/state";
-    import { fly } from "svelte/transition";
+    import { fly, fade } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
     import { api, STATIC_BASE } from "$lib/api.js";
 
@@ -13,6 +14,8 @@
     ];
 
     const moreItems = [
+        { name: "Diễn đàn", path: "/forum", icon: "bx-message-square-detail" },
+        { name: "Tuyển dụng", path: "/recruitment", icon: "bx-briefcase" },
         { name: "Bạn bè", path: "/people", icon: "bx-user-plus" },
         { name: "Học tập", path: "/sign-language", icon: "bx-book-open" },
         { name: "Tạo CV", path: "/cv", icon: "bx-id-card" },
@@ -24,6 +27,9 @@
     let currentUser = $state(null);
     let isToolsDropdownOpen = $state(false);
     let isNotificationsOpen = $state(false);
+
+    let isMobileMenuOpen = $derived(isToolsDropdownOpen || isNotificationsOpen);
+
     let notifications = $state([]);
     let unreadChatCount = $state(0);
 
@@ -100,8 +106,11 @@
     });
 </script>
 
+<svelte:window bind:innerWidth />
+
 <!-- Desktop: Top Dynamic Island -->
-<div class="hidden md:flex fixed top-6 left-0 right-0 z-50 justify-center px-6 pointer-events-none">
+{#if innerWidth === 0 || innerWidth >= 1024}
+<div class="top-nav-container fixed top-6 left-0 right-0 z-50 justify-center px-6 pointer-events-none hidden lg:flex {page.url.pathname === '/chat' ? 'is-chat' : ''}">
     <nav
         class="dynamic-island pointer-events-auto flex items-center gap-2 p-1.5 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
         class:scrolled
@@ -273,17 +282,36 @@
         </div>
     </nav>
 </div>
+{/if}
 
 <!-- Mobile: Bottom Navigation Bar -->
-<div class="md:hidden fixed bottom-10 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
-    <nav class="glass pointer-events-auto flex items-center justify-around w-full max-w-sm px-2 py-3 rounded-[2.5rem] shadow-2xl border border-white/20 relative">
-        {#each navItems as item}
+{#if isMobileMenuOpen}
+    <div 
+        class="fixed inset-0 bg-rose-text/20 backdrop-blur-md z-[90] lg:hidden"
+        onclick={() => { isToolsDropdownOpen = false; isNotificationsOpen = false; }}
+        onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { isToolsDropdownOpen = false; isNotificationsOpen = false; } }}
+        role="button"
+        tabindex="0"
+        aria-label="Close menu"
+        in:fade={{ duration: 400 }}
+        out:fade={{ duration: 300 }}
+    ></div>
+{/if}
+
+<div class="lg:hidden fixed bottom-0 left-0 right-0 z-[100] flex justify-center pointer-events-none">
+    <nav class="glass pointer-events-auto flex items-center justify-around w-full px-1 pt-3 pb-6 rounded-t-[2.5rem] shadow-[0_-15px_40px_rgba(87,82,121,0.2)] border-t border-white/60 relative">
+        {#each navItems.filter(i => i.path === '/' || i.path === '/chat') as item}
             {@const isActive = page.url.pathname === item.path}
             <a
                 href={item.path}
-                class="flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all relative {isActive ? 'text-iris scale-110' : 'text-muted'}"
+                class="flex flex-col items-center gap-1 px-2.5 py-2 rounded-2xl transition-all relative {isActive ? 'text-iris' : 'text-muted'}"
             >
-                <i class="bx {item.icon} text-2xl"></i>
+                <div class="relative">
+                    <i class="bx {item.icon} text-2xl transition-transform {isActive ? 'scale-110 -translate-y-1' : ''}"></i>
+                    {#if isActive}
+                        <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-iris rounded-full" in:fade></div>
+                    {/if}
+                </div>
                 <span class="text-[9px] font-black uppercase tracking-tighter transition-all {isActive ? 'opacity-100' : 'opacity-0 h-0 w-0 overflow-hidden'}">
                     {item.name}
                 </span>
@@ -295,119 +323,133 @@
             </a>
         {/each}
 
-        <!-- MOBILE TOOLS DROPDOWN -->
-        <div id="tools-dropdown-container-mobile" class="relative">
-            <button
-                onclick={() => (isToolsDropdownOpen = !isToolsDropdownOpen)}
-                class="flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all {isToolsDropdownOpen ? 'text-iris scale-110' : 'text-muted'}"
-            >
-                <i class="bx bx-grid-alt text-2xl"></i>
-                <span class="text-[9px] font-black uppercase tracking-tighter">Thêm</span>
-            </button>
-
-            {#if isToolsDropdownOpen}
-                <div 
-                    class="absolute bottom-full right-0 mb-4 w-48 glass border border-iris/20 rounded-2xl overflow-hidden shadow-2xl py-2 z-[60]"
-                    in:fly={{ y: 20, duration: 300, easing: cubicOut }}
-                >
-                    {#each moreItems as item}
-                        {@const isActive = page.url.pathname === item.path}
-                        <a 
-                            href={item.path} 
-                            class="flex items-center gap-3 px-4 py-3 text-sm font-bold transition-all {isActive ? 'text-iris bg-iris/5' : 'text-subtle hover:bg-iris/5 hover:text-iris'}"
-                            onclick={() => (isToolsDropdownOpen = false)}
-                        >
-                            <i class="bx {item.icon} text-xl"></i>
-                            {item.name}
-                        </a>
-                    {/each}
-                </div>
-            {/if}
-        </div>
-    </nav>
-</div>
-
-<!-- Mobile: Top Actions Bar -->
-<div class="md:hidden fixed top-4 left-0 right-0 z-50 flex justify-between items-center px-6">
-    <a href="/" class="w-10 h-10 bg-iris text-white rounded-full flex items-center justify-center shadow-lg" aria-label="Trang chủ" title="Trang chủ AMP">
-        <i class="bx bx-atom text-xl"></i>
-    </a>
-
-    <div class="flex items-center gap-3">
+        <!-- MOBILE NOTIFICATIONS -->
         {#if currentUser}
-            <div class="relative">
-                <button 
-                    onclick={() => {
-                        isNotificationsOpen = !isNotificationsOpen;
-                        if (isNotificationsOpen) fetchNotifications();
-                    }}
-                    class="w-10 h-10 glass rounded-full flex items-center justify-center text-rose-text text-xl relative transition-all" 
+            <div id="notif-dropdown-container-mobile" class="relative">
+                <button
+                    onclick={() => { isNotificationsOpen = !isNotificationsOpen; isToolsDropdownOpen = false; if (isNotificationsOpen) fetchNotifications(); }}
+                    class="flex flex-col items-center gap-1 px-2.5 py-2 rounded-2xl transition-all relative {isNotificationsOpen ? 'text-iris animate-bounce-short' : 'text-muted'}"
                     aria-label="Thông báo"
                 >
-                    <i class="bx bx-bell"></i>
-                    {#if notifications.some(n => !n.is_read)}
-                        <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-text rounded-full border-2 border-white"></span>
-                    {/if}
+                    <div class="relative">
+                        <i class="bx bx-bell text-2xl"></i>
+                        {#if notifications.some(n => !n.is_read)}
+                            <span class="absolute top-0 right-0 w-2 h-2 bg-rose-text rounded-full border-2 border-white"></span>
+                        {/if}
+                    </div>
+                    <span class="text-[9px] font-black uppercase tracking-tighter">Thông báo</span>
                 </button>
 
                 {#if isNotificationsOpen}
                     <div 
-                        class="fixed top-16 right-6 left-6 md:absolute md:top-full md:right-0 md:left-auto md:mt-3 md:w-80 glass border border-iris/20 rounded-[2rem] overflow-hidden shadow-2xl z-[60]"
-                        in:fly={{ y: 15, duration: 400, easing: cubicOut }}
+                        class="fixed bottom-24 left-4 right-4 glass border border-iris/20 rounded-[2.5rem] overflow-hidden shadow-2xl z-[110]"
+                        in:fly={{ y: 20, duration: 400, easing: cubicOut }}
+                        out:fly={{ y: 20, duration: 300, easing: cubicOut }}
                     >
-                        <div class="p-4 border-b border-white/10 bg-iris/5">
-                            <h3 class="text-sm font-black text-rose-text uppercase tracking-widest text-center md:text-left">Thông báo hệ thống</h3>
+                        <div class="p-5 border-b border-white/10 bg-iris/5 flex items-center justify-between">
+                            <h3 class="text-xs font-black text-rose-text uppercase tracking-widest">Thông báo hệ thống</h3>
+                            <button onclick={() => isNotificationsOpen = false} class="text-muted" aria-label="Đóng thông báo"><i class="bx bx-x text-xl"></i></button>
                         </div>
-                        <div class="max-h-[350px] overflow-y-auto custom-scrollbar">
+                        <div class="max-h-[50vh] overflow-y-auto custom-scrollbar">
                             {#each notifications as notif}
-                                <div class="p-4 border-b border-white/5 hover:bg-white/5 transition-colors cursor-default">
-                                    <div class="flex gap-3">
-                                        <div class="w-8 h-8 rounded-xl flex items-center justify-center text-lg shrink-0
+                                <div class="p-5 border-b border-white/5 hover:bg-iris/5 transition-colors">
+                                    <div class="flex gap-4">
+                                        <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-xl shrink-0
                                             {notif.type === 'admin' ? 'bg-iris/10 text-iris' : 
                                              notif.type === 'warning' ? 'bg-love/10 text-love' :
                                              notif.type === 'success' ? 'bg-green-500/10 text-green-500' : 'bg-subtle/10 text-subtle'}">
                                             <i class="bx {notif.type === 'admin' ? 'bx-shield-quarter' : 'bx-info-circle'}"></i>
                                         </div>
                                         <div class="min-w-0">
-                                            <p class="text-sm font-bold text-rose-text truncate">{notif.title}</p>
-                                            <p class="text-xs text-subtle mt-1 leading-relaxed">{notif.content}</p>
-                                            <p class="text-[9px] font-black text-subtle/50 mt-2 uppercase tracking-tighter">
+                                            <p class="text-sm font-black text-rose-text truncate">{notif.title}</p>
+                                            <p class="text-xs text-subtle mt-1.5 leading-relaxed">{notif.content}</p>
+                                            <p class="text-[9px] font-black text-subtle/40 mt-2.5 uppercase tracking-wider">
                                                 {new Date(notif.created_at).toLocaleDateString()}
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                             {:else}
-                                <div class="p-8 text-center opacity-50">
-                                    <i class="bx bx-bell-off text-4xl mb-2"></i>
-                                    <p class="text-xs font-bold uppercase tracking-widest">Không có thông báo mới</p>
+                                <div class="p-12 text-center opacity-40">
+                                    <i class="bx bx-bell-off text-5xl mb-3"></i>
+                                    <p class="text-[10px] font-black uppercase tracking-widest">Hộp thư trống</p>
                                 </div>
                             {/each}
                         </div>
                     </div>
                 {/if}
             </div>
-            
-            <a href="/profile" class="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden bg-white">
-                {#if currentUser.avatar_url}
-                    <img
-                        src={currentUser.avatar_url.startsWith("http")
-                            ? currentUser.avatar_url
-                            : `${STATIC_BASE}${currentUser.avatar_url}`}
-                        alt=""
-                        class="w-full h-full object-cover"
-                    />
-                {:else}
-                    <div class="w-full h-full flex items-center justify-center font-bold text-iris bg-iris/5">
-                        {currentUser.username[0]}
+        {/if}
+
+        <!-- MOBILE TOOLS -->
+        <div id="tools-dropdown-container-mobile" class="relative">
+            <button
+                onclick={() => { isToolsDropdownOpen = !isToolsDropdownOpen; isNotificationsOpen = false; }}
+                class="flex flex-col items-center gap-1 px-2.5 py-2 rounded-2xl transition-all {isToolsDropdownOpen ? 'text-iris animate-bounce-short' : 'text-muted'}"
+                aria-label="Công cụ"
+            >
+                <i class="bx bx-grid-alt text-2xl"></i>
+                <span class="text-[9px] font-black uppercase tracking-tighter">Công cụ</span>
+            </button>
+
+            {#if isToolsDropdownOpen}
+                <div 
+                    class="fixed bottom-24 left-4 right-4 glass border border-iris/20 rounded-[2.5rem] overflow-hidden shadow-2xl py-3 z-[110]"
+                    in:fly={{ y: 20, duration: 400, easing: cubicOut }}
+                    out:fly={{ y: 20, duration: 300, easing: cubicOut }}
+                >
+                    <div class="px-6 py-4 border-b border-white/10 mb-2">
+                        <h3 class="text-xs font-black text-rose-text uppercase tracking-widest text-center">Tiện ích AMP</h3>
                     </div>
-                {/if}
+                    <div class="grid grid-cols-2 gap-2 px-3">
+                        {#each moreItems as item}
+                            {@const isActive = page.url.pathname === item.path}
+                            <a 
+                                href={item.path} 
+                                class="flex items-center gap-3 px-4 py-4 rounded-2xl text-xs font-bold transition-all {isActive ? 'text-iris bg-iris/10' : 'text-subtle hover:bg-iris/5 hover:text-iris'}"
+                                onclick={() => (isToolsDropdownOpen = false)}
+                            >
+                                <i class="bx {item.icon} text-xl"></i>
+                                {item.name}
+                            </a>
+                        {/each}
+                    </div>
+                </div>
+            {/if}
+        </div>
+
+        <!-- PROFILE / AVATAR -->
+        {#if currentUser}
+            <a
+                href="/profile"
+                class="flex flex-col items-center gap-1 px-2.5 py-2 rounded-2xl transition-all relative {page.url.pathname === '/profile' ? 'text-iris' : 'text-muted'}"
+            >
+                <div class="w-7 h-7 rounded-full border-2 border-white shadow-sm overflow-hidden bg-white/50 {page.url.pathname === '/profile' ? 'ring-2 ring-iris/30' : ''}">
+                    {#if currentUser.avatar_url}
+                        <img
+                            src={currentUser.avatar_url.startsWith("http")
+                                ? currentUser.avatar_url
+                                : `${STATIC_BASE}${currentUser.avatar_url}`}
+                            alt=""
+                            class="w-full h-full object-cover"
+                        />
+                    {:else}
+                        <div class="w-full h-full flex items-center justify-center text-[10px] font-black text-iris">
+                            {currentUser.username[0].toUpperCase()}
+                        </div>
+                    {/if}
+                </div>
+                <span class="text-[9px] font-black uppercase tracking-tighter">Hồ sơ</span>
             </a>
         {:else}
-            <a href="/login" class="bg-rose-text text-white px-5 py-2 rounded-full text-xs font-black shadow-lg">BẮT ĐẦU</a>
+            <a href="/login" class="flex flex-col items-center gap-1 px-2.5 py-2 text-muted">
+                <i class="bx bx-log-in-circle text-2xl"></i>
+                <span class="text-[9px] font-black uppercase tracking-tighter">Login</span>
+            </a>
         {/if}
-    </div>
+    </nav>
 </div>
+
 
 <style>
     .dynamic-island {
@@ -456,7 +498,7 @@
     }
 
     /* Hide labels on mobile to save space */
-    @media (max-width: 768px) {
+    @media (max-width: 1023px) {
         .nav-links .label {
             display: none;
         }

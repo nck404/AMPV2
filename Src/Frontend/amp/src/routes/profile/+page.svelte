@@ -3,12 +3,18 @@
     import { fly, fade } from "svelte/transition";
     import { api, STATIC_BASE } from "$lib/api";
     import { goto } from "$app/navigation";
+    import Cropper from "cropperjs";
+    import "cropperjs/dist/cropper.css";
 
     let mounted = $state(false);
     let isEditingProfile = $state(false);
     let errorMsg = $state("");
     let uploadLoading = $state(false);
     let fileInput = $state();
+    let cropperModalOpen = $state(false);
+    let imageToCrop = $state(null);
+    let cropperImageElement = $state();
+    let cropper;
 
     let user = $state({
         username: "Đang tải...",
@@ -138,23 +144,80 @@
         const file = e.target.files[0];
         if (!file) return;
 
-        const formData = new FormData();
-        formData.append("avatar", file);
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            imageToCrop = event.target.result;
+            cropperModalOpen = true;
+        };
+        reader.readAsDataURL(file);
+        
+        // Reset input to allow selecting same file again
+        e.target.value = "";
+    }
 
-        uploadLoading = true;
-        try {
-            const res = await api.upload("/me/avatar/upload", formData);
-            if (res.avatar_url) {
-                user.avatar_url = res.avatar_url;
-                syncUserData();
-            } else {
-                alert(res.msg || "Lỗi tải ảnh");
-            }
-        } catch (err) {
-            alert("Lỗi kết nối server.");
-        } finally {
-            uploadLoading = false;
+    $effect(() => {
+        if (cropperModalOpen && imageToCrop && cropperImageElement) {
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(cropperImageElement, {
+                aspectRatio: 1,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 0.8,
+                restore: false,
+                guides: true,
+                center: true,
+                highlight: false,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false,
+            });
         }
+    });
+
+    function cancelCrop() {
+        cropperModalOpen = false;
+        if (cropper) cropper.destroy();
+        cropper = null;
+        imageToCrop = null;
+    }
+
+    function zoomIn() { if (cropper) cropper.zoom(0.1); }
+    function zoomOut() { if (cropper) cropper.zoom(-0.1); }
+    function rotateLeft() { if (cropper) cropper.rotate(-90); }
+    function rotateRight() { if (cropper) cropper.rotate(90); }
+
+    async function cropSave() {
+        if (!cropper) return;
+        
+        const canvas = cropper.getCroppedCanvas({
+            width: 512,
+            height: 512
+        });
+
+        canvas.toBlob(async (blob) => {
+            const formData = new FormData();
+            formData.append("avatar", blob, "avatar.jpg");
+
+            uploadLoading = true;
+            cropperModalOpen = false;
+            
+            try {
+                const res = await api.upload("/me/avatar/upload", formData);
+                if (res.avatar_url) {
+                    user.avatar_url = res.avatar_url;
+                    syncUserData();
+                } else {
+                    alert(res.msg || "Lỗi tải ảnh");
+                }
+            } catch (err) {
+                alert("Lỗi kết nối server.");
+            } finally {
+                uploadLoading = false;
+                if (cropper) cropper.destroy();
+                cropper = null;
+                imageToCrop = null;
+            }
+        }, 'image/jpeg', 0.9);
     }
 
     function syncUserData() {
@@ -170,12 +233,12 @@
     }
 </script>
 
-<div class="max-w-4xl mx-auto px-6 py-12">
+<div class="max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12">
     {#if mounted}
         <div in:fly={{ y: 20 }} class="space-y-8">
             <!-- Profile Header Card -->
             <div
-                class="glass p-10 rounded-[3rem] border border-white/60 relative overflow-hidden"
+                class="glass p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-white/60 relative overflow-hidden"
             >
                 <div
                     class="absolute top-0 right-0 w-64 h-64 bg-iris/5 rounded-full blur-3xl -mr-20 -mt-20"
@@ -197,6 +260,7 @@
                             <button
                                 type="button"
                                 onclick={cancelEditing}
+                                aria-label="Đóng"
                                 class="text-muted hover:text-love transition-colors"
                             >
                                 <i class="bx bx-x text-3xl"></i>
@@ -589,10 +653,67 @@
             </div>
         </div>
     {/if}
+
+    <!-- Cropper Modal -->
+    {#if cropperModalOpen}
+        <div class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-rose-text/90 backdrop-blur-lg" in:fade>
+            <div class="bg-white w-full max-w-xl rounded-[3rem] overflow-hidden shadow-2xl flex flex-col p-6 md:p-10 space-y-6 md:space-y-8" in:fly={{ y: 30 }}>
+                <div class="flex items-center justify-between relative px-2">
+                    <div class="flex flex-col">
+                        <h2 class="text-2xl md:text-3xl font-black text-rose-text">Căn chỉnh <span class="text-iris">Avatar</span></h2>
+                        <p class="text-[10px] uppercase tracking-widest font-bold text-muted">Dùng chuột cuộn hoặc nút bấm để zoom</p>
+                    </div>
+                    <button onclick={cancelCrop} class="text-muted hover:text-love transition-colors" aria-label="Đóng"><i class="bx bx-x text-4xl"></i></button>
+                </div>
+
+                <div class="aspect-square w-full bg-overlay/10 rounded-[2rem] overflow-hidden relative border border-overlay/30 shadow-inner group">
+                    <img bind:this={cropperImageElement} src={imageToCrop} alt="Review" class="max-w-full block" />
+                    
+                    <!-- Floating Zoom Controls -->
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white/80 backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onclick={zoomOut} class="w-8 h-8 rounded-lg hover:bg-iris hover:text-white transition-all flex items-center justify-center border border-overlay" aria-label="Thu nhỏ"><i class="bx bx-minus"></i></button>
+                        <div class="w-px h-4 bg-overlay mx-1"></div>
+                        <button onclick={zoomIn} class="w-8 h-8 rounded-lg hover:bg-iris hover:text-white transition-all flex items-center justify-center border border-overlay" aria-label="Phóng to"><i class="bx bx-plus"></i></button>
+                        <div class="w-px h-4 bg-overlay mx-1"></div>
+                        <button onclick={rotateLeft} class="w-8 h-8 rounded-lg hover:bg-iris hover:text-white transition-all flex items-center justify-center border border-overlay" aria-label="Xoay trái"><i class="bx bx-rotate-left"></i></button>
+                        <button onclick={rotateRight} class="w-8 h-8 rounded-lg hover:bg-iris hover:text-white transition-all flex items-center justify-center border border-overlay" aria-label="Xoay phải"><i class="bx bx-rotate-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-4 px-2">
+                    <button onclick={cancelCrop} class="px-8 py-4 bg-overlay/30 text-rose-text font-black rounded-[1.5rem] hover:bg-overlay/50 transition-all uppercase tracking-widest text-[10px] order-2 md:order-1">Hủy bỏ</button>
+                    <button onclick={cropSave} class="flex-1 px-8 py-4 bg-iris text-white font-black rounded-[1.5rem] shadow-xl shadow-iris/20 hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest text-[10px] order-1 md:order-2 flex items-center justify-center gap-2">
+                        <i class="bx bx-check-circle text-lg"></i> Áp dụng ảnh mới
+                    </button>
+                </div>
+            </div>
+        </div>
+    {/if}
 </div>
 
 <style>
     :global(input[type="checkbox"]) {
         accent-color: var(--color-iris);
+    }
+    
+    :global(.cropper-view-box, .cropper-face) {
+        border-radius: 50%;
+    }
+    :global(.cropper-container) {
+        border-radius: 2rem;
+    }
+    :global(.cropper-line, .cropper-point) {
+        display: none !important;
+    }
+    :global(.cropper-view-box) {
+        outline: 3px solid #7c7adb;
+        outline-offset: -1px;
+        box-shadow: 0 0 0 5000px rgba(10, 10, 15, 0.7);
+    }
+    :global(.cropper-wrap-box) {
+        background-color: transparent !important;
+    }
+    :global(.cropper-drag-box) {
+        background-color: rgba(0,0,0,0.1) !important;
     }
 </style>

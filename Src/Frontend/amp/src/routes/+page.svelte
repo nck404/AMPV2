@@ -246,7 +246,7 @@
         <!-- Part 2: Tool listing -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {#each tools as tool}
-                <a href={tool.path} class="group relative p-10 rounded-[3rem] bg-white border border-overlay/40 hover:border-iris/20 hover:shadow-[0_20px_50px_-15px_rgba(144,122,169,0.12)] transition-all duration-500 overflow-hidden">
+                <a href={tool.path} class="group relative p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] bg-white border border-overlay/40 hover:border-iris/20 hover:shadow-[0_20px_50px_-15px_rgba(144,122,169,0.12)] transition-all duration-500 overflow-hidden">
                     <div class="absolute top-6 right-6">
                         <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest {tool.color} {tool.textColor}">
                             {tool.tag}

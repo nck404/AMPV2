@@ -234,16 +234,26 @@
         if (e.key === "Enter") sendMessage();
     }
 
+    function handleInputFocus() {
+        if (window.innerWidth < 768) {
+            document.body.classList.add("keyboard-open");
+        }
+    }
+
+    function handleInputBlur() {
+        document.body.classList.remove("keyboard-open");
+    }
+
     let currentChat = $derived(convos.find((c) => c.id === selectedChatId));
 </script>
 
 <div
-    class="h-[calc(100vh-8rem)] md:h-[calc(100vh-12rem)] max-w-7xl mx-auto px-0 md:px-6 mb-12"
+    class="h-screen md:h-[calc(100vh-12rem)] max-w-7xl mx-auto px-0 md:px-6 md:mb-12"
 >
     {#if mounted}
         <div
             in:fade
-            class="bg-surface border-x md:border border-overlay rounded-none md:rounded-[3rem] h-full overflow-hidden flex shadow-2xl shadow-rose-text/5 relative"
+            class="bg-surface border-x md:border border-overlay rounded-none md:rounded-[3rem] h-full overflow-hidden flex shadow-2xl shadow-rose-text/5 relative pb-20 md:pb-0"
         >
             <!-- Sidebar -->
             <aside
@@ -369,7 +379,7 @@
             >
                 {#if selectedChatId}
                     <header
-                        class="p-4 md:p-6 border-b border-overlay flex items-center justify-between bg-white/50 backdrop-blur"
+                        class="hidden md:flex p-4 md:p-6 border-b border-overlay flex items-center justify-between bg-white/50 backdrop-blur sticky top-0 z-30"
                     >
                         <div class="flex items-center gap-3 md:gap-4">
                             <button
@@ -511,10 +521,10 @@
 
                     <div class="p-4 md:p-6 border-t border-overlay bg-white">
                         <div
-                            class="flex items-center gap-2 md:gap-4 bg-overlay/30 p-1.5 md:p-2 rounded-2xl"
+                            class="flex items-center gap-2 md:gap-4 bg-overlay/30 p-2 md:p-3 rounded-2xl"
                         >
                             <button
-                                class="w-10 h-10 text-xl md:text-2xl hover:scale-110 transition-transform"
+                                class="w-12 h-12 text-2xl md:text-2xl hover:scale-110 transition-transform flex items-center justify-center bg-white/50 rounded-xl"
                                 aria-label="Emoji"
                                 ><i class="bx bx-smile"></i></button
                             >
@@ -522,6 +532,8 @@
                                 type="text"
                                 bind:value={messageInput}
                                 onkeydown={handleKeydown}
+                                onfocus={handleInputFocus}
+                                onblur={handleInputBlur}
                                 placeholder="Nhập tin nhắn..."
                                 class="flex-1 bg-transparent border-none focus:ring-0 text-sm outline-none"
                             />

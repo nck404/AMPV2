@@ -121,7 +121,7 @@
                         <button
                             onclick={() => goto(`/forum/${post.id}`)}
                             in:fly={{ y: 20, delay: i * 100 }}
-                            class="w-full text-left glass p-8 rounded-[3rem] border border-white/60 hover:bg-white/95 transition-all duration-500 group cursor-pointer shadow-sm hover:shadow-xl hover:shadow-rose-text/5 relative"
+                            class="w-full text-left glass p-5 md:p-8 rounded-[2rem] md:rounded-[3rem] border border-white/60 hover:bg-white/95 transition-all duration-500 group cursor-pointer shadow-sm hover:shadow-xl hover:shadow-rose-text/5 relative"
                         >
                             <div class="flex items-start gap-6">
                                 <!-- Upvote -->

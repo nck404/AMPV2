@@ -87,6 +87,6 @@
 <Navbar />
 <Toolbox bind:isCustomCursorActive />
 
-<main class="pt-32 pb-32 md:pb-0 min-h-screen">
+<main class="{page.url.pathname === '/chat' ? 'pt-0 lg:pt-32' : 'pt-6 lg:pt-32'} pb-24 lg:pb-0 min-h-screen">
     {@render children()}
 </main>
