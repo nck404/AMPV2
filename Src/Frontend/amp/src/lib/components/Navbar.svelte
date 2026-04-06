@@ -304,7 +304,7 @@
             {@const isActive = page.url.pathname === item.path}
             <a
                 href={item.path}
-                class="flex flex-col items-center gap-1 px-2.5 py-2 rounded-2xl transition-all relative {isActive ? 'text-iris' : 'text-muted'}"
+                class="flex flex-col items-center gap-1 px-2.5 py-2 rounded-2xl transition-all active:scale-90 relative {isActive ? 'text-iris' : 'text-muted'}"
             >
                 <div class="relative">
                     <i class="bx {item.icon} text-2xl transition-transform {isActive ? 'scale-110 -translate-y-1' : ''}"></i>

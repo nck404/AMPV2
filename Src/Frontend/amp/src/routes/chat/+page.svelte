@@ -1,6 +1,7 @@
 <script>
     import { onMount, onDestroy } from "svelte";
     import { fly, fade } from "svelte/transition";
+    import { cubicOut } from "svelte/easing";
     import { api, STATIC_BASE } from "$lib/api";
     import { page } from "$app/state";
     import { goto } from "$app/navigation";
@@ -378,7 +379,9 @@
                     : 'flex'}"
             >
                 {#if selectedChatId}
-                    <header
+                    {#key selectedChatId}
+                        <div in:fly={{ x: 20, duration: 450, easing: cubicOut }} class="flex flex-col h-full">
+                            <header
                         class="hidden md:flex p-4 md:p-6 border-b border-overlay flex items-center justify-between bg-white/50 backdrop-blur sticky top-0 z-30"
                     >
                         <div class="flex items-center gap-3 md:gap-4">
@@ -546,6 +549,8 @@
                             </button>
                         </div>
                     </div>
+                </div>
+            {/key}
                 {:else}
                     <div
                         class="flex-1 flex flex-col items-center justify-center text-center p-12 space-y-4"

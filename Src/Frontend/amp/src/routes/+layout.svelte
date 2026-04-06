@@ -11,9 +11,15 @@
     import { onMount } from "svelte";
     import { api } from "$lib/api.js";
 
+    import { fly, fade } from "svelte/transition";
+
     let { children } = $props();
 
-    let isCustomCursorActive = $state(true);
+    let isCustomCursorActive = $state(
+        typeof window !== "undefined"
+            ? localStorage.getItem("custom-cursor-active") !== "false"
+            : true,
+    );
 
     $effect(() => {
         if (typeof document !== "undefined") {
@@ -70,11 +76,6 @@
         if (storedFontSize) {
             document.documentElement.style.fontSize = storedFontSize;
         }
-
-        const storedCursor = localStorage.getItem("custom-cursor-active");
-        if (storedCursor !== null) {
-            isCustomCursorActive = storedCursor === "true";
-        }
     });
 </script>
 
@@ -88,5 +89,9 @@
 <Toolbox bind:isCustomCursorActive />
 
 <main class="{page.url.pathname === '/chat' ? 'pt-0 lg:pt-32' : 'pt-6 lg:pt-32'} pb-24 lg:pb-0 min-h-screen">
-    {@render children()}
+    {#key page.url.pathname}
+        <div in:fly={{ y: 20, duration: 400, delay: 250 }} out:fade={{ duration: 200 }}>
+            {@render children()}
+        </div>
+    {/key}
 </main>
