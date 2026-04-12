@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [tailwindcss(), sveltekit()],
   server: {
-    allowedHosts: ["amp.tfai.lol"],
+    allowedHosts: ["amp.tfai.lol", "amp.prj.ydns.eu"],
     proxy: {
       "/api": {
         target: "http://127.0.0.1:6333",
@@ -22,7 +22,7 @@ export default defineConfig({
     },
   },
   preview: {
-    allowedHosts: ["amp.tfai.lol"],
+    allowedHosts: ["amp.tfai.lol", "amp.prj.ydns.eu"],
     proxy: {
       "/api": {
         target: "http://127.0.0.1:6333",
