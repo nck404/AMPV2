@@ -1,11 +1,10 @@
 #!/bin/bash
 
 # ==============================================================================
-# AMP VPS Host Startup Script
+# AMP VPS Host Startup Script (PM2 Version)
 # Usage: ./start-host.sh
-# Description: Starts the backend and frontend in the background (nohup),
-# allowing you to safely close your SSH/Terminal session without stopping the app.
-# Both services are bound to 0.0.0.0 to allow external Internet access.
+# Description: Starts the backend and frontend using PM2,
+# providing process monitoring and automatic restarts.
 # ==============================================================================
 
 CYAN='\033[0;36m'
@@ -22,7 +21,7 @@ echo " \`--\`--'\`--\`--\`--'|  |-'  "
 echo "                  \`--'    "
 echo -e "${NC}"
 echo "=========================================="
-echo -e "  ${GREEN}Starting AMP for VPS Hosting${NC}"
+echo -e "  ${GREEN}Starting AMP with PM2${NC}"
 echo "=========================================="
 echo ""
 
@@ -30,12 +29,17 @@ echo ""
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 PROJECT_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
 
-# ---------------------------------------------------------
-# [1/2] Start Backend (Flask)
-# ---------------------------------------------------------
-echo -e "${CYAN}[1/2]${NC} Initializing Backend on 0.0.0.0:6333..."
+# Check if PM2 is installed
+if ! command -v pm2 &>/dev/null; then
+    echo -e "${RED}Error: PM2 is not installed. Please install it with 'npm install -g pm2'${NC}"
+    exit 1
+fi
 
-# Handle directory casing
+# ---------------------------------------------------------
+# [1/2] Prepare Backend (Flask)
+# ---------------------------------------------------------
+echo -e "${CYAN}[1/2]${NC} Preparing Backend..."
+
 if [ -d "$PROJECT_ROOT/src/backend" ]; then
     BACKEND_DIR="$PROJECT_ROOT/src/backend"
 elif [ -d "$PROJECT_ROOT/Src/backend" ]; then
@@ -49,7 +53,7 @@ fi
 
 cd "$BACKEND_DIR" || exit 1
 
-# [NEW] Apply Database Migrations
+# Apply Database Migrations
 echo -e "  -> ${YELLOW}Migrating database schema...${NC}"
 export FLASK_APP=app.py
 if command -v flask &>/dev/null; then
@@ -60,23 +64,10 @@ else
     python -m flask db upgrade
 fi
 
-# Kill any existing processes running on port 6333 to prevent "address already in use"
-fuser -k 6333/tcp 2>/dev/null
-sleep 1
-
-# Start Backend in background using nohup
-if command -v python3 &>/dev/null; then
-    nohup python3 app.py > backend_host.log 2>&1 &
-else
-    nohup python app.py > backend_host.log 2>&1 &
-fi
-BACKEND_PID=$!
-echo -e "  -> ${GREEN}Backend running in background (PID: $BACKEND_PID)${NC}"
-
 # ---------------------------------------------------------
-# [2/2] Start Frontend (SvelteKit/Vite)
+# [2/2] Prepare Frontend (SvelteKit)
 # ---------------------------------------------------------
-echo -e "\n${CYAN}[2/2]${NC} Building and Launching Frontend on 0.0.0.0:5173..."
+echo -e "\n${CYAN}[2/2]${NC} Building Frontend..."
 
 if [ -d "$PROJECT_ROOT/src/frontend/amp" ]; then
     FRONTEND_DIR="$PROJECT_ROOT/src/frontend/amp"
@@ -89,35 +80,31 @@ fi
 
 cd "$FRONTEND_DIR" || exit 1
 
-# Kill any existing Vite processes on port 5173
-fuser -k 5173/tcp 2>/dev/null
-sleep 1
-
-# Start Frontend in background using nohup and bind to 0.0.0.0 via --host
+# Build frontend
+echo -e "  -> ${YELLOW}Compiling production bundle...${NC}"
 if command -v pnpm &>/dev/null; then
-    echo -e "  -> ${YELLOW}Building frontend for production...${NC}"
     pnpm run build
-    nohup pnpm run preview -- --host 0.0.0.0 --port 5173 > frontend_host.log 2>&1 &
 elif command -v npm &>/dev/null; then
-    echo -e "  -> ${YELLOW}Building frontend for production...${NC}"
     npm run build
-    nohup npm run preview -- --host 0.0.0.0 --port 5173 > frontend_host.log 2>&1 &
-else
-    echo -e "${RED}Error: Package manager not found.${NC}"
-    exit 1
 fi
-FRONTEND_PID=$!
-echo -e "  -> ${GREEN}Frontend running in background (PID: $FRONTEND_PID)${NC}"
+
+# ---------------------------------------------------------
+# Start Services with PM2
+# ---------------------------------------------------------
+echo -e "\n${CYAN}[FINAL]${NC} Launching services with PM2..."
+
+cd "$PROJECT_ROOT" || exit 1
+
+# Restart or Start the services using ecosystem file
+pm2 start ecosystem.config.js
 
 echo ""
 echo "======================================================================"
-echo -e "  ${GREEN}AMP System is now LIVE on your VPS!${NC}"
-echo -e "  You can safely close this terminal/SSH session."
+echo -e "  ${GREEN}AMP System is now LIVE and managed by PM2!${NC}"
 echo ""
-echo -e "  ${YELLOW}Logs (to monitor errors):${NC}"
-echo -e "  - Backend:  tail -f $BACKEND_DIR/backend_host.log"
-echo -e "  - Frontend: tail -f $FRONTEND_DIR/frontend_host.log"
-echo ""
-echo -e "  ${RED}To stop the system later, run:${NC}"
-echo -e "  kill $BACKEND_PID $FRONTEND_PID"
+echo -e "  ${YELLOW}Useful PM2 commands:${NC}"
+echo -e "  - View status:  pm2 list"
+echo -e "  - View logs:    pm2 logs"
+echo -e "  - Stop all:     pm2 stop all"
+echo -e "  - Restart all:  pm2 restart all"
 echo "======================================================================"
