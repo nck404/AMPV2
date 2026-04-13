@@ -1,7 +1,6 @@
 <script>
     import ToastContainer from "$lib/components/ToastContainer.svelte";
     import "./layout.css";
-    import favicon from "$lib/assets/favicon.svg";
     import Navbar from "$lib/components/Navbar.svelte";
     import CustomCursor from "$lib/components/CustomCursor.svelte";
     import Toolbox from "$lib/components/Toolbox.svelte";
@@ -79,7 +78,10 @@
     });
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+    <link rel="icon" href="/favicon.png" />
+    <meta name="google-site-verification" content="Rj5CohCzIgRnlj5wpCMKd4Rbv6iYBZTckWL8rTZArjI" />
+</svelte:head>
 
 {#if isCustomCursorActive}
     <CustomCursor />
