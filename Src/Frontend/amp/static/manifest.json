@@ -1,0 +1,21 @@
+{
+    "name": "AMP Platform",
+    "short_name": "AMP",
+    "description": "Mạng xã hội và Hỗ trợ Người khuyết tật",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#907aa9",
+    "icons": [
+        {
+            "src": "/favicon.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
