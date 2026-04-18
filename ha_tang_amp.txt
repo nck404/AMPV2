@@ -1,0 +1,51 @@
+YÊU CẦU HẠ TẦNG CHI TIẾT CHO HỆ THỐNG AMP
+
+1.1. Hạ tầng phần cứng
+Hệ thống được thiết kế theo mô hình Client-Server, yêu cầu cấu hình máy chủ như sau:
+a. Máy chủ (Server - chạy Linux VPS):
+- Bộ xử lý trung tâm (CPU): Tối thiểu 8 Cores (Đảm bảo xử lý song song các tiến trình AI, Socket nội dung và API Backend).
+- Bộ nhớ trong (RAM): 4GB - 8GB (Mức ≥ 2GB là tối thiểu, nhưng khuyến nghị 4GB để chạy mượt cả Node.js Frontend và Flask Backend).
+- Ổ cứng: SSD ≥ 40GB (Lưu trữ Database, tệp tĩnh và log hệ thống).
+- Bộ xử lý đồ họa (GPU): Không bắt buộc (Vì hiện tại hệ thống dùng API Gemini cloud). Tuy nhiên, nếu sau này triển khai model AI nội bộ để xử lý Vision, cần GPU NVIDIA ≥ 4GB VRAM.
+b. Thiết bị người dùng (Client Devices):
+- Điện thoại: Hoạt động trên Android (v8+) và iOS (v12+).
+- Máy tính: PC/Laptop (Windows, macOS, Linux).
+- Thiết bị hỗ trợ: Tai nghe có Micro (cho chức năng Speech-to-Text), Webcam (cho Video Call và học ngôn ngữ ký hiệu).
+
+1.2. Hạ tầng phần mềm
+a. Máy chủ:
+- Ngôn ngữ lập trình: Python 3.10+, Node.js 18+.
+- Framework: Flask (Backend), SvelteKit (Frontend).
+- Cơ sở dữ liệu: PostgreSQL hoặc MySQL (Quản lý trực quan bằng Beekeeper Studio).
+- Web Server: Nginx (Reverse Proxy cho HTTPS).
+b. Công cụ hỗ trợ:
+- Quản lý VPS: MobaXterm.
+- Theo dõi hệ thống: PM2 (Quản lý tiến trình amp-backend và amp-frontend).
+
+1.3. Hệ điều hành
+a. Máy chủ: Linux (Ubuntu 22.04 LTS hoặc Debian).
+b. Thiết bị người dùng:
+- Android (version 8 trở lên).
+- iOS (version 12 trở lên).
+- Windows/macOS.
+
+1.4. Hạ tầng mạng
+- Băng thông tối thiểu:
+  • Server: ≥ 100 Mbps (Đảm bảo video call và truyền tải âm thanh mượt mà).
+  • Người dùng: ≥ 4G / WiFi ổn định.
+- Hỗ trợ giao thức: HTTPS (SSL/TLS bắt buộc để dùng Micro/Camera).
+- Firewall: Mở cổng 80, 443, 6333 (API/Socket) và 5173 (Frontend).
+
+1.5. Thiết bị ngoại vi và hỗ trợ:
+- Yêu cầu Micro và Loa/Tai nghe hoạt động tốt cho tính năng Screen Reader và Voice Chat.
+- Webcam đạt chất lượng HD cho tính năng ghép cặp Video Call.
+
+1.6. Hạ tầng triển khai và vận hành:
+- Triển khai: Đồng bộ mã nguồn qua Git/SFTP bằng MobaXterm.
+- Vận hành: Sử dụng PM2 với tệp ecosystem.config.js để tự động duy trì hoạt động của ứng dụng.
+
+1.7. Yêu cầu về bảo mật và dữ liệu:
+- Xác thực người dùng: JWT (JSON Web Token).
+- Phân quyền: Role-Based Access Control (user, business, admin).
+- Bảo vệ dữ liệu cá nhân: Mã hóa mật khẩu bằng Bcrypt, kiểm duyệt nội dung bằng AI (Gemini).
+- Sao lưu: Backup Database định kỳ hàng ngày (Daily Backup).

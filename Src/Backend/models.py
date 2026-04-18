@@ -110,3 +110,19 @@ class Notification(db.Model):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     user = db.relationship('User', backref='notifications')
+
+class JobApplication(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    name = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    phone = db.Column(db.String(20))
+    cv_url = db.Column(db.String(255))
+    cover_letter = db.Column(db.Text)
+    status = db.Column(db.String(20), default='pending') # pending, reviewed, accepted, rejected
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    job = db.relationship('Job', backref='applications')
+    user = db.relationship('User', backref='applications')
+

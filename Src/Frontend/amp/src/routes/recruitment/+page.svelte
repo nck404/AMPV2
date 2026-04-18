@@ -7,11 +7,11 @@
     let searchTerm = $state("");
     let jobs = $state([]);
 
+    let currentUser = $state(null);
+
     async function fetchJobs() {
         try {
-            const res = await api.get("/admin/jobs"); // Assuming public list is filterable or same
-            // Actually admin/jobs returns everything, let's assume a public one or use it if permitted
-            // For now let's use a public endpoint if I should create one, or just use this
+            const res = await api.get("/recruitment/jobs");
             jobs = res.jobs || [];
         } catch (err) {
             console.error(err);
@@ -20,6 +20,10 @@
 
     onMount(() => {
         mounted = true;
+        const userData = localStorage.getItem("user");
+        if (userData) {
+            currentUser = JSON.parse(userData);
+        }
         fetchJobs();
     });
 </script>
@@ -85,11 +89,22 @@
                         AMP kết nối bạn với các doanh nghiệp cam kết tạo dựng
                         môi trường làm việc thông minh và hòa nhập.
                     </p>
-                    <button
-                        class="px-8 py-4 bg-white text-rose-text font-black rounded-2xl shadow-sm hover:shadow-xl transition-all border border-overlay flex items-center gap-2"
-                    >
-                        <i class="bx bx-plus-circle"></i> Đăng tin tuyển dụng
-                    </button>
+                    <div class="flex flex-wrap gap-4">
+                        <a
+                            href="/recruitment/post"
+                            class="px-8 py-4 bg-white text-rose-text font-black rounded-2xl shadow-sm hover:shadow-xl transition-all border border-overlay flex items-center gap-2"
+                        >
+                            <i class="bx bx-plus-circle"></i> Đăng tin tuyển dụng
+                        </a>
+                        {#if currentUser?.role === 'business' || currentUser?.role === 'admin'}
+                            <a
+                                href="/recruitment/manage"
+                                class="px-8 py-4 bg-gold text-white font-black rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gold flex items-center gap-2"
+                            >
+                                <i class="bx bx-list-check"></i> Quản lý ứng tuyển
+                            </a>
+                        {/if}
+                    </div>
                 </div>
                 <div class="hidden lg:grid grid-cols-2 gap-4">
                     {#each [1, 2, 3, 4] as i}
@@ -170,11 +185,12 @@
                                         >{job.location} • {job.type}</span
                                     >
                                 </div>
-                                <button
-                                    class="button px-10 bg-overlay text-rose-text group-hover:bg-gold group-hover:text-white transition-all shadow-none group-hover:shadow-lg group-hover:shadow-gold/20 font-black"
+                                <a
+                                    href="/recruitment/{job.id}/apply"
+                                    class="button px-10 bg-overlay text-rose-text group-hover:bg-gold group-hover:text-white transition-all shadow-none group-hover:shadow-lg group-hover:shadow-gold/20 font-black flex items-center justify-center text-center"
                                 >
-                                    Xem chi tiết
-                                </button>
+                                    Ứng tuyển ngay
+                                </a>
                             </div>
                         </div>
                     {/each}

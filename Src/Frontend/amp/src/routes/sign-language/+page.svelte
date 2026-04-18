@@ -1,634 +1,718 @@
 <script>
     import { onMount, onDestroy } from "svelte";
-    import { fly, fade } from "svelte/transition";
-    import { Hands, HAND_CONNECTIONS } from "@mediapipe/hands";
+    import { fly, fade, scale } from "svelte/transition";
+    import { Hands } from "@mediapipe/hands";
     import { Camera } from "@mediapipe/camera_utils";
-    import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
+    import { GestureEstimator } from "fingerpose";
+    import { gestureList } from "$lib/gestures.js";
+    import confetti from "canvas-confetti";
 
-    let mounted = $state(false);
+    // ── Core state ─────────────────────────────────────────────────────────────
+    let mounted          = $state(false);
     let selectedCategory = $state("Bảng chữ cái");
-    let activeLesson = $state(null);
-    let videoElement;
-    let canvasElement;
-    let illustrationCanvas; // Canvas for the "Teacher"
-    let camera;
-    let hands;
-    let isCameraRunning = $state(false);
-    let handDetected = $state(false);
+    let activeLesson     = $state(null);
+    let activeLessonIdx  = $state(0);
+    let mode             = $state("learn");
+    let currentUser      = $state(null);
 
-    // Custom Theme configuration
-    const theme = {
-        connectorColor: "#eb6f92", // Rose
-        landmarkColor: "#31748f", // Foam
-        connectorWidth: 4,
-        landmarkRadius: 2,
-    };
+    let videoElement, canvasElement;
+    let camera, hands, gestureEstimator;
+    let isCameraRunning  = $state(false);
+    let handDetected     = $state(false);
 
+    // ── Recognition ────────────────────────────────────────────────────────────
+    let detectedLetter   = $state(null);
+    let stableBuffer     = [];
+    const STABLE_FRAMES  = 10;
+    let cooldown         = false;
+
+    // ── Scoring ────────────────────────────────────────────────────────────────
+    let totalScore       = $state(0);
+    let streak           = $state(0);
+    let lastPoints       = $state(0);
+    let completedSet     = $state(new Set());
+    let showCorrect      = $state(false);
+    let showComplete     = $state(false);
+
+    // ── Practice mode ─────────────────────────────────────────────────────────
+    const WORDS = [
+        "HOA","CAY","NHA","CON","BAN",
+        "ANH","HOC","CAM","TAY","MAT",
+        "SACH","LOP","VIET","DOC","BIEN",
+    ];
+    let practiceWord     = $state("");
+    let currentIdx       = $state(0);
+    let typedLetters     = $state([]);
+    let practiceScore    = $state(0);
+    let practiceCombo    = $state(0);
+    let practiceFeedback = $state(null);
+
+    // ── Admin lock ─────────────────────────────────────────────────────────────
+    function loadLocked() {
+        try { return new Set(JSON.parse(localStorage.getItem("amp_locked_lessons") ?? "[]")); }
+        catch { return new Set(); }
+    }
+    let lockedLessons = $state(loadLocked());
+
+    function isLocked(title) { return lockedLessons.has(title); }
+
+    function toggleLock(title, e) {
+        e.stopPropagation();
+        const s = new Set(lockedLessons);
+        s.has(title) ? s.delete(title) : s.add(title);
+        lockedLessons = s;
+        localStorage.setItem("amp_locked_lessons", JSON.stringify([...s]));
+    }
+
+    // ── Admin category lock ───────────────────────────────────────────────
+    function loadLockedCats() {
+        try { return new Set(JSON.parse(localStorage.getItem("amp_locked_categories") ?? "[]")); }
+        catch { return new Set(); }
+    }
+    let lockedCategories = $state(loadLockedCats());
+
+    function isCatLocked(name) { return lockedCategories.has(name); }
+
+    function toggleCatLock(name, e) {
+        e.stopPropagation();
+        const s = new Set(lockedCategories);
+        s.has(name) ? s.delete(name) : s.add(name);
+        lockedCategories = s;
+        localStorage.setItem("amp_locked_categories", JSON.stringify([...s]));
+    }
+
+    // ── Data ───────────────────────────────────────────────────────────────────
     const categories = [
-        { name: "Bảng chữ cái", icon: "bx-font", count: 26 },
-        { name: "Số đếm", icon: "bx-hash", count: 10 },
-        { name: "Chào hỏi", icon: "bx-hand", count: 15 },
-        { name: "Ẩm thực", icon: "bx-fridge", count: 20 },
-        { name: "Cảm xúc", icon: "bx-laugh", count: 12 },
+        { name: "Bảng chữ cái", icon: "bx-font",    count: 26 },
+        { name: "Số đếm",       icon: "bx-hash",     count: 10 },
+        { name: "Chào hỏi",     icon: "bx-hand",     count: 3  },
+        { name: "Luyện tập",    icon: "bx-dumbbell", count: 0  },
     ];
 
-    // Pre-defined landmarks for illustrations (normalized 0-1)
-    // In a real app, you'd capture these from MediaPipe and save them to a JSON file.
-    // Here, I'm simulating "A" and "B" broadly.
-    const handShapes = {
-        "Letter A": [
-            { x: 0.5, y: 0.8 },
-            { x: 0.4, y: 0.75 },
-            { x: 0.35, y: 0.65 },
-            { x: 0.38, y: 0.55 },
-            { x: 0.42, y: 0.5 }, // Thumb
-            { x: 0.5, y: 0.8 },
-            { x: 0.55, y: 0.65 },
-            { x: 0.52, y: 0.55 },
-            { x: 0.5, y: 0.6 }, // Index (curled)
-            { x: 0.5, y: 0.8 },
-            { x: 0.6, y: 0.65 },
-            { x: 0.58, y: 0.55 },
-            { x: 0.56, y: 0.62 }, // Middle (curled)
-            { x: 0.5, y: 0.8 },
-            { x: 0.65, y: 0.66 },
-            { x: 0.63, y: 0.56 },
-            { x: 0.61, y: 0.63 }, // Ring (curled)
-            { x: 0.5, y: 0.8 },
-            { x: 0.7, y: 0.68 },
-            { x: 0.68, y: 0.6 },
-            { x: 0.66, y: 0.65 }, // Pinky (curled)
-            // Note: This is a very rough approximation for demo purposes.
-            // Real MediaPipe has 21 points. I'm just triggering a generic hand draw for now.
-        ],
+    const CATEGORY_NAMES = categories.map(c => c.name);
+
+    const signSvgMap = {
+        "Chữ A":"/handsigns/Ahand.svg","Chữ B":"/handsigns/Bhand.svg",
+        "Chữ C":"/handsigns/Chand.svg","Chữ D":"/handsigns/Dhand.svg",
+        "Chữ E":"/handsigns/Ehand.svg","Chữ F":"/handsigns/Fhand.svg",
+        "Chữ G":"/handsigns/Ghand.svg","Chữ H":"/handsigns/Hhand.svg",
+        "Chữ I":"/handsigns/Ihand.svg","Chữ J":"/handsigns/Jhand.svg",
+        "Chữ K":"/handsigns/Khand.svg","Chữ L":"/handsigns/Lhand.svg",
+        "Chữ M":"/handsigns/Mhand.svg","Chữ N":"/handsigns/Nhand.svg",
+        "Chữ O":"/handsigns/Ohand.svg","Chữ P":"/handsigns/Phand.svg",
+        "Chữ Q":"/handsigns/Qhand.svg","Chữ R":"/handsigns/Rhand.svg",
+        "Chữ S":"/handsigns/Shand.svg","Chữ T":"/handsigns/Thand.svg",
+        "Chữ U":"/handsigns/Uhand.svg","Chữ V":"/handsigns/Vhand.svg",
+        "Chữ W":"/handsigns/Whand.svg","Chữ X":"/handsigns/Xhand.svg",
+        "Chữ Y":"/handsigns/Yhand.svg","Chữ Z":"/handsigns/Zhand.svg",
     };
 
-    const lessons = [
-        {
-            id: 1,
-            title: "Chữ A",
-            difficulty: "Cơ bản",
-            duration: "2 phút",
-            category: "Bảng chữ cái",
-            description:
-                "Nắm bàn tay lại, để ngón cái sát vào cạnh của ngón trỏ.",
-        },
-        {
-            id: 2,
-            title: "Chữ B",
-            difficulty: "Cơ bản",
-            duration: "3 phút",
-            category: "Bảng chữ cái",
-            description: "Giơ thẳng 4 ngón tay, gập ngón cái vào lòng bàn tay.",
-        },
-        {
-            id: 3,
-            title: "Chữ C",
-            difficulty: "Cơ bản",
-            duration: "2 phút",
-            category: "Bảng chữ cái",
-            description: "Cong các ngón tay lại tạo thành hình chữ C.",
-        },
-        {
-            id: 4,
-            title: "Xin chào",
-            difficulty: "Trung bình",
-            duration: "5 phút",
-            category: "Chào hỏi",
-            description: "Đưa tay lên trán và vẫy nhẹ ra ngoài.",
-        },
-    ];
+    const aslDesc = {
+        A:"Nắm bàn tay, ngón cái sát cạnh ngón trỏ.",B:"Giơ thẳng 4 ngón, gập ngón cái vào lòng bàn tay.",
+        C:"Cong các ngón tạo hình chữ C.",D:"Chỉ ngón trỏ lên, các ngón còn lại chạm ngón cái.",
+        E:"Gập tất cả ngón vào trong, ngón cái gập dưới.",F:"Ngón cái chạm ngón trỏ thành vòng, 3 ngón còn lại giơ thẳng.",
+        G:"Ngón trỏ và ngón cái song song chỉ ngang.",H:"Ngón trỏ và ngón giữa song song chỉ ngang.",
+        I:"Chỉ ngón út lên, các ngón còn lại nắm lại.",J:"Vẽ chữ J bằng ngón út.",
+        K:"Ngón trỏ lên, ngón giữa chéo ra, ngón cái ở giữa.",L:"Ngón cái và ngón trỏ tạo góc vuông hình L.",
+        M:"Gập 3 ngón trên ngón cái.",N:"Gập 2 ngón trước lên ngón cái.",
+        O:"Tất cả ngón cong tròn chạm ngón cái.",P:"Giống K nhưng chỉ xuống.",
+        Q:"Giống G nhưng chỉ xuống.",R:"Ngón trỏ và giữa chéo nhau.",
+        S:"Nắm tay, ngón cái nằm trên.",T:"Ngón cái ở giữa ngón trỏ và giữa.",
+        U:"Ngón trỏ và giữa giơ thẳng sát nhau.",V:"Ngón trỏ và giữa xòe ra hình V.",
+        W:"Ngón trỏ, giữa, áp xòe ra hình W.",X:"Ngón trỏ móc còng lại.",
+        Y:"Ngón cái và ngón út giơ ra.",Z:"Vẽ chữ Z bằng ngón trỏ.",
+    };
 
+    const allLessons = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((l, i) => ({
+        id: i+1, title:`Chữ ${l}`, targetLetter: l,
+        difficulty:"Cơ bản", duration:"2 phút", category:"Bảng chữ cái",
+        description: aslDesc[l] ?? `Ký hiệu ASL cho chữ ${l}.`,
+    })).concat([
+        { id:27, title:"Xin chào",  targetLetter:null, difficulty:"Trung bình", duration:"5 phút", category:"Chào hỏi", description:"Đưa tay lên trán và vẫy nhẹ ra ngoài." },
+        { id:28, title:"Cảm ơn",    targetLetter:null, difficulty:"Cơ bản",   duration:"2 phút", category:"Chào hỏi", description:"Đưa bàn tay từ miệng ra phía trước." },
+        { id:29, title:"Xin lỗi",   targetLetter:null, difficulty:"Cơ bản",   duration:"2 phút", category:"Chào hỏi", description:"Nắm tay, xoay tròn trước ngực." },
+    ]);
+
+    let filteredLessons = $derived(allLessons.filter(l => l.category === selectedCategory));
+
+    // ── MediaPipe ──────────────────────────────────────────────────────────────
     onMount(() => {
         mounted = true;
+        try { currentUser = JSON.parse(localStorage.getItem("user")); } catch {}
+        gestureEstimator = new GestureEstimator(gestureList);
         initMediaPipe();
     });
 
-    onDestroy(() => {
-        if (camera) {
-            camera.stop();
-        }
-    });
+    onDestroy(() => { if (camera) camera.stop(); });
 
     function initMediaPipe() {
-        hands = new Hands({
-            locateFile: (file) => {
-                return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-            },
-        });
-
-        hands.setOptions({
-            maxNumHands: 1,
-            modelComplexity: 1,
-            minDetectionConfidence: 0.7,
-            minTrackingConfidence: 0.7,
-        });
-
+        hands = new Hands({ locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}` });
+        hands.setOptions({ maxNumHands:1, modelComplexity:1, minDetectionConfidence:0.75, minTrackingConfidence:0.75 });
         hands.onResults(onResults);
     }
 
     function onResults(results) {
         if (!canvasElement) return;
+        const ctx = canvasElement.getContext("2d");
+        ctx.save();
+        ctx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+        ctx.fillStyle = "rgba(25,23,36,0.82)";
+        ctx.fillRect(0, 0, canvasElement.width, canvasElement.height);
 
-        const canvasCtx = canvasElement.getContext("2d");
-        canvasCtx.save();
-
-        // 1. Draw the video frame but dimmed (Overlay effect)
-        // Draw the raw image first
-        canvasCtx.globalCompositeOperation = "source-over";
-        canvasCtx.drawImage(
-            results.image,
-            0,
-            0,
-            canvasElement.width,
-            canvasElement.height,
-        );
-
-        // Apply a dark semi-transparent overlay
-        canvasCtx.fillStyle = "rgba(25, 23, 36, 0.85)"; // Deep dark overlay (85% opacity)
-        canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
-
-        // 2. Draw "Realistic" Hand
-        if (
-            results.multiHandLandmarks &&
-            results.multiHandLandmarks.length > 0
-        ) {
+        if (results.multiHandLandmarks?.length > 0) {
             handDetected = true;
-            for (const landmarks of results.multiHandLandmarks) {
-                drawRealisticHand(canvasCtx, landmarks);
-            }
+            drawRealisticHand(ctx, results.multiHandLandmarks[0]);
+
+            // Scale z same as x/y for correct fingerpose angle computation
+            const keypoints = results.multiHandLandmarks[0].map(lm => [
+                lm.x * canvasElement.width,
+                lm.y * canvasElement.height,
+                lm.z * canvasElement.width,
+            ]);
+            try {
+                const est = gestureEstimator.estimate(keypoints, 7);
+                if (est.gestures.length > 0) {
+                    const best = est.gestures.reduce((a,b) => a.score > b.score ? a : b);
+                    processDetection(best.name.toUpperCase(), best.score);
+                } else { stableBuffer = []; detectedLetter = null; }
+            } catch {}
         } else {
-            handDetected = false;
+            handDetected = false; stableBuffer = []; detectedLetter = null;
         }
-        canvasCtx.restore();
+        ctx.restore();
     }
 
-    // Helper to map normalized coordinates to canvas pixel coordinates
-    function toPixel(landmark, width, height) {
-        return { x: landmark.x * width, y: landmark.y * height };
+    function processDetection(letter) {
+        if (cooldown) return;
+        stableBuffer.push(letter);
+        if (stableBuffer.length > STABLE_FRAMES) stableBuffer.shift();
+        const stable = stableBuffer.length === STABLE_FRAMES && stableBuffer.every(l => l === stableBuffer[0]);
+        if (!stable) return;
+        detectedLetter = letter;
+
+        if (mode === "learn" && activeLesson?.targetLetter) {
+            if (letter === activeLesson.targetLetter && !completedSet.has(activeLesson.title)) {
+                onCorrectSign();
+            }
+        }
+        if (mode === "practice" && practiceWord) {
+            if (letter === practiceWord[currentIdx]) onPracticeCorrect();
+        }
     }
+
+    // ── Correct sign in learn mode ─────────────────────────────────────────────
+    function onCorrectSign() {
+        cooldown = true;
+        stableBuffer = [];
+        const pts = 100 + streak * 25;
+        totalScore += pts;
+        lastPoints = pts;
+        streak++;
+        completedSet = new Set([...completedSet, activeLesson.title]);
+        showCorrect = true;
+        fireSmallConfetti();
+
+        setTimeout(() => {
+            showCorrect = false;
+            const avail = filteredLessons.filter(l => !isLocked(l.title));
+            const nextIdx = activeLessonIdx + 1;
+            if (nextIdx < avail.length) {
+                activeLessonIdx = nextIdx;
+                activeLesson = avail[nextIdx];
+                cooldown = false;
+                detectedLetter = null;
+            } else {
+                cooldown = false;
+                fireCompletionFireworks();
+                showComplete = true;
+            }
+        }, 1400);
+    }
+
+    // ── Practice mode ──────────────────────────────────────────────────────────
+    function onPracticeCorrect() {
+        cooldown = true;
+        stableBuffer = [];
+        typedLetters = [...typedLetters, practiceWord[currentIdx]];
+        practiceScore += 10 + practiceCombo * 2;
+        practiceCombo++;
+        practiceFeedback = "correct";
+        setTimeout(() => { practiceFeedback = null; }, 700);
+        currentIdx++;
+        if (currentIdx >= practiceWord.length) {
+            fireSmallConfetti();
+            setTimeout(() => {
+                practiceWord = WORDS[Math.floor(Math.random() * WORDS.length)];
+                currentIdx = 0; typedLetters = []; practiceCombo = 0;
+                cooldown = false;
+            }, 1300);
+        } else {
+            cooldown = false;
+        }
+    }
+
+    // ── Camera ─────────────────────────────────────────────────────────────────
+    async function startCamera() {
+        if (!videoElement) return;
+        try {
+            camera = new Camera(videoElement, {
+                onFrame: async () => await hands.send({ image: videoElement }),
+                width: 640, height: 480,
+            });
+            await camera.start();
+            isCameraRunning = true;
+        } catch { alert("Không thể truy cập Camera."); }
+    }
+
+    function stopCamera() {
+        camera?.stop(); isCameraRunning = false; handDetected = false; detectedLetter = null;
+    }
+
+    function selectLesson(lesson, idx) {
+        if (isLocked(lesson.title)) return;
+        activeLesson = lesson;
+        activeLessonIdx = idx;
+        mode = "learn";
+        showComplete = false;
+        setTimeout(startCamera, 100);
+    }
+
+    function enterPractice() {
+        closeActive();
+        mode = "practice";
+        practiceScore = 0; practiceCombo = 0; currentIdx = 0; typedLetters = [];
+        practiceWord = WORDS[Math.floor(Math.random() * WORDS.length)];
+        setTimeout(startCamera, 100);
+    }
+
+    function closeActive() {
+        stopCamera();
+        activeLesson = null; mode = "learn"; practiceWord = ""; showComplete = false;
+    }
+
+    // ── Confetti/Fireworks ─────────────────────────────────────────────────────
+    function fireSmallConfetti() {
+        confetti({ particleCount: 70, spread: 80, origin: { y: 0.55 }, colors: ["#eb6f92","#f6c177","#9ccfd8","#c4a7e7"] });
+    }
+
+    function fireCompletionFireworks() {
+        const end = Date.now() + 4500;
+        const colors = ["#eb6f92","#f6c177","#9ccfd8","#c4a7e7","#ebbcba","#31748f"];
+        (function frame() {
+            confetti({ particleCount: 7, angle: 60,  spread: 60, origin: { x: 0, y: 0.6 }, colors });
+            confetti({ particleCount: 7, angle: 120, spread: 60, origin: { x: 1, y: 0.6 }, colors });
+            confetti({ particleCount: 4, angle: 90,  spread: 100, origin: { x: 0.5, y: 0 }, colors });
+            if (Date.now() < end) requestAnimationFrame(frame);
+        })();
+    }
+
+    // ── Hand renderer ──────────────────────────────────────────────────────────
+    function toPixel(lm, w, h) { return { x: lm.x * w, y: lm.y * h }; }
 
     function drawRealisticHand(ctx, landmarks) {
-        const width = ctx.canvas.width;
-        const height = ctx.canvas.height;
-
-        const palmBase = toPixel(landmarks[0], width, height); // Wrist
-        const thumbCMC = toPixel(landmarks[1], width, height);
-        const indexMCP = toPixel(landmarks[5], width, height);
-        const pinkyMCP = toPixel(landmarks[17], width, height);
-
-        // Draw Palm (Polygon)
-        ctx.fillStyle = "rgba(235, 111, 146, 0.6)"; // Rose color with opacity
+        const w = ctx.canvas.width, h = ctx.canvas.height;
+        const [pb,ti,im,pm] = [0,1,5,17].map(i => toPixel(landmarks[i],w,h));
+        ctx.fillStyle = "rgba(235,111,146,0.45)";
         ctx.beginPath();
-        ctx.moveTo(palmBase.x, palmBase.y);
-        ctx.lineTo(thumbCMC.x, thumbCMC.y);
-        ctx.lineTo(indexMCP.x, indexMCP.y);
-        ctx.lineTo(pinkyMCP.x, pinkyMCP.y);
-        ctx.closePath();
-        ctx.fill();
+        ctx.moveTo(pb.x,pb.y); ctx.lineTo(ti.x,ti.y); ctx.lineTo(im.x,im.y); ctx.lineTo(pm.x,pm.y);
+        ctx.closePath(); ctx.fill();
 
-        // Helper to draw fingers
-        const fingers = [
-            [1, 2, 3, 4], // Thumb
-            [5, 6, 7, 8], // Index
-            [9, 10, 11, 12], // Middle
-            [13, 14, 15, 16], // Ring
-            [17, 18, 19, 20], // Pinky
-        ];
-
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-
-        fingers.forEach((indices, fIndex) => {
-            // Base thickness depends on finger (Thumb is thicker)
-            let baseThickness = fIndex === 0 ? 25 : 20;
-
-            // Draw segments with tapering thickness
-            for (let i = 0; i < indices.length - 1; i++) {
-                const start = toPixel(landmarks[indices[i]], width, height);
-                const end = toPixel(landmarks[indices[i + 1]], width, height);
-
-                ctx.strokeStyle = theme.connectorColor;
-                // Taper thickness: gets thinner towards the tip
-                ctx.lineWidth = baseThickness - i * 4;
-
-                ctx.beginPath();
-                ctx.moveTo(start.x, start.y);
-                ctx.lineTo(end.x, end.y);
-                ctx.stroke();
+        [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16],[17,18,19,20]].forEach((idxs,fi) => {
+            const base = fi===0 ? 26 : 21;
+            for (let i=0; i<idxs.length-1; i++) {
+                const s=toPixel(landmarks[idxs[i]],w,h), e=toPixel(landmarks[idxs[i+1]],w,h);
+                ctx.strokeStyle="#eb6f92"; ctx.lineWidth=Math.max(base-i*5,6);
+                ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(e.x,e.y); ctx.stroke();
             }
-
-            // Draw Joints (Knuckles) for smoother look
-            indices.forEach((idx, jIndex) => {
-                const p = toPixel(landmarks[idx], width, height);
-                ctx.fillStyle = theme.landmarkColor;
-                ctx.beginPath();
-                // Joint size matches segment thickness roughly
-                let radius = (baseThickness - jIndex * 3) / 2;
-                if (radius < 4) radius = 4;
-                ctx.arc(p.x, p.y, radius, 0, 2 * Math.PI);
-                ctx.fill();
+            idxs.forEach((idx,ji) => {
+                const p=toPixel(landmarks[idx],w,h);
+                ctx.fillStyle="#31748f"; ctx.beginPath();
+                ctx.arc(p.x,p.y,Math.max((base-ji*3)/2,4),0,2*Math.PI); ctx.fill();
             });
         });
     }
-
-    async function startCamera() {
-        if (activeLesson && videoElement) {
-            try {
-                camera = new Camera(videoElement, {
-                    onFrame: async () => {
-                        await hands.send({ image: videoElement });
-                    },
-                    width: 640,
-                    height: 480,
-                });
-                await camera.start();
-                isCameraRunning = true;
-
-                // Also draw the illustration static hand
-                drawIllustration(activeLesson.title);
-            } catch (e) {
-                console.error("Camera error:", e);
-                alert(
-                    "Không thể truy cập Camera. Vui lòng kiểm tra quyền truy cập.",
-                );
-            }
-        }
-    }
-
-    // This function simulates drawing a perfect hand pose for the lesson
-    function drawIllustration(lessonTitle) {
-        if (!illustrationCanvas) return;
-        const ctx = illustrationCanvas.getContext("2d");
-        ctx.fillStyle = "#faf4ed"; // Surface color
-        ctx.fillRect(0, 0, illustrationCanvas.width, illustrationCanvas.height);
-
-        // In a real app, you would define 21 points for each letter.
-        // For this demo, I'll draw a generic "Hand" placeholder using logic,
-        // because hardcoding 21 points * 26 letters is too much code for this step.
-        // I will draw a visual representation of a hand skeleton to match the style.
-
-        const centerX = illustrationCanvas.width / 2;
-        const centerY = illustrationCanvas.height / 2 + 50;
-
-        // Draw a simulated "Skeleton" hand standing upright
-        ctx.strokeStyle = theme.connectorColor;
-        ctx.lineWidth = 6;
-        ctx.lineCap = "round";
-
-        // Wrist to Middle Finger (Base)
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY + 80);
-        ctx.lineTo(centerX, centerY - 50);
-        ctx.stroke();
-
-        // Thumb
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY + 50);
-        ctx.lineTo(centerX - 60, centerY - 10);
-        ctx.stroke();
-
-        // Index
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.lineTo(centerX - 30, centerY - 80);
-        ctx.stroke();
-
-        // Ring
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.lineTo(centerX + 30, centerY - 80);
-        ctx.stroke();
-
-        // Pinky
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY + 20);
-        ctx.lineTo(centerX + 50, centerY - 40);
-        ctx.stroke();
-
-        // Draw Joints
-        ctx.fillStyle = theme.landmarkColor;
-        [
-            { x: centerX, y: centerY + 80 },
-            { x: centerX, y: centerY },
-            { x: centerX, y: centerY - 50 },
-        ].forEach((p) => {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
-            ctx.fill();
-        });
-    }
-
-    function selectLesson(lesson) {
-        activeLesson = lesson;
-        // Wait for DOM update then start camera
-        setTimeout(() => {
-            startCamera();
-        }, 100);
-    }
-
-    function closeLesson() {
-        if (camera) camera.stop();
-        isCameraRunning = false;
-        activeLesson = null;
-        handDetected = false;
-    }
 </script>
+
+<!-- ── Completion Modal ─────────────────────────────────────────────────────── -->
+{#if showComplete}
+    <div class="fixed inset-0 z-[200] flex items-center justify-center" in:fade>
+        <div class="absolute inset-0 bg-rose-text/50 backdrop-blur-md"></div>
+        <div class="relative bg-white rounded-[4rem] p-14 shadow-2xl text-center space-y-6 max-w-md w-full mx-6" in:scale={{ start: 0.8 }}>
+            <div class="text-8xl animate-bounce">🎉</div>
+            <h2 class="text-4xl font-black text-rose-text">Xuất sắc!</h2>
+            <p class="text-subtle text-lg">Bạn đã hoàn thành toàn bộ danh mục <span class="font-black text-iris">{selectedCategory}</span>!</p>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-gold/10 rounded-2xl p-4">
+                    <div class="text-3xl font-black text-gold">{totalScore}</div>
+                    <div class="text-xs font-bold text-muted uppercase tracking-widest mt-1">Tổng điểm</div>
+                </div>
+                <div class="bg-iris/10 rounded-2xl p-4">
+                    <div class="text-3xl font-black text-iris">{streak}x</div>
+                    <div class="text-xs font-bold text-muted uppercase tracking-widest mt-1">Streak cao nhất</div>
+                </div>
+            </div>
+            <button onclick={closeActive} class="w-full h-14 bg-iris text-white font-black rounded-2xl shadow-xl shadow-iris/25 hover:bg-iris/80 active:scale-95 transition-all">
+                Tiếp tục học →
+            </button>
+        </div>
+    </div>
+{/if}
 
 <div class="max-w-7xl mx-auto px-6 py-12">
     {#if mounted}
-        <div
-            in:fade={{ duration: 600 }}
-            class="flex flex-col lg:flex-row gap-10"
-        >
-            <!-- Sidebar / Categories -->
-            <aside
-                class="w-full lg:w-72 lg:h-[calc(100vh-100px)] lg:sticky lg:top-24 space-y-8 flex flex-col"
-            >
-                <div class="space-y-4">
-                    <h2 class="text-2xl font-bold text-rose-text">
-                        <i class="bx bx-book-reader mr-2"></i>Học tập
-                    </h2>
-                    <div
-                        class="space-y-2 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar"
-                    >
+        <div in:fade={{ duration: 500 }} class="flex flex-col lg:flex-row gap-10">
+
+            <!-- ── Sidebar ─────────────────────────────────────────────────────── -->
+            <aside class="w-full lg:w-72 lg:sticky lg:top-24 lg:h-[calc(100vh-100px)] space-y-5 flex flex-col">
+                <div class="space-y-3">
+                    <h2 class="text-2xl font-bold text-rose-text"><i class="bx bx-book-reader mr-2"></i>Học tập</h2>
+                    <div class="space-y-2 overflow-y-auto max-h-[350px] pr-1 custom-scrollbar">
                         {#each categories as cat}
-                            <button
-                                onclick={() => (selectedCategory = cat.name)}
-                                class="w-full flex items-center justify-between p-4 rounded-2xl transition-all duration-300 {selectedCategory ===
-                                cat.name
-                                    ? 'bg-iris text-white shadow-lg shadow-iris/20'
-                                    : 'bg-surface text-muted hover:bg-overlay/60 hover:text-rose-text border border-overlay'}"
-                            >
-                                <div class="flex items-center gap-3">
-                                    <span class="text-2xl"
-                                        ><i class="bx {cat.icon}"></i></span
-                                    >
-                                    <span class="font-medium">{cat.name}</span>
-                                </div>
-                                <span class="text-xs opacity-60 font-bold"
-                                    >{cat.count}</span
+                            {@const catLocked = isCatLocked(cat.name) && cat.name !== 'Luyện tập'}
+                            <div class="relative">
+                                <button
+                                    onclick={() => {
+                                        if (catLocked && currentUser?.role !== 'admin') return;
+                                        if (cat.name === "Luyện tập") { enterPractice(); return; }
+                                        selectedCategory = cat.name; closeActive();
+                                    }}
+                                    class="w-full flex items-center justify-between p-4 rounded-2xl transition-all duration-300
+                                    {(selectedCategory === cat.name && mode !== 'practice') || (cat.name === 'Luyện tập' && mode === 'practice')
+                                        ? 'bg-iris text-white shadow-lg shadow-iris/20'
+                                        : catLocked
+                                            ? 'bg-surface text-muted border border-dashed border-overlay cursor-not-allowed opacity-60'
+                                            : 'bg-surface text-muted hover:bg-overlay/60 hover:text-rose-text border border-overlay'}"
                                 >
-                            </button>
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-2xl"><i class="bx {catLocked ? 'bx-lock' : cat.icon}"></i></span>
+                                        <div class="text-left">
+                                            <span class="font-medium block">{cat.name}</span>
+                                            {#if catLocked}<span class="text-[10px] text-rose-text font-bold">Đang cập nhật...</span>{/if}
+                                        </div>
+                                    </div>
+                                    {#if cat.count > 0 && !catLocked}<span class="text-xs opacity-60 font-bold">{cat.count}</span>{/if}
+                                </button>
+                                <!-- Admin lock toggle for category -->
+                                {#if currentUser?.role === 'admin' && cat.name !== 'Luyện tập'}
+                                    <button
+                                        onclick={(e) => toggleCatLock(cat.name, e)}
+                                        class="absolute top-2 right-2 w-7 h-7 rounded-lg flex items-center justify-center text-xs transition-all
+                                        {catLocked ? 'bg-rose-text text-white' : 'bg-overlay/80 text-muted hover:bg-rose-text/20 hover:text-rose-text'}"
+                                        title={catLocked ? 'Mở khóa danh mục' : 'Khóa danh mục'}
+                                    >
+                                        <i class="bx {catLocked ? 'bx-lock' : 'bx-lock-open'}"></i>
+                                    </button>
+                                {/if}
+                            </div>
                         {/each}
                     </div>
                 </div>
 
-                <!-- Stats Card -->
-                <div
-                    class="glass p-6 rounded-3xl border border-iris/20 space-y-4 mt-auto"
-                >
-                    <h3 class="font-bold text-rose-text">Tiến độ của bạn</h3>
-                    <div class="space-y-2">
-                        <div
-                            class="flex justify-between text-xs text-muted mb-1"
-                        >
-                            <span>Hoàn thành 12/80 bài</span>
-                            <span>15%</span>
+                <!-- Score board -->
+                <div class="glass p-5 rounded-3xl border border-gold/20 bg-gold/5 space-y-4">
+                    <h3 class="text-xs font-black uppercase tracking-widest text-gold">Bảng điểm</h3>
+                    <div class="flex items-end gap-3">
+                        <div class="text-5xl font-black text-gold leading-none">{totalScore}</div>
+                        {#if lastPoints && showCorrect}
+                            <div in:fly={{ y: -15 }} class="text-green-500 font-black text-lg pb-1">+{lastPoints}</div>
+                        {/if}
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex-1 bg-white rounded-xl p-2 text-center">
+                            <div class="text-xl font-black text-iris">{streak}</div>
+                            <div class="text-[9px] text-muted uppercase tracking-widest font-bold">Streak</div>
                         </div>
-                        <div
-                            class="w-full h-2 bg-overlay rounded-full overflow-hidden"
-                        >
-                            <div class="w-[15%] h-full bg-iris"></div>
+                        <div class="flex-1 bg-white rounded-xl p-2 text-center">
+                            <div class="text-xl font-black text-iris">{completedSet.size}</div>
+                            <div class="text-[9px] text-muted uppercase tracking-widest font-bold">Hoàn thành</div>
                         </div>
                     </div>
-                    <button
-                        class="w-full py-3 text-xs font-bold text-iris bg-iris/10 rounded-xl hover:bg-iris/20 transition-colors"
-                    >
-                        Xem thống kê chi tiết
-                    </button>
                 </div>
-            </aside>
 
-            <!-- Main Content -->
-            <main class="flex-1 space-y-8 min-w-0">
-                {#if activeLesson}
-                    <!-- Study Mode: Split Panel -->
-                    <div in:fly={{ y: 20, duration: 500 }} class="space-y-6">
-                        <!-- Navigation Header -->
+                <!-- Live detection -->
+                {#if isCameraRunning}
+                    <div class="glass p-5 rounded-3xl border border-iris/20 space-y-3" in:fade>
+                        <h3 class="text-xs font-black uppercase tracking-widest text-iris">Nhận diện</h3>
                         <div class="flex items-center gap-4">
-                            <button
-                                onclick={closeLesson}
-                                class="w-10 h-10 rounded-xl bg-surface border border-overlay flex items-center justify-center hover:bg-iris hover:text-white transition-all shadow-sm"
-                            >
-                                <i class="bx bx-left-arrow-alt text-2xl"></i>
-                            </button>
-                            <div>
-                                <h1 class="text-2xl font-black text-rose-text">
-                                    {activeLesson.title}
-                                </h1>
-                                <span
-                                    class="text-xs text-muted font-bold uppercase tracking-widest"
-                                    >{activeLesson.difficulty} • {activeLesson.duration}</span
-                                >
-                            </div>
-                        </div>
-
-                        <!-- Split Panels -->
-                        <div
-                            class="grid grid-cols-1 xl:grid-cols-2 gap-6 h-[600px]"
-                        >
-                            <!-- Left Panel: Illustration (Teacher) -->
-                            <div
-                                class="bg-surface rounded-[2.5rem] border border-overlay overflow-hidden flex flex-col shadow-sm"
-                            >
-                                <div
-                                    class="p-6 border-b border-overlay flex items-center justify-between bg-white/50 backdrop-blur"
-                                >
-                                    <h3
-                                        class="font-bold text-rose-text flex items-center gap-2"
-                                    >
-                                        <i class="bx bx-image"></i> Minh họa
-                                    </h3>
+                            <div class="text-6xl font-black text-iris w-16 text-center">{detectedLetter ?? "?"}</div>
+                            <div class="flex flex-col gap-1">
+                                <div class="flex items-center gap-1.5 text-xs font-bold">
+                                    <div class="w-2 h-2 rounded-full {handDetected ? 'bg-green-500 animate-pulse' : 'bg-red-400'}"></div>
+                                    {handDetected ? "Đang nhận diện" : "Chờ bàn tay..."}
                                 </div>
-                                <div
-                                    class="flex-1 relative bg-white p-6 flex items-center justify-center"
-                                >
-                                    <div
-                                        class="absolute inset-0 pattern-grid opacity-5 pointer-events-none"
-                                    ></div>
-
-                                    <!-- AI Illustration Image -->
-                                    <img 
-                                        src="/ai_hand_sign.png" 
-                                        alt="AI Hand Illustration" 
-                                        class="absolute inset-0 w-full h-full object-contain opacity-20 pointer-events-none"
-                                    />
-
-                                    <!-- Use Canvas to draw simulated landmarks -->
-                                    <canvas
-                                        bind:this={illustrationCanvas}
-                                        width="400"
-                                        height="400"
-                                        class="max-w-full max-h-full object-contain drop-shadow-2xl rounded-2xl bg-surface/50 relative z-10"
-                                    ></canvas>
-
-                                    <div
-                                        class="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-overlay shadow-lg"
-                                    >
-                                        <p
-                                            class="text-sm text-subtle leading-relaxed"
-                                        >
-                                            <span class="font-bold text-iris"
-                                                >Hướng dẫn:</span
-                                            >
-                                            {activeLesson.description}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Right Panel: Camera (Student) -->
-                            <div
-                                class="bg-black rounded-[2.5rem] overflow-hidden flex flex-col relative shadow-xl"
-                            >
-                                <div
-                                    class="absolute top-6 left-6 z-20 bg-black/50 backdrop-blur-md text-white px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 border border-white/10"
-                                >
-                                    <div
-                                        class="w-2 h-2 rounded-full {handDetected
-                                            ? 'bg-green-500 animate-pulse'
-                                            : 'bg-red-500'}"
-                                    ></div>
-                                    {handDetected
-                                        ? "Đã nhận diện tay"
-                                        : "Đưa tay vào khung hình"}
-                                </div>
-
-                                <!-- Video can be hidden or shown. For ghost mode, we just hide it visually but keep it for input -->
-                                <video
-                                    bind:this={videoElement}
-                                    class="absolute inset-0 opacity-0 w-full h-full object-cover transform -scale-x-100 pointer-events-none"
-                                    playsinline
-                                ></video>
-                                <canvas
-                                    bind:this={canvasElement}
-                                    width="640"
-                                    height="480"
-                                    class="w-full h-full object-cover transform -scale-x-100 z-10"
-                                ></canvas>
-
-                                {#if !isCameraRunning}
-                                    <div
-                                        class="absolute inset-0 flex items-center justify-center bg-gray-900 z-30"
-                                    >
-                                        <div class="text-center space-y-4">
-                                            <i
-                                                class="bx bx-loader-alt animate-spin text-4xl text-iris"
-                                            ></i>
-                                            <p
-                                                class="text-white text-sm font-bold opacity-70"
-                                            >
-                                                Đang khởi động Camera AI...
-                                            </p>
-                                        </div>
-                                    </div>
+                                {#if showCorrect}
+                                    <div in:fly={{ y: -10 }} class="text-green-500 font-black text-sm">✓ Chính xác!</div>
                                 {/if}
                             </div>
                         </div>
+                    </div>
+                {/if}
+            </aside>
 
-                        <!-- Feedback Panel -->
-                        <div
-                            class="bg-iris text-white p-6 rounded-3xl flex items-center justify-between shadow-xl shadow-iris/20 relative overflow-hidden"
-                        >
-                            <div
-                                class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"
-                            ></div>
+            <!-- ── Main ────────────────────────────────────────────────────────── -->
+            <main class="flex-1 space-y-8 min-w-0">
 
-                            <div class="relative z-10">
-                                <h4 class="font-bold text-lg mb-1">
-                                    Thực hành ngay!
-                                </h4>
-                                <p class="text-white/80 text-sm">
-                                    Hãy mô phỏng động tác tay giống hình minh
-                                    họa. AI sẽ tự động chấm điểm.
-                                </p>
+                <!-- PRACTICE MODE -->
+                {#if mode === "practice"}
+                    <div in:fly={{ y: 20, duration: 400 }} class="space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h1 class="text-3xl font-black text-rose-text">Luyện tập câu</h1>
+                                <p class="text-sm text-subtle mt-1">Điểm: <span class="font-black text-gold">{practiceScore}</span> | Combo: <span class="font-black text-iris">×{practiceCombo}</span></p>
                             </div>
-                            <button
-                                class="relative z-10 px-6 py-3 bg-white text-iris font-black rounded-xl hover:scale-105 transition-transform shadow-lg"
-                            >
-                                Kiểm tra
+                            <button onclick={closeActive} class="w-10 h-10 rounded-xl bg-surface border border-overlay flex items-center justify-center hover:bg-rose-text hover:text-white transition-all">
+                                <i class="bx bx-x text-2xl"></i>
                             </button>
                         </div>
+
+                        <div class="bg-surface rounded-[3rem] border border-overlay p-10 space-y-8">
+                            <div class="flex items-center justify-center gap-3 flex-wrap">
+                                {#each practiceWord.split("") as char, ci}
+                                    <div class="w-14 h-14 flex items-center justify-center rounded-2xl text-2xl font-black transition-all duration-300
+                                        {ci < currentIdx ? 'bg-green-100 text-green-600 border-2 border-green-400 scale-95' :
+                                         ci === currentIdx ? 'bg-iris text-white shadow-xl shadow-iris/30 scale-110' :
+                                         'bg-white border-2 border-overlay text-muted opacity-40'}">
+                                        {ci < currentIdx ? "✓" : char}
+                                    </div>
+                                {/each}
+                            </div>
+
+                            {#if currentIdx < practiceWord.length}
+                                <div class="flex items-center justify-center gap-10">
+                                    <div class="text-center space-y-1">
+                                        <p class="text-[10px] font-black uppercase tracking-widest text-muted">Ký hiệu tiếp theo</p>
+                                        <div class="text-7xl font-black text-iris">{practiceWord[currentIdx]}</div>
+                                    </div>
+                                    {#if signSvgMap[`Chữ ${practiceWord[currentIdx]}`]}
+                                        <img src={signSvgMap[`Chữ ${practiceWord[currentIdx]}`]} alt={practiceWord[currentIdx]} class="h-28 object-contain drop-shadow-lg" />
+                                    {/if}
+                                </div>
+                                {#if practiceFeedback === "correct"}
+                                    <div in:fly={{ y:-15, duration:300 }} class="text-center text-green-500 font-black text-2xl">✓ Chính xác!</div>
+                                {/if}
+                            {:else}
+                                <div in:scale class="text-center space-y-3 py-6">
+                                    <div class="text-6xl">🎊</div>
+                                    <p class="text-2xl font-black text-green-600">Hoàn thành từ "{practiceWord}"!</p>
+                                </div>
+                            {/if}
+                        </div>
+
+                        <!-- Camera -->
+                        <div class="bg-black rounded-[2.5rem] overflow-hidden relative h-[380px] shadow-xl">
+                            <div class="absolute top-4 left-4 z-20 bg-black/50 backdrop-blur px-4 py-1.5 rounded-full text-xs font-bold text-white flex items-center gap-2 border border-white/10">
+                                <div class="w-2 h-2 rounded-full {handDetected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}"></div>
+                                {handDetected ? "Đang nhận diện" : "Đưa tay vào khung hình"}
+                            </div>
+                            <div class="absolute top-4 right-4 z-20 w-14 h-14 rounded-2xl bg-iris/80 flex items-center justify-center text-2xl font-black text-white">
+                                {detectedLetter ?? "—"}
+                            </div>
+                            <video bind:this={videoElement} class="absolute inset-0 opacity-0 w-full h-full object-cover -scale-x-100" playsinline></video>
+                            <canvas bind:this={canvasElement} width="640" height="480" class="w-full h-full object-cover -scale-x-100 z-10"></canvas>
+                            {#if !isCameraRunning}
+                                <div class="absolute inset-0 flex items-center justify-center bg-gray-900 z-30">
+                                    <div class="text-center space-y-3">
+                                        <i class="bx bx-loader-alt animate-spin text-4xl text-iris"></i>
+                                        <p class="text-white text-sm opacity-70">Đang khởi động Camera AI...</p>
+                                    </div>
+                                </div>
+                            {/if}
+                        </div>
                     </div>
+
+                <!-- LEARN MODE – lesson active -->
+                {:else if activeLesson}
+                    <div in:fly={{ y: 20, duration: 500 }} class="space-y-6">
+                        <div class="flex items-center gap-4">
+                            <button onclick={closeActive} class="w-10 h-10 rounded-xl bg-surface border border-overlay flex items-center justify-center hover:bg-iris hover:text-white transition-all">
+                                <i class="bx bx-left-arrow-alt text-2xl"></i>
+                            </button>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3">
+                                    <h1 class="text-2xl font-black text-rose-text">{activeLesson.title}</h1>
+                                    {#if showCorrect}
+                                        <div in:scale class="px-3 py-1 bg-green-500 text-white text-xs font-black rounded-full">✓ Đúng! +{lastPoints}đ</div>
+                                    {/if}
+                                </div>
+                                <span class="text-xs text-muted font-bold uppercase tracking-widest">{activeLesson.difficulty} • {activeLesson.duration}</span>
+                            </div>
+                            <!-- Lesson progress indicator -->
+                            <div class="text-sm font-black text-muted">
+                                {activeLessonIdx + 1} / {filteredLessons.filter(l => !isLocked(l.title)).length}
+                            </div>
+                        </div>
+
+                        <!-- Progress bar -->
+                        <div class="w-full h-2 bg-overlay rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-iris to-gold transition-all duration-500 rounded-full"
+                                style="width:{((activeLessonIdx) / Math.max(filteredLessons.filter(l=>!isLocked(l.title)).length,1))*100}%"></div>
+                        </div>
+
+                        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 h-[560px]">
+                            <!-- Left: Illustration -->
+                            <div class="bg-surface rounded-[2.5rem] border {showCorrect ? 'border-green-400' : 'border-overlay'} overflow-hidden flex flex-col shadow-sm transition-colors duration-300">
+                                <div class="p-5 border-b border-overlay bg-white/50 backdrop-blur flex items-center justify-between">
+                                    <h3 class="font-bold text-rose-text flex items-center gap-2"><i class="bx bx-image text-iris"></i>Minh họa</h3>
+                                    {#if showCorrect}
+                                        <span in:scale class="px-3 py-1 bg-green-500 text-white text-xs font-black rounded-full">✓ Chính xác!</span>
+                                    {/if}
+                                </div>
+                                <div class="flex-1 relative bg-white flex items-center justify-center overflow-hidden">
+                                    <div class="absolute inset-0 pattern-grid opacity-5 pointer-events-none"></div>
+                                    {#if signSvgMap[activeLesson.title]}
+                                        {#key activeLesson.title}
+                                            <img in:fly={{ y: 20, duration: 350 }}
+                                                src={signSvgMap[activeLesson.title]} alt={activeLesson.title}
+                                                class="w-full h-full object-contain p-8 drop-shadow-lg relative z-10" />
+                                        {/key}
+                                    {:else}
+                                        <div class="flex flex-col items-center gap-4 opacity-30">
+                                            <i class="bx bx-hand text-8xl text-iris"></i>
+                                        </div>
+                                    {/if}
+                                    <div class="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur p-3 rounded-2xl border border-overlay shadow text-sm">
+                                        <span class="font-bold text-iris">Hướng dẫn: </span>
+                                        <span class="text-subtle">{activeLesson.description}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Camera -->
+                            <div class="bg-black rounded-[2.5rem] overflow-hidden flex flex-col relative shadow-xl">
+                                <div class="absolute top-5 left-5 z-20 bg-black/50 backdrop-blur px-4 py-1.5 rounded-full text-xs font-bold text-white flex items-center gap-2 border border-white/10">
+                                    <div class="w-2 h-2 rounded-full {handDetected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}"></div>
+                                    {handDetected ? "Đang nhận diện" : "Đưa tay vào khung hình"}
+                                </div>
+                                <!-- Detected overlay -->
+                                {#if detectedLetter}
+                                    <div class="absolute top-5 right-5 z-20 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black text-white shadow-xl transition-colors duration-200
+                                        {detectedLetter === activeLesson.targetLetter ? 'bg-green-500 scale-110' : 'bg-iris/80'}">
+                                        {detectedLetter}
+                                    </div>
+                                {/if}
+                                <video bind:this={videoElement} class="absolute inset-0 opacity-0 w-full h-full object-cover -scale-x-100" playsinline></video>
+                                <canvas bind:this={canvasElement} width="640" height="480" class="w-full h-full object-cover -scale-x-100 z-10"></canvas>
+                                {#if !isCameraRunning}
+                                    <div class="absolute inset-0 flex items-center justify-center bg-gray-900 z-30">
+                                        <div class="text-center space-y-3">
+                                            <i class="bx bx-loader-alt animate-spin text-4xl text-iris"></i>
+                                            <p class="text-white text-sm opacity-70">Đang khởi động Camera AI...</p>
+                                        </div>
+                                    </div>
+                                {/if}
+                                <!-- Instruction hint at bottom -->
+                                <div class="absolute bottom-5 left-5 right-5 z-20 bg-black/60 backdrop-blur text-white text-xs text-center py-2 px-4 rounded-xl border border-white/10">
+                                    Thực hiện ký hiệu <span class="font-black text-gold">"{activeLesson.title.split(" ").pop()}"</span> — camera sẽ tự nhận diện
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <!-- LEARN MODE – list view -->
                 {:else}
-                    <!-- List View -->
                     <div>
-                        <header class="mb-8">
-                            <h1 class="text-4xl font-black text-rose-text mb-2">
-                                Thư viện Kí hiệu
-                            </h1>
-                            <p class="text-subtle">
-                                Chọn bài học để bắt đầu luyện tập với AI.
-                            </p>
+                        <header class="mb-8 flex items-center justify-between">
+                            <div>
+                                <h1 class="text-4xl font-black text-rose-text mb-1">Thư viện Ký hiệu</h1>
+                                <p class="text-subtle">Chọn bài học. Camera AI sẽ tự nhận diện và qua bài khi đúng.</p>
+                            </div>
+                            {#if currentUser?.role === "admin"}
+                                <span class="px-4 py-2 bg-rose-text/10 text-rose-text rounded-xl text-xs font-black uppercase tracking-widest border border-rose-text/20">
+                                    <i class="bx bx-lock-open mr-1"></i>Chế độ Admin
+                                </span>
+                            {/if}
                         </header>
+                        {#if isCatLocked(selectedCategory) && currentUser?.role !== 'admin'}
+                            <!-- Category locked - under construction banner -->
+                            <div class="py-20 text-center space-y-6" in:fade>
+                                <div class="relative inline-block">
+                                    <div class="w-32 h-32 rounded-[2rem] bg-gradient-to-br from-rose-text/20 to-iris/10 border-2 border-dashed border-rose-text/30 flex items-center justify-center mx-auto">
+                                        <i class="bx bx-wrench text-5xl text-rose-text/60"></i>
+                                    </div>
+                                    <div class="absolute -top-3 -right-3 w-10 h-10 bg-rose-text rounded-full flex items-center justify-center shadow-lg">
+                                        <i class="bx bx-lock text-white text-lg"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-black text-rose-text mb-2">Đang cập nhật nội dung</h2>
+                                    <p class="text-subtle max-w-sm mx-auto">Danh mục <span class="font-bold text-iris">"{selectedCategory}"</span> hiện đang được cập nhật. Vui lòng quay lại sau.</p>
+                                </div>
+                                <div class="flex items-center justify-center gap-2 text-xs text-muted font-bold">
+                                    <span class="inline-flex gap-1">
+                                        <span class="w-2 h-2 rounded-full bg-rose-text/50 animate-bounce" style="animation-delay:0ms"></span>
+                                        <span class="w-2 h-2 rounded-full bg-rose-text/50 animate-bounce" style="animation-delay:150ms"></span>
+                                        <span class="w-2 h-2 rounded-full bg-rose-text/50 animate-bounce" style="animation-delay:300ms"></span>
+                                    </span>
+                                    Sắp ra mắt
+                                </div>
+                            </div>
+                        {:else}
 
-                        <!-- Search & Filter not implemented for brevity, assume simple grid -->
-
-                        <div
-                            class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
-                        >
-                            {#each lessons.filter((l) => l.category === selectedCategory) as lesson, i}
-                                <button
-                                    in:fly={{ y: 20, delay: i * 50 }}
-                                    class="group bg-surface p-6 rounded-[2rem] border border-overlay hover:border-iris/40 hover:shadow-2xl hover:shadow-iris/5 transition-all duration-500 cursor-pointer text-left w-full relative overflow-hidden"
-                                    onclick={() => selectLesson(lesson)}
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                            {#each filteredLessons as lesson, i}
+                                {@const locked = isLocked(lesson.title)}
+                                {@const done = completedSet.has(lesson.title)}
+                                <div
+                                    in:fly={{ y: 20, delay: i * 35 }}
+                                    onclick={() => !locked && selectLesson(lesson, i)}
+                                    class="group relative bg-surface rounded-[2rem] border transition-all duration-500 text-left w-full overflow-hidden
+                                        {locked ? 'opacity-50 cursor-not-allowed border-overlay' :
+                                         done ? 'border-green-400/50 hover:border-green-400 hover:shadow-xl hover:shadow-green-400/10 cursor-pointer' :
+                                         'border-overlay hover:border-iris/40 hover:shadow-2xl hover:shadow-iris/5 cursor-pointer'}"
                                 >
-                                    <div
-                                        class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500"
-                                    >
-                                        <i
-                                            class="bx {categories.find(
-                                                (c) =>
-                                                    c.name === selectedCategory,
-                                            )?.icon ||
-                                                'bx-book'} text-8xl text-iris"
-                                        ></i>
-                                    </div>
+                                    <!-- SVG thumb -->
+                                    {#if signSvgMap[lesson.title]}
+                                        <img src={signSvgMap[lesson.title]} alt={lesson.title}
+                                            class="absolute top-3 right-3 w-20 h-20 object-contain transition-opacity pointer-events-none
+                                            {locked ? 'opacity-5' : 'opacity-10 group-hover:opacity-35'}" />
+                                    {/if}
 
-                                    <div class="relative z-10">
-                                        <div
-                                            class="h-12 w-12 bg-white rounded-2xl flex items-center justify-center text-2xl shadow-sm mb-4 text-iris border border-overlay"
-                                        >
-                                            {lesson.title[7] || lesson.title[0]}
+                                    <div class="relative z-10 p-6">
+                                        <div class="flex items-start justify-between mb-4">
+                                            <div class="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl font-black shadow-sm border
+                                                {done ? 'bg-green-100 text-green-600 border-green-300' : 'bg-white text-iris border-overlay'}">
+                                                {done ? "✓" : lesson.title.split(" ").pop()}
+                                            </div>
+                                            <!-- Admin lock toggle -->
+                                            {#if currentUser?.role === "admin"}
+                                                <button
+                                                    onclick={(e) => toggleLock(lesson.title, e)}
+                                                    class="w-8 h-8 rounded-lg flex items-center justify-center transition-all
+                                                        {locked ? 'bg-rose-text/10 text-rose-text' : 'bg-overlay/50 text-muted hover:bg-rose-text/10 hover:text-rose-text'}"
+                                                    title={locked ? "Mở khóa bài này" : "Khóa bài này"}
+                                                >
+                                                    <i class="bx {locked ? 'bx-lock' : 'bx-lock-open'} text-lg"></i>
+                                                </button>
+                                            {:else if locked}
+                                                <i class="bx bx-lock text-xl text-muted opacity-50"></i>
+                                            {/if}
                                         </div>
 
-                                        <h3
-                                            class="text-xl font-bold text-rose-text group-hover:text-iris transition-colors mb-1"
-                                        >
+                                        <h3 class="text-xl font-bold mb-1 transition-colors
+                                            {locked ? 'text-muted' : done ? 'text-green-600' : 'text-rose-text group-hover:text-iris'}">
                                             {lesson.title}
+                                            {#if locked}<span class="text-xs ml-2 opacity-60">· Đã khóa</span>{/if}
                                         </h3>
-
-                                        <div
-                                            class="flex items-center gap-3 text-xs font-bold text-muted mt-4"
-                                        >
-                                            <span
-                                                class="px-2 py-1 bg-overlay rounded-lg"
-                                                >{lesson.difficulty}</span
-                                            >
-                                            <span
-                                                class="flex items-center gap-1"
-                                                ><i class="bx bx-time"></i>
-                                                {lesson.duration}</span
-                                            >
+                                        <p class="text-xs text-muted line-clamp-2 leading-relaxed">{lesson.description}</p>
+                                        <div class="flex items-center gap-3 text-xs font-bold text-muted mt-4">
+                                            <span class="px-2 py-1 bg-overlay rounded-lg">{lesson.difficulty}</span>
+                                            <span class="flex items-center gap-1"><i class="bx bx-time"></i>{lesson.duration}</span>
                                         </div>
                                     </div>
 
-                                    <div
-                                        class="absolute bottom-6 right-6 w-8 h-8 rounded-full bg-iris text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-300"
-                                    >
-                                        <i class="bx bx-right-arrow-alt"></i>
-                                    </div>
-                                </button>
+                                    {#if !locked}
+                                        <div class="absolute bottom-5 right-5 w-8 h-8 rounded-full {done ? 'bg-green-500' : 'bg-iris'} text-white flex items-center justify-center opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300">
+                                            <i class="bx bx-right-arrow-alt"></i>
+                                        </div>
+                                    {/if}
+                                </div>
                             {/each}
                         </div>
 
-                        {#if lessons.filter((l) => l.category === selectedCategory).length === 0}
-                            <div
-                                class="py-20 text-center text-muted opacity-50"
-                            >
-                                <i class="bx bx-folder-open text-6xl mb-4"></i>
-                                <p>Chưa có bài học nào trong danh mục này.</p>
+                        {#if filteredLessons.length === 0}
+                            <div class="py-20 text-center opacity-50">
+                                <i class="bx bx-folder-open text-7xl text-muted mb-4"></i>
+                                <p class="text-muted">Chưa có bài học nào.</p>
                             </div>
                         {/if}
                     </div>
@@ -639,21 +723,7 @@
 </div>
 
 <style>
-    .pattern-grid {
-        background-image: radial-gradient(#404040 1px, transparent 1px);
-        background-size: 20px 20px;
-    }
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: rgba(0, 0, 0, 0.2);
-    }
+.pattern-grid { background-image: radial-gradient(#404040 1px, transparent 1px); background-size: 20px 20px; }
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
 </style>

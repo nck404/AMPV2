@@ -17,9 +17,15 @@ importers:
       '@mediapipe/hands':
         specifier: ^0.4.1675469240
         version: 0.4.1675469240
+      canvas-confetti:
+        specifier: ^1.9.4
+        version: 1.9.4
       cropperjs:
         specifier: ^1.6.2
         version: 1.6.2
+      fingerpose:
+        specifier: ^0.1.0
+        version: 0.1.0
     devDependencies:
       '@sveltejs/adapter-static':
         specifier: ^3.0.10
@@ -532,6 +538,9 @@ packages:
     resolution: {integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==}
     engines: {node: '>= 0.4'}
 
+  canvas-confetti@1.9.4:
+    resolution: {integrity: sha512-yxQbJkAVrFXWNbTUjPqjF7G+g6pDotOUHGbkZq2NELZUMDpiJ85rIEazVb8GTaAptNW2miJAXbs1BtioA251Pw==}
+
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
@@ -582,6 +591,9 @@ packages:
     peerDependenciesMeta:
       picomatch:
         optional: true
+
+  fingerpose@0.1.0:
+    resolution: {integrity: sha512-OXIRuRTgukBOo4xUO+vPchzHftZOPxO7VRh4HDjTg5NGr4gSkiY+LQShjsKAzmpRiRdmTgDh0dNsGpWa1Jsx3Q==}
 
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -1155,6 +1167,8 @@ snapshots:
 
   axobject-query@4.1.0: {}
 
+  canvas-confetti@1.9.4: {}
+
   clsx@2.1.1: {}
 
   cookie@0.6.0: {}
@@ -1212,6 +1226,8 @@ snapshots:
   fdir@6.5.0(picomatch@4.0.3):
     optionalDependencies:
       picomatch: 4.0.3
+
+  fingerpose@0.1.0: {}
 
   fsevents@2.3.3:
     optional: true
