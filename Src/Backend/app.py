@@ -14,6 +14,7 @@ from routes.forum import forum_bp
 from routes.social import social_bp
 from routes.tts import tts_bp
 from routes.recruitment import recruitment_bp
+from routes.sign_language import sign_lang_bp
 
 load_dotenv()
 
@@ -53,6 +54,7 @@ def create_app():
     app.register_blueprint(docs_bp, url_prefix="/api/docs")
     app.register_blueprint(admin_bp, url_prefix="/api/admin")
     app.register_blueprint(recruitment_bp, url_prefix="/api/recruitment")
+    app.register_blueprint(sign_lang_bp, url_prefix="/api/sign-language")
 
     # Removed db.create_all() in favor of migrations
 
