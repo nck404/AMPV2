@@ -11,14 +11,10 @@
             "id": "be81c70e4ec042b9",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "AMP.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "AMP"
+              "title": "New tab"
             }
           }
         ]

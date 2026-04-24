@@ -1,12 +1,10 @@
 import { mdsvex } from "mdsvex";
-import adapter from "@sveltejs/adapter-static";
+import adapter from "@sveltejs/adapter-node";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   kit: {
-    adapter: adapter({
-      fallback: "index.html", // SPA mode cho static hosting
-    }),
+    adapter: adapter(),
   },
   preprocess: [mdsvex()],
   extensions: [".svelte", ".svx"],

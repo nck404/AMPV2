@@ -156,7 +156,7 @@
                                 bind:value={password}
                                 placeholder="••••••••"
                                 required
-                                class="w-full pr-14 h-14 bg-surface/50 border-overlay focus:bg-white focus:border-iris focus:ring-4 focus:ring-iris/5 transition-all text-base"
+                                class="w-full pr-14 h-14 bg-surface/50 border-overlay focus:bg-white focus:border-iris focus:ring-4 focus:ring-iris/5 transition-all text-base input-icon"
                             />
                             <button
                                 type="button"
