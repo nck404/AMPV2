@@ -49,23 +49,15 @@
 }
 
 @media (max-width: 1024px) {
-    :root {
-        font-size: 12px; /* Scales down all rem-based elements */
-    }
     h1 {
-        font-size: 2.8rem !important;
+        font-size: 3rem !important;
         margin-bottom: 1rem !important;
     }
     h2 {
-        font-size: 1.8rem !important;
+        font-size: 2rem !important;
     }
     h3 {
-        font-size: 1.4rem !important;
-    }
-    input {
-        font-size: 14px !important;
-        padding-top: 10px !important;
-        padding-bottom: 10px !important;
+        font-size: 1.5rem !important;
     }
 }
 

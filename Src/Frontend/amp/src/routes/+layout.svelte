@@ -16,8 +16,8 @@
 
     let isCustomCursorActive = $state(
         typeof window !== "undefined"
-            ? localStorage.getItem("custom-cursor-active") !== "false"
-            : true,
+            ? localStorage.getItem("custom-cursor-active") === "true"
+            : false,
     );
 
     $effect(() => {

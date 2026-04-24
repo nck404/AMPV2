@@ -85,7 +85,7 @@
                     AMP - Công nghệ cho sự bình đẳng
                 </div>
 
-                <h1 class="text-6xl md:text-8xl font-black tracking-tight leading-none text-rose-text">
+                <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-none text-rose-text">
                     Nâng tầm <br />
                     <span class="text-iris">Giá trị sống</span>
                 </h1>

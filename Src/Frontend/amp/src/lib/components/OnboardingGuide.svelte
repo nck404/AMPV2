@@ -63,6 +63,9 @@
     ];
 
     onMount(() => {
+        // Không hiển thị hướng dẫn trên thiết bị di động (màn hình < 768px)
+        if (window.innerWidth < 768) return;
+
         // Kiểm tra xem người dùng đã xem hướng dẫn chưa
         const hasSeenTour = localStorage.getItem("amp-onboarding-completed");
 
