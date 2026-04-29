@@ -31,7 +31,6 @@
 <div class="max-w-6xl mx-auto px-6 py-12">
     {#if mounted}
         <div class="space-y-12">
-            <!-- Header & Search -->
             <div class="text-center space-y-6">
                 <h1 class="text-6xl font-black text-rose-text">
                     Tìm <span class="text-gold">Sự Nghiệp</span> <br /> Mơ Ước Của
@@ -68,7 +67,6 @@
                 </div>
             </div>
 
-            <!-- Dashboard Banner -->
             <div
                 class="bg-gradient-to-r from-gold/10 to-iris/5 p-12 rounded-[4rem] border border-gold/10 flex flex-col lg:flex-row items-center justify-between gap-12 relative overflow-hidden"
             >
@@ -117,7 +115,6 @@
                 </div>
             </div>
 
-            <!-- Jobs List -->
             <div class="space-y-6">
                 <div class="flex items-center justify-between px-4 mb-8">
                     <h3 class="text-2xl font-black text-rose-text">

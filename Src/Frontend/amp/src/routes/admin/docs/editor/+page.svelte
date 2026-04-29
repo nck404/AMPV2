@@ -21,13 +21,9 @@
         if (id) {
             docId = id;
             try {
-                // We need to fetch the existing doc
-                // But the public API uses slug. Let's assume we can get it by id if we had an endpoint or just search it.
-                // For simplicity, let's add a GET /api/docs/detail/<id> or just use the public list to find it.
                 const allDocs = await api.get("/docs/");
                 const currentDoc = allDocs.find((d) => d.id == id);
                 if (currentDoc) {
-                    // Fetch full detail for content
                     const detail = await api.get(`/docs/${currentDoc.slug}`);
                     title = detail.title;
                     slug = detail.slug;
@@ -131,7 +127,6 @@
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <!-- Sidebar Metadata -->
             <aside class="lg:col-span-1 space-y-6">
                 <div
                     class="glass p-6 rounded-[2rem] border border-overlay space-y-4"
@@ -186,7 +181,6 @@
                 </div>
             </aside>
 
-            <!-- Main Editor Area -->
             <main class="lg:col-span-3">
                 {#if preview}
                     <div

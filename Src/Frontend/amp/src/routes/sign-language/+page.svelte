@@ -17,7 +17,6 @@
         };
     }
 
-    // ── Core state ─────────────────────────────────────────────────────────────
     let mounted = $state(false);
     let selectedCategory = $state("Bảng chữ cái");
     let activeLesson = $state(null);
@@ -31,15 +30,13 @@
     let isCameraRunning = $state(false);
     let handDetected = $state(false);
 
-    // ── Recognition ────────────────────────────────────────────────────────────
     let detectedLetter = $state(null);
     let stableBuffer = [];
     const STABLE_FRAMES = 8;
     let cooldown = false;
     let autoSkipTimer = null;
-    const AUTO_SKIP_DELAY = 2000; // 2 seconds
+    const AUTO_SKIP_DELAY = 2000;
 
-    // ── Scoring ────────────────────────────────────────────────────────────────
     let totalScore = $state(0);
     let streak = $state(0);
     let lastPoints = $state(0);
@@ -47,7 +44,6 @@
     let showCorrect = $state(false);
     let showComplete = $state(false);
 
-    // ── Practice mode ─────────────────────────────────────────────────────────
     const WORDS = [
         "HOA",
         "CAY",
@@ -72,7 +68,6 @@
     let practiceCombo = $state(0);
     let practiceFeedback = $state(null);
 
-    // ── Database & API ────────────────────────────────────────────────────────
     async function fetchProgress() {
         if (!currentUser) return;
         try {
@@ -82,7 +77,6 @@
             if (res.ok) {
                 const data = await res.json();
                 completedSet = new Set(data.map((p) => p.lesson_title));
-                // Add scores if needed
             }
         } catch (e) {
             console.error("Fetch progress failed", e);
@@ -94,7 +88,7 @@
         const timeSpent = lessonStartTime
             ? Math.floor((Date.now() - lessonStartTime) / 1000)
             : 0;
-        const accuracy = Math.min(100, scoreVal); // Assuming score is out of 100
+        const accuracy = Math.min(100, scoreVal);
 
         try {
             await fetch(`${API_BASE}/progress`, {
@@ -168,7 +162,6 @@
         toggleRemoteLock("category", name);
     }
 
-    // ── Data ───────────────────────────────────────────────────────────────────
     const categories = [
         { name: "Bảng chữ cái", icon: "bx-font", count: 26 },
         { name: "Số đếm", icon: "bx-hash", count: 10 },
@@ -281,7 +274,6 @@
         allLessons.filter((l) => l.category === selectedCategory),
     );
 
-    // ── MediaPipe ──────────────────────────────────────────────────────────────
     onMount(() => {
         mounted = true;
         try {
@@ -329,7 +321,6 @@
             handDetected = true;
             drawRealisticHand(ctx, results.multiHandLandmarks[0]);
 
-            // Scale z same as x/y for correct fingerpose angle computation
             const keypoints = results.multiHandLandmarks[0].map((lm) => [
                 lm.x * canvasElement.width,
                 lm.y * canvasElement.height,
@@ -363,7 +354,6 @@
             stableBuffer.length === STABLE_FRAMES &&
             stableBuffer.every((l) => l === stableBuffer[0]);
         if (!stable) {
-            // Clear auto-skip timer if gesture becomes unstable
             if (autoSkipTimer) {
                 clearTimeout(autoSkipTimer);
                 autoSkipTimer = null;
@@ -377,14 +367,12 @@
                 letter === activeLesson.targetLetter &&
                 !completedSet.has(activeLesson.title)
             ) {
-                // Start auto-skip timer if not already running
                 if (!autoSkipTimer) {
                     autoSkipTimer = setTimeout(() => {
                         onCorrectSign();
                     }, AUTO_SKIP_DELAY);
                 }
             } else {
-                // Clear timer if gesture is not correct
                 if (autoSkipTimer) {
                     clearTimeout(autoSkipTimer);
                     autoSkipTimer = null;
@@ -396,9 +384,7 @@
         }
     }
 
-    // ── Correct sign in learn mode ─────────────────────────────────────────────
     function onCorrectSign() {
-        // Clear auto-skip timer
         if (autoSkipTimer) {
             clearTimeout(autoSkipTimer);
             autoSkipTimer = null;
@@ -432,7 +418,6 @@
         }, 800);
     }
 
-    // ── Practice mode ──────────────────────────────────────────────────────────
     function onPracticeCorrect() {
         cooldown = true;
         stableBuffer = [];
@@ -458,7 +443,6 @@
         }
     }
 
-    // ── Camera ─────────────────────────────────────────────────────────────────
     async function startCamera() {
         if (!videoElement) return;
         try {
@@ -503,7 +487,6 @@
     }
 
     function closeActive() {
-        // Clear auto-skip timer
         if (autoSkipTimer) {
             clearTimeout(autoSkipTimer);
             autoSkipTimer = null;
@@ -516,7 +499,6 @@
         showComplete = false;
     }
 
-    // ── Confetti/Fireworks ─────────────────────────────────────────────────────
     function fireSmallConfetti() {
         confetti({
             particleCount: 70,
@@ -562,7 +544,6 @@
         })();
     }
 
-    // ── Hand renderer ──────────────────────────────────────────────────────────
     function toPixel(lm, w, h) {
         return { x: lm.x * w, y: lm.y * h };
     }
@@ -618,7 +599,6 @@
     }
 </script>
 
-<!-- ── Completion Modal ─────────────────────────────────────────────────────── -->
 {#if showComplete}
     <div class="fixed inset-0 z-[200] flex items-center justify-center" in:fade>
         <div class="absolute inset-0 bg-rose-text/50 backdrop-blur-md"></div>
@@ -669,7 +649,6 @@
             in:fade={{ duration: 500 }}
             class="flex flex-col lg:flex-row gap-10"
         >
-            <!-- ── Sidebar ─────────────────────────────────────────────────────── -->
             <aside
                 class="w-full lg:w-72 lg:sticky lg:top-24 lg:h-[calc(100vh-100px)] space-y-5 flex flex-col"
             >
@@ -732,7 +711,6 @@
                                             >{cat.count}</span
                                         >{/if}
                                 </button>
-                                <!-- Admin lock toggle for category -->
                                 {#if currentUser?.role === "admin" && cat.name !== "Luyện tập"}
                                     <button
                                         onclick={(e) =>
@@ -757,7 +735,6 @@
                     </div>
                 </div>
 
-                <!-- Score board -->
                 <div
                     class="glass p-5 rounded-3xl border border-gold/20 bg-gold/5 space-y-4"
                 >
@@ -803,7 +780,6 @@
                     </div>
                 </div>
 
-                <!-- Live detection -->
                 {#if isCameraRunning}
                     <div
                         class="glass p-5 rounded-3xl border border-iris/20 space-y-3"
@@ -847,9 +823,7 @@
                 {/if}
             </aside>
 
-            <!-- ── Main ────────────────────────────────────────────────────────── -->
             <main class="flex-1 space-y-8 min-w-0">
-                <!-- PRACTICE MODE -->
                 {#if mode === "practice"}
                     <div in:fly={{ y: 20, duration: 400 }} class="space-y-6">
                         <div class="flex items-center justify-between">
@@ -944,7 +918,6 @@
                             {/if}
                         </div>
 
-                        <!-- Camera -->
                         <div
                             class="bg-black rounded-[2.5rem] overflow-hidden relative h-[380px] shadow-xl"
                         >
@@ -995,7 +968,6 @@
                         </div>
                     </div>
 
-                    <!-- LEARN MODE – lesson active -->
                 {:else if activeLesson}
                     <div in:fly={{ y: 20, duration: 500 }} class="space-y-6">
                         <div class="flex items-center gap-4">
@@ -1026,7 +998,6 @@
                                     >{activeLesson.difficulty} • {activeLesson.duration}</span
                                 >
                             </div>
-                            <!-- Lesson progress indicator -->
                             <div class="text-sm font-black text-muted">
                                 {activeLessonIdx + 1} / {filteredLessons.filter(
                                     (l) => !isLocked(l.title),
@@ -1034,7 +1005,6 @@
                             </div>
                         </div>
 
-                        <!-- Progress bar -->
                         <div
                             class="w-full h-2 bg-overlay rounded-full overflow-hidden"
                         >
@@ -1054,7 +1024,6 @@
                         <div
                             class="grid grid-cols-1 xl:grid-cols-2 gap-6 h-[560px]"
                         >
-                            <!-- Left: Illustration -->
                             <div
                                 class="bg-surface rounded-[2.5rem] border {showCorrect
                                     ? 'border-green-400'
@@ -1119,7 +1088,6 @@
                                 </div>
                             </div>
 
-                            <!-- Right: Camera -->
                             <div
                                 class="bg-black rounded-[2.5rem] overflow-hidden flex flex-col relative shadow-xl"
                             >
@@ -1135,7 +1103,6 @@
                                         ? "Đang nhận diện"
                                         : "Đưa tay vào khung hình"}
                                 </div>
-                                <!-- Detected overlay -->
                                 {#if detectedLetter}
                                     <div
                                         class="absolute top-5 right-5 z-20 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black text-white shadow-xl transition-colors duration-200
@@ -1174,7 +1141,6 @@
                                         </div>
                                     </div>
                                 {/if}
-                                <!-- Instruction hint at bottom -->
                                 <div
                                     class="absolute bottom-5 left-5 right-5 z-20 bg-black/60 backdrop-blur text-white text-xs text-center py-2 px-4 rounded-xl border border-white/10"
                                 >
@@ -1189,7 +1155,6 @@
                         </div>
                     </div>
 
-                    <!-- LEARN MODE – list view -->
                 {:else}
                     <div>
                         <header class="mb-8 flex items-center justify-between">
@@ -1233,7 +1198,6 @@
                             {/if}
                         </header>
                         {#if isCatLocked(selectedCategory) && currentUser?.role !== "admin"}
-                            <!-- Category locked - under construction banner -->
                             <div class="py-20 text-center space-y-6" in:fade>
                                 <div class="relative inline-block">
                                     <div
@@ -1304,7 +1268,6 @@
                                               ? 'border-green-400/50 hover:border-green-400 hover:shadow-xl hover:shadow-green-400/10 cursor-pointer'
                                               : 'border-overlay hover:border-iris/40 hover:shadow-2xl hover:shadow-iris/5 cursor-pointer'}"
                                     >
-                                        <!-- SVG thumb -->
                                         {#if signSvgMap[lesson.title]}
                                             <img
                                                 src={signSvgMap[lesson.title]}
@@ -1332,7 +1295,6 @@
                                                               .split(" ")
                                                               .pop()}
                                                 </div>
-                                                <!-- Admin lock toggle -->
                                                 {#if currentUser?.role === "admin"}
                                                     <button
                                                         onclick={(e) =>

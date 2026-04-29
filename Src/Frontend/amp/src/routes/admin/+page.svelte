@@ -2,10 +2,8 @@
     import { api } from "$lib/api.js";
     import { onMount } from "svelte";
 
-    // Active tab state
     let activeTab = $state("users");
 
-    // Real Data
     let users = $state([]);
     let posts = $state([]);
     let jobs = $state([]);
@@ -18,14 +16,12 @@
         total_jobs: 0
     });
 
-    // New notification form state
     let newNotification = $state({
         title: "",
         content: "",
         type: "admin"
     });
 
-    // Search & Filter
     let userSearchTerm = $state("");
     let filteredUsers = $derived(
         users.filter(u => 
@@ -34,7 +30,6 @@
         )
     );
 
-    // Available routes to lock
     const availableRoutes = [
         "/chat",
         "/forum",
@@ -46,7 +41,6 @@
         "/tools/accessibility"
     ];
 
-    // Modal state for adding user
     let showAddUserModal = $state(false);
     let newUser = $state({
         name: "",
@@ -83,7 +77,6 @@
         fetchData();
     });
 
-    // User Actions
     async function changeUserRole(id, role) {
         try {
             await api.put(`/admin/users/${id}/role`, { role });
@@ -132,7 +125,6 @@
         }
     }
 
-    // Post Actions
     async function deletePost(id) {
         if (confirm("Bạn có chắc muốn xóa bài viết này?")) {
             try {
@@ -144,7 +136,6 @@
         }
     }
 
-    // Job Actions
     async function approveJob(id) {
         try {
             await api.put(`/admin/jobs/${id}/approve`, {});
@@ -165,7 +156,6 @@
         }
     }
 
-    // Route Locking
     async function toggleRouteLock(route) {
         let newLockedRoutes;
         if (lockedRoutes.includes(route)) {
@@ -182,7 +172,6 @@
         }
     }
 
-    // Notification Actions
     async function sendNotification(e) {
         e.preventDefault();
         try {
@@ -221,7 +210,6 @@
         </div>
     </div>
 
-    <!-- Stats Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="glass p-6 rounded-[2rem] border border-white/10 flex items-center gap-4">
             <div class="w-12 h-12 rounded-2xl bg-iris/10 flex items-center justify-center text-iris text-2xl">
@@ -261,7 +249,6 @@
         </div>
     </div>
 
-    <!-- Navigation Tabs -->
     <div class="flex space-x-2 border-b border-white/10 pb-2">
         <button
             class="px-6 py-3 text-sm font-black rounded-t-2xl transition-all {activeTab === 'users' ? 'bg-iris text-white shadow-lg shadow-iris/20' : 'text-subtle hover:text-rose-text'}"
@@ -295,7 +282,6 @@
         </button>
     </div>
 
-    <!-- Tab Content -->
     <div class="glass rounded-[2rem] border border-white/10 overflow-hidden min-h-[400px]">
         {#if activeTab === "users"}
             <div class="p-6 border-b border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 bg-white/5">
@@ -479,7 +465,6 @@
         {#if activeTab === "notifications"}
             <div class="p-8">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Send Notification Form -->
                     <div class="lg:col-span-1 border-r border-white/10 pr-0 lg:pr-8">
                         <h2 class="text-2xl font-black text-rose-text mb-6">Gửi thông báo mới</h2>
                         <form onsubmit={sendNotification} class="space-y-4">
@@ -527,7 +512,6 @@
                         </form>
                     </div>
 
-                    <!-- Notification History -->
                     <div class="lg:col-span-2">
                         <h2 class="text-2xl font-black text-rose-text mb-6">Lịch sử thông báo</h2>
                         <div class="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
@@ -606,7 +590,6 @@
     </div>
 </div>
 
-<!-- Modal Thêm Tài Khoản -->
 {#if showAddUserModal}
     <div
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"

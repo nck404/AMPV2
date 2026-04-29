@@ -39,7 +39,6 @@ def register():
 
     new_user = User(username=username, email=email)
     new_user.set_password(password)
-    # Generate random 6-digit public_id
     new_user.public_id = generate_random_public_id()
     
     db.session.add(new_user)
@@ -105,7 +104,6 @@ def update_public_id():
     if not new_pid:
         return jsonify({"msg": "Missing public_id"}), 400
         
-    # Validation: alphanumeric only, no special chars
     if not re.match(r'^[a-zA-Z0-9]+$', new_pid):
         return jsonify({"msg": "Public ID must be alphanumeric only"}), 400
         
@@ -159,7 +157,6 @@ def upload_avatar():
         filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         
-        # Update user avatar_url
         avatar_url = f"/static/uploads/{filename}"
         user.avatar_url = avatar_url
         db.session.commit()
@@ -221,7 +218,6 @@ def get_user_notifications():
     from models import Notification
     from sqlalchemy import or_
     
-    # Get personal notifications OR global notifications (user_id is NULL)
     notifs = Notification.query.filter(
         or_(Notification.user_id == user_id, Notification.user_id == None)
     ).order_by(Notification.created_at.desc()).limit(20).all()
@@ -243,7 +239,7 @@ def get_user_notifications():
 def mark_all_notifications_read():
     user_id = int(get_jwt_identity())
     from models import Notification
-    # Only mark user-specific ones for now
     Notification.query.filter_by(user_id=user_id, is_read=False).update({"is_read": True})
     db.session.commit()
     return jsonify({"msg": "Notifications updated"}), 200
+

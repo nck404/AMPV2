@@ -5,13 +5,12 @@
 
     let mounted = false;
     let currentUser = null;
-    let activeTab = "global"; // "global" or "personal"
+    let activeTab = "global";
     let leaderboard = [];
     let myStats = null;
     let loading = true;
     let error = null;
 
-    // Pagination
     let limit = 50;
     let offset = 0;
     let hasMore = true;
@@ -88,7 +87,6 @@
             }
         }
 
-        // Always fetch leaderboard (public)
         fetchLeaderboard();
     });
 </script>
@@ -104,7 +102,6 @@
 <div class="max-w-6xl mx-auto px-6 py-12">
     {#if mounted}
         <div class="space-y-8">
-            <!-- Header -->
             <div class="text-center space-y-4">
                 <h1 class="text-4xl md:text-5xl font-black text-rose-text">
                     🏆 Bảng xếp hạng
@@ -114,7 +111,6 @@
                 </p>
             </div>
 
-            <!-- Tabs -->
             <div class="flex justify-center">
                 <div class="glass p-1 rounded-2xl flex">
                     <button
@@ -140,7 +136,6 @@
                 </div>
             </div>
 
-            <!-- Global Leaderboard Tab -->
             {#if activeTab === "global"}
                 <div in:fly={{ y: 20, duration: 500 }}>
                     {#if loading && leaderboard.length === 0}
@@ -167,14 +162,12 @@
                                     }}
                                 >
                                     <div class="flex items-center gap-6">
-                                        <!-- Rank -->
                                         <div
                                             class="text-3xl font-black text-rose-text min-w-[60px] text-center"
                                         >
                                             {getRankIcon(user.rank)}
                                         </div>
 
-                                        <!-- Avatar -->
                                         <div
                                             class="w-12 h-12 rounded-full bg-iris/20 flex items-center justify-center overflow-hidden"
                                         >
@@ -197,7 +190,6 @@
                                             {/if}
                                         </div>
 
-                                        <!-- User Info -->
                                         <div class="flex-1">
                                             <h3
                                                 class="font-bold text-rose-text text-lg"
@@ -210,7 +202,6 @@
                                             </p>
                                         </div>
 
-                                        <!-- Stats -->
                                         <div class="text-right space-y-1">
                                             <div
                                                 class="text-2xl font-black text-gold"
@@ -252,12 +243,10 @@
                 </div>
             {/if}
 
-            <!-- Personal Stats Tab -->
             {#if activeTab === "personal" && currentUser}
                 <div in:fly={{ y: 20, duration: 500 }}>
                     {#if myStats}
                         <div class="space-y-8">
-                            <!-- Large Rank Display -->
                             <div class="text-center">
                                 <div
                                     class="inline-block glass p-8 rounded-[3rem] shadow-2xl"
@@ -276,7 +265,6 @@
                                 </div>
                             </div>
 
-                            <!-- Stats Cards -->
                             <div
                                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
                             >
@@ -327,7 +315,6 @@
                                 </div>
                             </div>
 
-                            <!-- Shortcut to Learning Page -->
                             <div class="text-center">
                                 <a
                                     href="/sign-language"

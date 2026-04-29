@@ -8,7 +8,6 @@
     let tooltipPos = $state({ top: 0, left: 0, transform: "translate(0, 0)" });
     let isAnimating = $state(false);
 
-    // Định nghĩa các bước hướng dẫn
     const steps = [
         {
             title: "Chào mừng đến với AMP!",
@@ -63,14 +62,11 @@
     ];
 
     onMount(() => {
-        // Không hiển thị hướng dẫn trên thiết bị di động (màn hình < 768px)
         if (window.innerWidth < 768) return;
 
-        // Kiểm tra xem người dùng đã xem hướng dẫn chưa
         const hasSeenTour = localStorage.getItem("amp-onboarding-completed");
 
         if (!hasSeenTour) {
-            // Đợi 1.5s để đảm bảo các component (Navbar, Toolbox, AI) render xong hết
             setTimeout(() => {
                 isVisible = true;
                 updateHighlight();
@@ -101,14 +97,12 @@
                 const el = document.querySelector(step.selector);
 
                 if (el) {
-                    // Cuộn phần tử vào giữa màn hình nếu nó bị khuất
                     el.scrollIntoView({
                         behavior: "smooth",
                         block: "center",
                         inline: "center",
                     });
 
-                    // Đợi 300ms cho mượt animation cuộn rồi mới lấy tọa độ
                     setTimeout(() => {
                         const rect = el.getBoundingClientRect();
 
@@ -119,8 +113,7 @@
                             height: rect.height,
                         };
 
-                        // Tính toán vị trí hiển thị bảng Tooltip
-                        const margin = 24; // Khoảng cách từ highlight box tới tooltip
+                        const margin = 24;
 
                         if (step.placement === "bottom") {
                             tooltipPos = {
@@ -148,8 +141,6 @@
                             };
                         }
 
-                        // Chống tràn màn hình cho tooltip
-                        // (Chỉ áp dụng logic cơ bản để tránh lỗi hiển thị)
                         if (tooltipPos.left < 160) {
                             tooltipPos.left = 160;
                         }
@@ -163,7 +154,6 @@
                     }, 300);
                 } else {
                     isAnimating = false;
-                    // Nếu không tìm thấy phần tử, tự động bỏ qua bước này
                     console.warn(
                         `Onboarding: Element not found for selector ${step.selector}`,
                     );
@@ -200,7 +190,6 @@
 
 {#if isVisible}
     <div class="onboarding-overlay" transition:fade={{ duration: 400 }}>
-        <!-- Vùng sáng (Spotlight) -->
         <div
             class="highlight-box"
             style="
@@ -211,7 +200,6 @@
             "
         ></div>
 
-        <!-- Bảng thông tin hướng dẫn (Tooltip) -->
         <div
             class="tooltip-box bg-white shadow-2xl rounded-2xl p-6 border border-overlay"
             style="

@@ -5,7 +5,6 @@ from extensions import db
 
 docs_bp = Blueprint('docs', __name__)
 
-# Middleware to check if user is admin
 def admin_required():
     user_id = int(get_jwt_identity())
     user = User.query.get(user_id)
@@ -13,7 +12,6 @@ def admin_required():
         return False
     return True
 
-# Public: Get all documentation titles (navigation)
 @docs_bp.route('/', methods=['GET'])
 def get_all_docs():
     docs = Documentation.query.order_by(Documentation.category, Documentation.order).all()
@@ -28,7 +26,6 @@ def get_all_docs():
         })
     return jsonify(result), 200
 
-# Public: Get a single doc by slug
 @docs_bp.route('/<slug>', methods=['GET'])
 def get_doc(slug):
     doc = Documentation.query.filter_by(slug=slug).first()
@@ -45,7 +42,6 @@ def get_doc(slug):
         "last_updated": doc.last_updated
     }), 200
 
-# Admin: Create new documentation
 @docs_bp.route('/', methods=['POST'])
 @jwt_required()
 def create_doc():
@@ -77,7 +73,6 @@ def create_doc():
 
     return jsonify({"msg": "Documentation created successfully", "id": new_doc.id}), 201
 
-# Admin: Update documentation
 @docs_bp.route('/<int:doc_id>', methods=['PUT'])
 @jwt_required()
 def update_doc(doc_id):
@@ -98,7 +93,6 @@ def update_doc(doc_id):
     db.session.commit()
     return jsonify({"msg": "Documentation updated successfully"}), 200
 
-# Admin: Delete documentation
 @docs_bp.route('/<int:doc_id>', methods=['DELETE'])
 @jwt_required()
 def delete_doc(doc_id):
@@ -112,3 +106,4 @@ def delete_doc(doc_id):
     db.session.delete(doc)
     db.session.commit()
     return jsonify({"msg": "Documentation deleted successfully"}), 200
+

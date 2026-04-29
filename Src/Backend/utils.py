@@ -7,7 +7,6 @@ def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         try:
-            # First check if the request has a valid JWT
             verify_jwt_in_request()
             username = get_jwt_identity()
             current_user = User.query.filter_by(username=username).first()
@@ -20,6 +19,5 @@ def token_required(f):
     return decorated
 
 def verify_recaptcha(token):
-    # Luôn trả về True để test giao diện theo yêu cầu của bạn
-    # Bạn không cần phải tick hay cấu hình key thật nữa
     return True
+

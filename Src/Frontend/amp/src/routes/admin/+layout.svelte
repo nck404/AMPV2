@@ -20,12 +20,10 @@
         try {
             const user = JSON.parse(userData);
 
-            // Kiểm tra quyền admin
             if (user.is_admin === true || user.role === "admin") {
                 isAuthorized = true;
                 isLoading = false;
             } else {
-                // Nếu không phải admin, hiển thị màn hình Access Denied thay vì redirect
                 accessDenied = true;
                 isLoading = false;
             }

@@ -28,13 +28,12 @@
         }
     }
 
-    // Function to strip markdown for preview snippet
     function getSnippet(content) {
         if (!content) return "";
         return (
             content
-                .replace(/[#*`_~]/g, "") // Remove formatting chars
-                .replace(/\[(.*?)\]\(.*?\)/g, "$1") // Replaced links with text
+                .replace(/[#*`_~]/g, "")
+                .replace(/\[(.*?)\]\(.*?\)/g, "$1")
                 .substring(0, 150) + "..."
         );
     }
@@ -43,7 +42,6 @@
 <div class="max-w-5xl mx-auto px-6 py-12">
     {#if mounted}
         <div class="space-y-8">
-            <!-- Forum Header -->
             <div
                 class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-overlay"
             >
@@ -65,7 +63,6 @@
                 </button>
             </div>
 
-            <!-- Filters -->
             <div
                 class="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-none"
             >
@@ -82,7 +79,6 @@
                 {/each}
             </div>
 
-            <!-- Posts List -->
             <div class="space-y-6">
                 {#if loading}
                     <div class="py-20 text-center opacity-40">
@@ -124,7 +120,6 @@
                             class="w-full text-left glass p-5 md:p-8 rounded-[2rem] md:rounded-[3rem] border border-white/60 hover:bg-white/95 transition-all duration-500 group cursor-pointer shadow-sm hover:shadow-xl hover:shadow-rose-text/5 relative"
                         >
                             <div class="flex items-start gap-6">
-                                <!-- Upvote -->
                                 <div
                                     class="hidden sm:flex flex-col items-center gap-2 px-3 py-4 bg-overlay/30 rounded-2xl h-fit"
                                 >

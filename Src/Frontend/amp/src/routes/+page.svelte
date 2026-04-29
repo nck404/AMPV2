@@ -73,7 +73,6 @@
 </script>
 
 <div class="px-6 max-w-7xl mx-auto">
-    <!-- Hero Section -->
     <section class="flex flex-col lg:flex-row items-center justify-between gap-12 py-12 lg:py-24">
         {#if mounted}
             <div in:fly={{ x: -30, duration: 1000 }} class="flex-1 space-y-8 text-center lg:text-left">
@@ -129,14 +128,12 @@
                     />
                     <div class="absolute inset-0 bg-gradient-to-t from-rose-text/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </div>
-                <!-- Decorative elements -->
                 <div class="absolute -top-12 -right-12 w-64 h-64 bg-iris/5 blur-[100px] rounded-full animate-pulse"></div>
                 <div class="absolute -bottom-12 -left-12 w-64 h-64 bg-love/5 blur-[100px] rounded-full animate-pulse"></div>
             </div>
         {/if}
     </section>
 
-    <!-- Mission Stats -->
     <section id="mission" class="py-24 border-y border-overlay/50">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div class="space-y-8">
@@ -208,10 +205,8 @@
         </div>
     </section>
 
-    <!-- Features: Support Intro + Tools -->
     <section class="py-24 space-y-20">
 
-        <!-- Part 1: Who AMP supports -->
         <div class="text-center space-y-4">
             <div class="inline-block px-4 py-1.5 bg-iris/10 text-iris rounded-full text-xs font-black uppercase tracking-widest">
                 AMP hỗ trợ cho
@@ -236,14 +231,12 @@
             {/each}
         </div>
 
-        <!-- Divider -->
         <div class="flex items-center gap-6">
             <div class="flex-1 h-px bg-overlay/50"></div>
             <div class="text-xs font-black text-muted uppercase tracking-[0.25em] whitespace-nowrap">Các công cụ hiện có</div>
             <div class="flex-1 h-px bg-overlay/50"></div>
         </div>
 
-        <!-- Part 2: Tool listing -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {#each tools as tool}
                 <a href={tool.path} class="group relative p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] bg-white border border-overlay/40 hover:border-iris/20 hover:shadow-[0_20px_50px_-15px_rgba(144,122,169,0.12)] transition-all duration-500 overflow-hidden">
@@ -267,7 +260,6 @@
 
     </section>
 
-    <!-- Sign Language Teaser -->
     <section class="py-24 bg-rose-text rounded-[4rem] px-8 lg:px-20 overflow-hidden relative shadow-2xl">
         <div class="absolute inset-0 bg-[url('/noise.png')] opacity-10"></div>
         <div class="flex flex-col lg:flex-row items-center gap-16 relative z-10">
@@ -307,7 +299,6 @@
         </div>
     </section>
 
-    <!-- Footer Space -->
     <footer class="py-24 border-t border-overlay mt-24">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
             <div class="space-y-6">

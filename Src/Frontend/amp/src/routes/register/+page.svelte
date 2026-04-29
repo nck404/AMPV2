@@ -40,7 +40,6 @@
 
         loading = true;
         try {
-            // Gửi 'test-token' vì bạn muốn bypass reCAPTCHA ở Backend
             const res = await api.post("/register", {
                 username: name,
                 email,
@@ -196,7 +195,6 @@
                         </div>
                     </div>
 
-                    <!-- Mock reCAPTCHA for Test Mode -->
                     <div class="py-2">
                         <button
                             type="button"

@@ -10,7 +10,7 @@
     let newComment = $state("");
     let submitting = $state(false);
     let replyTo = $state(null);
-    let activePicker = $state(null); // { type: 'post'|'comment', id: null|commentId }
+    let activePicker = $state(null);
 
     const reactions = [
         { type: "like", icon: "👍", label: "Thích", color: "text-blue-500" },
@@ -73,7 +73,6 @@
                 type: type,
             });
             activePicker = null;
-            // Update local state instead of reload for better UX
             if (targetType === "post") {
                 window.location.reload();
             } else {
@@ -95,12 +94,10 @@
 </script>
 
 <div class="space-y-4 pt-4 border-t border-overlay">
-    <!-- Post Actions Bar -->
     <div
         class="flex items-center justify-between border-y border-overlay py-1.5 px-2 relative"
     >
         <div class="flex items-center gap-1 group/btn">
-            <!-- Reaction Picker Post -->
             {#if activePicker?.type === "post"}
                 <div
                     in:fly={{ y: 5 }}
@@ -152,7 +149,6 @@
         </button>
     </div>
 
-    <!-- Post Stats Summary -->
     <div class="flex items-center justify-between px-2 text-[13px]">
         <div class="flex items-center gap-2">
             {#if getTotalReactions(post.reactions) > 0}
@@ -174,9 +170,7 @@
         >
     </div>
 
-    <!-- Comment Section -->
     <div class="space-y-4 bg-overlay/5 p-4 rounded-2xl">
-        <!-- New Comment Input -->
         <div class="flex gap-2 items-start">
             <div
                 class="w-8 h-8 mt-1 rounded-full bg-iris/20 border border-white flex-shrink-0 flex items-center justify-center font-bold text-iris text-xs"
@@ -269,7 +263,6 @@
                                     {comment.content}
                                 </p>
 
-                                <!-- Comment Reaction Count Badge -->
                                 {#if getTotalReactions(comment.reactions) > 0}
                                     <div
                                         class="absolute -bottom-2 right-0 translate-x-1/4 bg-white border border-overlay rounded-full px-1.5 py-0.5 shadow-sm flex items-center gap-0.5 z-10"
@@ -357,7 +350,6 @@
                                 >
                             </div>
 
-                            <!-- Replies Area -->
                             {#if comment.replies && comment.replies.length > 0}
                                 <div
                                     class="mt-2 space-y-3 border-l-2 border-overlay/50 ml-2 pl-4"

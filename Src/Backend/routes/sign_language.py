@@ -7,7 +7,6 @@ from utils import token_required
 
 sign_lang_bp = Blueprint("sign_lang", __name__)
 
-
 @sign_lang_bp.route("/progress", methods=["GET"])
 @token_required
 def get_progress(current_user):
@@ -24,7 +23,6 @@ def get_progress(current_user):
         ]
     )
 
-
 @sign_lang_bp.route("/progress", methods=["POST"])
 @token_required
 def save_progress(current_user):
@@ -32,15 +30,13 @@ def save_progress(current_user):
     lesson_title = data.get("lesson_title")
     category = data.get("category")
     score = data.get("score", 0)
-    time_spent = data.get("time_spent", 0)  # thời gian học tính bằng giây
-    accuracy = data.get("accuracy", 0.0)  # độ chính xác (%)
+    time_spent = data.get("time_spent", 0)
+    accuracy = data.get("accuracy", 0.0)
 
-    # Check if exists to update or create new
     p = LearningProgress.query.filter_by(
         user_id=current_user.id, lesson_title=lesson_title
     ).first()
     if p:
-        # Update existing progress
         p.score = score
         p.best_score = max(p.best_score, score)
         p.attempts += 1
@@ -50,7 +46,6 @@ def save_progress(current_user):
         p.completed_at = datetime.utcnow()
         p.last_attempt = datetime.utcnow()
     else:
-        # Create new progress record
         p = LearningProgress(
             user_id=current_user.id,
             lesson_title=lesson_title,
@@ -68,7 +63,6 @@ def save_progress(current_user):
 
     db.session.commit()
 
-    # Update leaderboard entry
     update_leaderboard(current_user.id)
 
     return jsonify(
@@ -82,14 +76,12 @@ def save_progress(current_user):
         }
     )
 
-
 @sign_lang_bp.route("/locks", methods=["GET"])
 def get_locks():
     locks = LessonLock.query.filter_by(is_locked=True).all()
     return jsonify(
         [{"target_type": l.target_type, "target_name": l.target_name} for l in locks]
     )
-
 
 @sign_lang_bp.route("/locks/toggle", methods=["POST"])
 @token_required
@@ -117,16 +109,13 @@ def toggle_lock(current_user):
     db.session.commit()
     return jsonify({"message": f"Target {status} successfully", "status": status})
 
-
 @sign_lang_bp.route("/leaderboard", methods=["GET"])
 def get_leaderboard():
     limit = int(request.args.get("limit", 50))
     offset = int(request.args.get("offset", 0))
 
-    # Update ranks before fetching
     update_all_ranks()
 
-    # Get leaderboard entries with user info
     entries = (
         db.session.query(Leaderboard, User)
         .join(User)
@@ -159,11 +148,9 @@ def get_leaderboard():
 
     return jsonify(result)
 
-
 @sign_lang_bp.route("/leaderboard/me", methods=["GET"])
 @token_required
 def get_my_leaderboard(current_user):
-    # Update ranks before fetching
     update_all_ranks()
 
     entry = Leaderboard.query.filter_by(user_id=current_user.id).first()
@@ -188,11 +175,9 @@ def get_my_leaderboard(current_user):
         }
     )
 
-
 @sign_lang_bp.route("/leaderboard/user/<int:user_id>", methods=["GET"])
 @token_required
 def get_user_leaderboard(current_user, user_id):
-    # Update ranks before fetching
     update_all_ranks()
 
     entry = Leaderboard.query.filter_by(user_id=user_id).first()
@@ -219,29 +204,22 @@ def get_user_leaderboard(current_user, user_id):
         }
     )
 
-
-# ─── Helper Functions ─────────────────────────────────────────────────────
-
-
 def update_leaderboard(user_id):
     """Update or create leaderboard entry for a user"""
     user = User.query.get(user_id)
     if not user:
         return
 
-    # Get or create leaderboard entry
     entry = Leaderboard.query.filter_by(user_id=user_id).first()
     if not entry:
         entry = Leaderboard(user_id=user_id)
         db.session.add(entry)
 
-    # Calculate stats from learning progress
     progress_records = LearningProgress.query.filter_by(user_id=user_id).all()
 
     total_score = sum(p.score for p in progress_records)
     total_lessons = len(progress_records)
 
-    # Calculate average accuracy (assuming score = accuracy * 100)
     if total_lessons > 0:
         average_accuracy = (
             (total_score / (total_lessons * 100)) * 100 if total_lessons > 0 else 0
@@ -256,14 +234,12 @@ def update_leaderboard(user_id):
 
     db.session.commit()
 
-
 def update_all_ranks():
     """Update ranks for all leaderboard entries based on total_score"""
-    # Get all leaderboard entries ordered by total_score desc
     entries = Leaderboard.query.order_by(Leaderboard.total_score.desc()).all()
 
-    # Update ranks
     for i, entry in enumerate(entries, start=1):
         entry.rank = i
 
     db.session.commit()
+

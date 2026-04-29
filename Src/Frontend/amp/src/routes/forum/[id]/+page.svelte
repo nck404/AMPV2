@@ -61,7 +61,6 @@
             </div>
         {:else if post}
             <div in:fade class="space-y-10">
-                <!-- Back Button & Tools -->
                 <div class="flex items-center justify-between">
                     <button
                         onclick={() => goto("/forum")}
@@ -86,7 +85,6 @@
                     </div>
                 </div>
 
-                <!-- Post Header -->
                 <header class="space-y-6">
                     <div
                         class="flex flex-wrap gap-2 text-[10px] uppercase font-black tracking-widest text-iris"
@@ -155,7 +153,6 @@
                     </div>
                 </header>
 
-                <!-- Post Content (Rendered Markdown) -->
                 <article class="prose prose-rose max-w-none text-lg">
                     {@html renderedContent}
                 </article>

@@ -77,7 +77,6 @@
                     start + key.length;
             }
 
-            // Trigger input event for Svelte/React etc
             activeElement.dispatchEvent(new Event("input", { bubbles: true }));
         }
     }
@@ -95,7 +94,6 @@
     <div
         class="keyboard-container bg-white/90 backdrop-blur-2xl shadow-2xl border border-overlay rounded-[2.5rem] overflow-hidden"
     >
-        <!-- Drag Handle -->
         <div
             class="h-10 bg-overlay/20 flex items-center justify-between px-6 cursor-move select-none"
             role="presentation"

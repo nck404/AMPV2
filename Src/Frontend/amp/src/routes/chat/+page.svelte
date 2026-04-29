@@ -7,7 +7,7 @@
     import { goto } from "$app/navigation";
 
     let mounted = $state(false);
-    let selectedChatId = $state(null); // 'global' or userId
+    let selectedChatId = $state(null);
     let showMobileSidebar = $state(true);
     let messageInput = $state("");
     let socket;
@@ -34,10 +34,8 @@
             currentUser = JSON.parse(userData);
         }
 
-        // Load friends as conversations
         await loadFriends();
 
-        // Check for direct chat from URL
         const targetId = page.url.searchParams.get("id");
         if (targetId) {
             selectedChatId = parseInt(targetId);
@@ -82,17 +80,14 @@
                             },
                         ];
                         
-                        // If we are currently in this chat, mark as read
                         if (selectedChatId === data.sender_id) {
                             api.post("/chat/mark-read", { sender_id: data.sender_id });
                         }
                     }
                 } else if (data.receiver_id === currentUser.id) {
-                    // Message for us but not in current chat - update sidebar badge
                     const convoIndex = convos.findIndex(c => c.id === data.sender_id);
                     if (convoIndex !== -1) {
                         convos[convoIndex].unread_count = (convos[convoIndex].unread_count || 0) + 1;
-                        // Trigger Navbar update
                         window.dispatchEvent(new CustomEvent("chat-updated"));
                     }
                 }
@@ -137,7 +132,6 @@
         selectedChatId = id;
         showMobileSidebar = false;
         
-        // Mark as read if private chat
         if (id !== "global") {
             try {
                 await api.post("/chat/mark-read", { sender_id: id });
@@ -145,7 +139,6 @@
                 if (convoIndex !== -1) {
                     convos[convoIndex].unread_count = 0;
                 }
-                // Notify Navbar
                 window.dispatchEvent(new CustomEvent("chat-updated"));
             } catch (err) {
                 console.error("Failed to mark messages as read", err);
@@ -256,7 +249,6 @@
             in:fade
             class="bg-surface border-x md:border border-overlay rounded-none md:rounded-[3rem] h-full overflow-hidden flex shadow-2xl shadow-rose-text/5 relative pb-20 md:pb-0"
         >
-            <!-- Sidebar -->
             <aside
                 class="w-full md:w-80 lg:w-96 border-r border-overlay bg-white/50 backdrop-blur flex flex-col {showMobileSidebar
                     ? 'flex'
@@ -372,7 +364,6 @@
                 </div>
             </aside>
 
-            <!-- Main Chat Area -->
             <main
                 class="flex-1 flex flex-col bg-white {showMobileSidebar
                     ? 'hidden md:flex'

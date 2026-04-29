@@ -15,7 +15,6 @@ def search_users():
     if not query:
         return jsonify([]), 200
         
-    # Search by username or public_id
     users = User.query.filter(
         or_(
             User.username.ilike(f'%{query}%'),
@@ -25,7 +24,6 @@ def search_users():
     
     result = []
     for u in users:
-        # Check friendship status
         friendship = Friendship.query.filter(
             or_(
                 (Friendship.user_id == current_user_id) & (Friendship.friend_id == u.id),
@@ -137,3 +135,4 @@ def get_pending_requests():
         })
         
     return jsonify(result), 200
+

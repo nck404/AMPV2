@@ -100,7 +100,6 @@
 <div class="max-w-7xl mx-auto px-6 py-16 min-h-screen">
     {#if mounted}
         <div in:fly={{ y: 20 }} class="space-y-16">
-            <!-- Hero Section -->
             <section class="relative p-12 md:p-20 glass rounded-[4rem] border-white/60 overflow-hidden text-center">
                 <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-iris/10 via-transparent to-love/10 opacity-30"></div>
                 <div class="absolute -top-24 -left-24 w-64 h-64 bg-iris/20 rounded-full blur-[100px]"></div>
@@ -129,7 +128,6 @@
                 </div>
             </section>
 
-            <!-- Tools Grid Section -->
             <div id="tools-grid" class="space-y-8">
                 <div class="flex items-center justify-between px-4">
                     <h2 class="text-3xl font-black text-rose-text">Dịch vụ Trợ giúp</h2>
@@ -160,7 +158,6 @@
                 </div>
             </div>
 
-            <!-- Main Workspace -->
             {#if activeTool}
                 <div in:fly={{ y: 50 }} class="glass p-12 md:p-20 rounded-[4rem] border-white/60 shadow-2xl relative">
                     <div class="flex flex-col lg:flex-row gap-16 items-start">
@@ -229,7 +226,6 @@
                 </div>
             {/if}
 
-            <!-- Education / Tutorial Section -->
             <section class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="col-span-1 md:col-span-2 space-y-8">
                     <h2 class="text-4xl font-black text-rose-text">Hành trình hòa nhập</h2>

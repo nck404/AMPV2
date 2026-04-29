@@ -11,10 +11,8 @@ def speak():
         return "No text provided", 400
     
     try:
-        # Create gTTS object
         tts = gTTS(text=text, lang='vi')
         
-        # Stream bytes directly
         mp3_fp = io.BytesIO()
         tts.write_to_fp(mp3_fp)
         data = mp3_fp.getvalue()
@@ -26,3 +24,4 @@ def speak():
         }
     except Exception as e:
         return str(e), 500
+

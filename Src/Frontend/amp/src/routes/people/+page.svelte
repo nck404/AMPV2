@@ -51,7 +51,7 @@
             });
             if (res.msg) {
                 alert("Đã gửi lời mời kết bạn!");
-                handleSearch(); // Refresh search list
+                handleSearch();
             }
         } catch (err) {
             alert(err.msg || "Lỗi gửi yêu cầu");
@@ -72,7 +72,6 @@
         }
     }
 
-    // Debounce search
     let timeout;
     function onInput() {
         clearTimeout(timeout);
@@ -83,7 +82,6 @@
 <div class="max-w-4xl mx-auto px-6 py-12">
     {#if mounted}
         <div in:fly={{ y: 20 }} class="space-y-12">
-            <!-- Header -->
             <div
                 class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-overlay pb-8"
             >
@@ -97,7 +95,6 @@
                 </div>
             </div>
 
-            <!-- Search Bar -->
             <div class="relative group">
                 <span
                     class="absolute left-6 top-1/2 -translate-y-1/2 text-2xl text-muted opacity-40 group-focus-within:opacity-100 transition-opacity"
@@ -114,7 +111,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-1 gap-12">
-                <!-- Pending Requests -->
                 {#if pendingRequests.length > 0}
                     <div class="space-y-6">
                         <h2
@@ -176,7 +172,6 @@
                     </div>
                 {/if}
 
-                <!-- Search Results -->
                 <div class="space-y-6">
                     <h2 class="text-xl font-black text-rose-text">
                         Kết quả tìm kiếm
@@ -272,7 +267,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- Background flourish -->
                                     <div
                                         class="absolute -right-4 -bottom-4 w-24 h-24 bg-iris/5 rounded-full blur-2xl group-hover:bg-iris/10 transition-colors"
                                     ></div>

@@ -3,7 +3,6 @@ from datetime import datetime
 from extensions import db
 from werkzeug.security import check_password_hash, generate_password_hash
 
-
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -16,7 +15,7 @@ class User(db.Model):
     avatar_url = db.Column(db.String(255))
     is_admin = db.Column(db.Boolean, default=False)
     is_banned = db.Column(db.Boolean, default=False)
-    role = db.Column(db.String(20), default="user")  # user, business, admin
+    role = db.Column(db.String(20), default="user")
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     def set_password(self, password):
@@ -24,7 +23,6 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,7 +34,6 @@ class Message(db.Model):
 
     sender = db.relationship("User", foreign_keys=[sender_id])
 
-
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -47,7 +44,6 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     author = db.relationship("User", backref="posts")
-
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -62,34 +58,31 @@ class Comment(db.Model):
         "Comment", backref=db.backref("parent", remote_side=[id]), lazy="dynamic"
     )
 
-
 class Reaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=True)
     comment_id = db.Column(db.Integer, db.ForeignKey("comment.id"), nullable=True)
-    type = db.Column(db.String(20), nullable=False)  # like, love, haha, wow, sad, angry
+    type = db.Column(db.String(20), nullable=False)
 
     user = db.relationship("User", backref="reactions")
-
 
 class Friendship(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     friend_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    status = db.Column(db.String(20), default="pending")  # pending, accepted, blocked
+    status = db.Column(db.String(20), default="pending")
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     user = db.relationship("User", foreign_keys=[user_id], backref="friendships")
     friend = db.relationship("User", foreign_keys=[friend_id])
-
 
 class Documentation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     slug = db.Column(db.String(200), unique=True, nullable=False)
     category = db.Column(db.String(100), default="Hướng dẫn")
-    content = db.Column(db.Text, nullable=False)  # Markdown
+    content = db.Column(db.Text, nullable=False)
     order = db.Column(db.Integer, default=0)
     last_updated = db.Column(
         db.DateTime,
@@ -97,12 +90,10 @@ class Documentation(db.Model):
         onupdate=db.func.current_timestamp(),
     )
 
-
 class SystemConfig(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     key = db.Column(db.String(255), unique=True, nullable=False)
     value = db.Column(db.Text, nullable=False)
-
 
 class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -110,28 +101,26 @@ class Job(db.Model):
     company = db.Column(db.String(200), nullable=False)
     location = db.Column(db.String(200))
     salary = db.Column(db.String(100))
-    type = db.Column(db.String(100))  # Full-time, Remote, etc.
+    type = db.Column(db.String(100))
     description = db.Column(db.Text)
-    status = db.Column(db.String(20), default="pending")  # pending, approved
+    status = db.Column(db.String(20), default="pending")
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
     author = db.relationship("User", backref="jobs")
 
-
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(
         db.Integer, db.ForeignKey("user.id"), nullable=True
-    )  # NULL means global notification
+    )
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    type = db.Column(db.String(50), default="info")  # info, warning, success, admin
+    type = db.Column(db.String(50), default="info")
     is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     user = db.relationship("User", backref="notifications")
-
 
 class JobApplication(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -144,12 +133,11 @@ class JobApplication(db.Model):
     cover_letter = db.Column(db.Text)
     status = db.Column(
         db.String(20), default="pending"
-    )  # pending, reviewed, accepted, rejected
+    )
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     job = db.relationship("Job", backref="applications")
     user = db.relationship("User", backref="applications")
-
 
 class LearningProgress(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -159,14 +147,13 @@ class LearningProgress(db.Model):
     score = db.Column(db.Integer, default=0)
     best_score = db.Column(db.Integer, default=0)
     attempts = db.Column(db.Integer, default=0)
-    time_spent = db.Column(db.Integer, default=0)  # thời gian học tính bằng giây
-    accuracy = db.Column(db.Float, default=0.0)  # độ chính xác (%)
-    session_count = db.Column(db.Integer, default=0)  # số phiên học
+    time_spent = db.Column(db.Integer, default=0)
+    accuracy = db.Column(db.Float, default=0.0)
+    session_count = db.Column(db.Integer, default=0)
     completed_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     last_attempt = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     user = db.relationship("User", backref="learning_progress")
-
 
 class Leaderboard(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -184,9 +171,9 @@ class Leaderboard(db.Model):
 
     user = db.relationship("User", backref="leaderboard")
 
-
 class LessonLock(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     target_type = db.Column(db.String(20), nullable=False)  # 'lesson' or 'category'
     target_name = db.Column(db.String(200), nullable=False)
     is_locked = db.Column(db.Boolean, default=True)
+

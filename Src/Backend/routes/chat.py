@@ -13,7 +13,6 @@ def get_chat_history():
     receiver_id = request.args.get('receiver_id')
     
     if receiver_id:
-        # Private chat
         receiver_id = int(receiver_id)
         messages = Message.query.filter(
             or_(
@@ -22,7 +21,6 @@ def get_chat_history():
             )
         ).order_by(Message.created_at.asc()).limit(100).all()
     else:
-        # Global chat (receiver_id is null)
         messages = Message.query.filter_by(receiver_id=None).order_by(Message.created_at.asc()).limit(100).all()
     
     result = []
@@ -56,3 +54,4 @@ def mark_messages_read():
         db.session.commit()
         return jsonify({"message": "Messages marked as read"}), 200
     return jsonify({"error": "sender_id is required"}), 400
+

@@ -11,7 +11,6 @@ def get_posts():
     posts = Post.query.order_by(Post.created_at.desc()).all()
     result = []
     for post in posts:
-        # Count reactions
         reactions_count = {}
         for r_type in ['like', 'love', 'haha', 'wow', 'sad', 'angry']:
             count = Reaction.query.filter_by(post_id=post.id, type=r_type).count()
@@ -44,7 +43,7 @@ def create_post():
     
     title = data.get('title')
     content = data.get('content')
-    tags = data.get('tags', '') # string
+    tags = data.get('tags', '')
     
     if not title or not content:
         return jsonify({"msg": "Missing title or content"}), 400
@@ -74,7 +73,6 @@ def get_post(post_id):
         if reaction:
             user_reaction = reaction.type
 
-    # Count reactions
     reactions_count = {}
     for r_type in ['like', 'love', 'haha', 'wow', 'sad', 'angry']:
         count = Reaction.query.filter_by(post_id=post.id, type=r_type).count()
@@ -101,13 +99,11 @@ def get_post(post_id):
 @forum_bp.route('/posts/<int:post_id>/comments', methods=['GET'])
 @jwt_required(optional=True)
 def get_comments(post_id):
-    # Fetch top-level comments
     comments = Comment.query.filter_by(post_id=post_id, parent_id=None).order_by(Comment.created_at.desc()).all()
     
     user_id = get_jwt_identity()
     
     def serialize_comment(c):
-        # Count reactions for comment
         reactions_count = {}
         for r_type in ['like', 'love', 'haha', 'wow', 'sad', 'angry']:
             count = Reaction.query.filter_by(comment_id=c.id, type=r_type).count()
@@ -143,7 +139,7 @@ def create_comment(post_id):
     user_id = int(get_jwt_identity())
     data = request.get_json()
     content = data.get('content')
-    parent_id = data.get('parent_id') # Optional for replies
+    parent_id = data.get('parent_id')
     
     if not content:
         return jsonify({"msg": "Content is required"}), 400
@@ -194,3 +190,4 @@ def react():
             return jsonify({"msg": "Reaction added"}), 201
             
     return jsonify({"msg": "No action taken"}), 400
+

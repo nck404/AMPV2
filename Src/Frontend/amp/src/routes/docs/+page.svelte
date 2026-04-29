@@ -16,7 +16,6 @@
         }
     });
 
-    // Group docs by category
     let groupedDocs = $derived(
         docs.reduce((acc, doc) => {
             if (!acc[doc.category]) acc[doc.category] = [];

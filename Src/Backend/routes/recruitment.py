@@ -4,7 +4,6 @@ from models import Job, JobApplication, User
 try:
     from flask_jwt_extended import jwt_required, get_jwt_identity
 except ImportError:
-    # Fallback if needed, though project uses flask_jwt_extended
     from functools import wraps
     def jwt_required():
         def decorator(f):
@@ -33,9 +32,9 @@ def get_jobs():
             "location": job.location,
             "salary": job.salary,
             "type": job.type,
-            "logo": job.company[0].upper() if job.company else "?", # Added logo for UI
-            "tags": [job.type] if job.type else [], # Added tags for UI
-            "date": job.created_at.strftime("%d/%m/%Y"), # Formatted date
+            "logo": job.company[0].upper() if job.company else "?",
+            "tags": [job.type] if job.type else [],
+            "date": job.created_at.strftime("%d/%m/%Y"),
             "description": job.description
         })
     return jsonify({"jobs": output}), 200
@@ -60,7 +59,6 @@ def create_job():
     current_user_id = get_jwt_identity()
     current_user = User.query.get(int(current_user_id))
     
-    # Only business or admin can post
     if current_user.role not in ["business", "admin"]:
         return jsonify({"message": "Only businesses can post jobs."}), 403
     
@@ -76,7 +74,7 @@ def create_job():
         type=data.get("type"),
         description=data.get("description"),
         author_id=current_user.id,
-        status='pending' # Wait for admin approval
+        status='pending'
     )
     db.session.add(new_job)
     db.session.commit()
@@ -94,7 +92,6 @@ def apply_job(job_id):
     if not data or not data.get("name") or not data.get("email"):
         return jsonify({"message": "Missing required fields."}), 400
     
-    # Check if already applied
     existing = JobApplication.query.filter_by(job_id=job_id, user_id=current_user.id).first()
     if existing:
         return jsonify({"message": "You have already applied for this job."}), 400
@@ -119,13 +116,11 @@ def get_applications():
     current_user_id = get_jwt_identity()
     current_user = User.query.get(int(current_user_id))
     
-    # If business, see applications for their jobs
     if current_user.role == "business":
         jobs = Job.query.filter_by(author_id=current_user.id).all()
         job_ids = [j.id for j in jobs]
         apps = JobApplication.query.filter(JobApplication.job_id.in_(job_ids)).all()
     else:
-        # User sees their own applications
         apps = JobApplication.query.filter_by(user_id=current_user.id).all()
     
     output = []
@@ -176,7 +171,6 @@ def update_application_status(app_id):
     current_user = User.query.get(int(current_user_id))
     
     app = JobApplication.query.get_or_404(app_id)
-    # Check if the job belongs to this business
     if app.job.author_id != current_user.id and current_user.role != "admin":
         return jsonify({"message": "Unauthorized"}), 403
         
@@ -192,7 +186,6 @@ def update_application_status(app_id):
 @recruitment_bp.route("/applications/send-email", methods=["POST"])
 @jwt_required()
 def send_bulk_email():
-    # Mocking email sending
     data = request.get_json()
     emails = data.get("emails", [])
     subject = data.get("subject", "Thông báo từ nhà tuyển dụng")
@@ -201,8 +194,8 @@ def send_bulk_email():
     if not emails:
         return jsonify({"message": "No emails provided"}), 400
         
-    # In a real app, you'd use Flask-Mail or an API like SendGrid
     print(f"Sending email to {len(emails)} recipients: {emails}")
     print(f"Subject: {subject}")
     
     return jsonify({"message": f"Successfully sent email to {len(emails)} applicants."}), 200
+

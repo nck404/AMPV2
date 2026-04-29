@@ -33,7 +33,6 @@
         }
     });
 
-    // List of public routes that don't need authentication
     const publicRoutes = ["/", "/login", "/register", "/terms", "/privacy"];
 
     $effect(() => {
@@ -51,7 +50,6 @@
                 goto("/profile");
             }
 
-            // Route Lockdown Check
             if (path !== "/maintenance" && path !== "/admin") {
                 api.get(`/admin/check-route?path=${path}`).then(res => {
                     if (res.locked) {

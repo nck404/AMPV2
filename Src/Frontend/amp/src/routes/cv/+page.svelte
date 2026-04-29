@@ -1,11 +1,9 @@
 <script>
     import { onMount } from "svelte";
 
-    // Trạng thái hiển thị (Intro / Builder)
     let showIntro = $state(true);
     let isGeneratingPDF = $state(false);
 
-    // Dữ liệu CV mặc định
     let cvData = $state({
         fullName: "",
         jobTitle: "",
@@ -34,7 +32,6 @@
         ],
     });
 
-    // Thêm kinh nghiệm
     function addExperience() {
         cvData.experience = [
             ...cvData.experience,
@@ -48,12 +45,10 @@
         ];
     }
 
-    // Xóa kinh nghiệm
     function removeExperience(id) {
         cvData.experience = cvData.experience.filter((exp) => exp.id !== id);
     }
 
-    // Thêm học vấn
     function addEducation() {
         cvData.education = [
             ...cvData.education,
@@ -66,12 +61,10 @@
         ];
     }
 
-    // Xóa học vấn
     function removeEducation(id) {
         cvData.education = cvData.education.filter((edu) => edu.id !== id);
     }
 
-    // Xử lý in / xuất PDF bằng html2pdf
     async function handlePrint() {
         if (isGeneratingPDF) return;
         isGeneratingPDF = true;
@@ -112,7 +105,6 @@
         }
     }
 
-    // Xử lý upload ảnh
     function handleAvatarUpload(event) {
         const file = event.target.files[0];
         if (file) {
@@ -130,7 +122,6 @@
 </svelte:head>
 
 {#if showIntro}
-    <!-- Intro / Landing Page -->
     <div
         class="min-h-screen flex items-center justify-center pt-24 pb-12 px-4 md:px-8"
     >
@@ -212,7 +203,6 @@
         </div>
     </div>
 {:else}
-    <!-- Giao diện Trình Tạo CV -->
     <div class="min-h-screen pt-24 pb-12 px-4 md:px-8">
         <div class="max-w-7xl mx-auto">
             <div class="flex justify-between items-center mb-6 no-print">
@@ -240,11 +230,9 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Cột trái: Form điền thông tin -->
                 <div
                     class="form-container glass p-6 rounded-2xl shadow-sm border border-surface h-[calc(100vh-160px)] overflow-y-auto no-print custom-scrollbar"
                 >
-                    <!-- Thông tin cá nhân -->
                     <section class="mb-8">
                         <h2
                             class="text-xl font-bold text-iris mb-4 pb-2 border-b border-highlight-low flex items-center gap-2"
@@ -345,7 +333,6 @@
                         </div>
                     </section>
 
-                    <!-- Kỹ năng -->
                     <section class="mb-8">
                         <h2
                             class="text-xl font-bold text-iris mb-4 pb-2 border-b border-highlight-low flex items-center gap-2"
@@ -368,7 +355,6 @@
                         </div>
                     </section>
 
-                    <!-- Kinh nghiệm làm việc -->
                     <section class="mb-8">
                         <div
                             class="flex justify-between items-center mb-4 pb-2 border-b border-highlight-low"
@@ -452,7 +438,6 @@
                         </div>
                     </section>
 
-                    <!-- Học vấn -->
                     <section>
                         <div
                             class="flex justify-between items-center mb-4 pb-2 border-b border-highlight-low"
@@ -525,7 +510,6 @@
                     </section>
                 </div>
 
-                <!-- Cột phải: Preview CV -->
                 <div
                     class="preview-container glass p-4 sm:p-8 rounded-2xl flex justify-center overflow-y-auto h-[calc(100vh-160px)] custom-scrollbar border border-surface"
                 >
@@ -533,7 +517,6 @@
                         id="cv-preview"
                         class="cv-document bg-base shadow-xl overflow-hidden text-rose-text"
                     >
-                        <!-- Header -->
                         <header
                             class="bg-surface border-b border-highlight-med text-rose-text p-8 flex items-center gap-6"
                         >
@@ -559,11 +542,9 @@
                         </header>
 
                         <div class="flex flex-col md:flex-row min-h-[800px]">
-                            <!-- Sidebar (Left) -->
                             <aside
                                 class="w-full md:w-[32%] bg-overlay p-6 border-r border-highlight-low"
                             >
-                                <!-- Contact -->
                                 <div class="mb-8">
                                     <h3
                                         class="text-sm font-bold uppercase tracking-wider text-rose-text border-b-2 border-highlight-med pb-2 mb-4"
@@ -604,7 +585,6 @@
                                     </ul>
                                 </div>
 
-                                <!-- Skills -->
                                 {#if cvData.skills}
                                     <div>
                                         <h3
@@ -628,9 +608,7 @@
                                 {/if}
                             </aside>
 
-                            <!-- Main Content (Right) -->
                             <main class="w-full md:w-[68%] p-6 md:p-8">
-                                <!-- Summary -->
                                 {#if cvData.summary}
                                     <section class="mb-8">
                                         <h3
@@ -648,7 +626,6 @@
                                     </section>
                                 {/if}
 
-                                <!-- Experience -->
                                 {#if cvData.experience.length > 0}
                                     <section class="mb-8">
                                         <h3
@@ -701,7 +678,6 @@
                                     </section>
                                 {/if}
 
-                                <!-- Education -->
                                 {#if cvData.education.length > 0}
                                     <section>
                                         <h3

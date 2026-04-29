@@ -51,7 +51,6 @@
         try {
             const userData = await api.get("/me");
             if (userData.id) {
-                // Đảm bảo links là một mảng
                 if (!userData.links) userData.links = [];
                 Object.assign(user, userData);
                 localStorage.setItem("user", JSON.stringify(userData));
@@ -70,7 +69,6 @@
             email: user.email,
             public_id: user.public_id,
             bio: user.bio,
-            // Deep copy mảng links
             links: JSON.parse(JSON.stringify(user.links || [])),
         };
         isEditingProfile = true;
@@ -97,7 +95,6 @@
         if (e) e.preventDefault();
         errorMsg = "";
 
-        // Validate public_id
         if (
             editFormData.public_id &&
             !/^[a-zA-Z0-9]+$/.test(editFormData.public_id)
@@ -107,9 +104,6 @@
         }
 
         try {
-            // Gọi API cập nhật thông tin user
-            // Endpoint theo yêu cầu: PUT /api/user/me
-            // Có thể dùng api.put("/me", ...) tùy vào base URL trong api.js, ở đây gọi tường minh hoặc qua api helper
             const res = await api.put("/me", {
                 username: editFormData.username,
                 public_id: editFormData.public_id,
@@ -121,11 +115,9 @@
                 throw new Error(res.error || res.msg);
             }
 
-            // Cập nhật thành công, đồng bộ lại state
             updateUserState(editFormData);
         } catch (err) {
             console.warn("Lỗi API, sử dụng mock state để cập nhật", err);
-            // Mock state nếu API lỗi / chưa có
             updateUserState(editFormData);
         }
     }
@@ -151,7 +143,6 @@
         };
         reader.readAsDataURL(file);
         
-        // Reset input to allow selecting same file again
         e.target.value = "";
     }
 
@@ -236,7 +227,6 @@
 <div class="max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12">
     {#if mounted}
         <div in:fly={{ y: 20 }} class="space-y-8">
-            <!-- Profile Header Card -->
             <div
                 class="glass p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-white/60 relative overflow-hidden"
             >
@@ -245,7 +235,6 @@
                 ></div>
 
                 {#if isEditingProfile}
-                    <!-- Edit Profile Form -->
                     <form
                         onsubmit={handleSaveProfile}
                         class="relative z-10 flex flex-col gap-6"
@@ -268,7 +257,6 @@
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Username -->
                             <div class="flex flex-col gap-1">
                                 <label
                                     for="username"
@@ -285,7 +273,6 @@
                                 />
                             </div>
 
-                            <!-- Email (Readonly) -->
                             <div class="flex flex-col gap-1">
                                 <label
                                     for="email"
@@ -303,7 +290,6 @@
                                 />
                             </div>
 
-                            <!-- Public ID -->
                             <div class="flex flex-col gap-1">
                                 <label
                                     for="public_id"
@@ -323,7 +309,6 @@
                             </div>
                         </div>
 
-                        <!-- Bio -->
                         <div class="flex flex-col gap-1">
                             <label
                                 for="bio"
@@ -338,7 +323,6 @@
                             ></textarea>
                         </div>
 
-                        <!-- Social Links -->
                         <div class="flex flex-col gap-3">
                             <div class="flex items-center justify-between">
                                 <span class="text-sm font-bold text-muted"
@@ -434,7 +418,6 @@
                         </div>
                     </form>
                 {:else}
-                    <!-- View Profile Mode -->
                     <div
                         class="relative z-10 flex flex-col md:flex-row items-center gap-10"
                         in:fade
@@ -507,7 +490,6 @@
                                 </p>
                             </div>
 
-                            <!-- Social Links Display -->
                             <div class="pt-2">
                                 {#if !user.links || user.links.length === 0}
                                     <p class="text-sm text-muted italic">
@@ -575,7 +557,6 @@
                 {/if}
             </div>
 
-            <!-- Stats Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div
                     class="p-8 bg-surface border border-overlay rounded-[2.5rem] text-center space-y-2 group hover:border-iris/30 transition-all shadow-sm"
@@ -621,7 +602,6 @@
                 </div>
             </div>
 
-            <!-- Content Tabs -->
             <div class="space-y-6 pt-6">
                 <div
                     class="flex items-center gap-8 border-b border-overlay px-4"
@@ -654,7 +634,6 @@
         </div>
     {/if}
 
-    <!-- Cropper Modal -->
     {#if cropperModalOpen}
         <div class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-rose-text/90 backdrop-blur-lg" in:fade>
             <div class="bg-white w-full max-w-xl rounded-[3rem] overflow-hidden shadow-2xl flex flex-col p-6 md:p-10 space-y-6 md:space-y-8" in:fly={{ y: 30 }}>
@@ -669,7 +648,6 @@
                 <div class="aspect-square w-full bg-overlay/10 rounded-[2rem] overflow-hidden relative border border-overlay/30 shadow-inner group">
                     <img bind:this={cropperImageElement} src={imageToCrop} alt="Review" class="max-w-full block" />
                     
-                    <!-- Floating Zoom Controls -->
                     <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white/80 backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl z-10 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button onclick={zoomOut} class="w-8 h-8 rounded-lg hover:bg-iris hover:text-white transition-all flex items-center justify-center border border-overlay" aria-label="Thu nhỏ"><i class="bx bx-minus"></i></button>
                         <div class="w-px h-4 bg-overlay mx-1"></div>

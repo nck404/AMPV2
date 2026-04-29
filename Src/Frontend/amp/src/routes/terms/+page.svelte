@@ -30,7 +30,6 @@
             in:fly={{ y: 20 }}
             class="glass p-8 md:p-12 rounded-[3rem] border border-white/60 shadow-2xl relative overflow-hidden"
         >
-            <!-- Decorative line at the top of the box to separate from Navbar -->
             <div
                 class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-love via-iris to-gold opacity-90"
             ></div>

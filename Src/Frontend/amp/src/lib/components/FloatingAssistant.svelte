@@ -24,7 +24,6 @@
     let dragStartCursorY = 0;
     let hasDragged = false;
 
-    // Approximate dimensions for clamping
     const BUBBLE_SIZE = 60;
     const CHAT_WIDTH = 320;
     const CHAT_HEIGHT = 400;
@@ -33,7 +32,6 @@
         const w = expanded ? CHAT_WIDTH : BUBBLE_SIZE;
         const h = expanded ? CHAT_HEIGHT : BUBBLE_SIZE;
 
-        // Ensure it doesn't go off-screen, adding a small padding of 10px
         const padding = 10;
         const maxX = window.innerWidth - w - padding;
         const maxY = window.innerHeight - h - padding;
@@ -46,7 +44,6 @@
 
     $effect(() => {
         if (typeof window !== "undefined") {
-            // Re-clamp when expanded state changes to prevent clipping
             const clamped = clampPosition(assistantX, assistantY, isExpanded);
             assistantX = clamped.x;
             assistantY = clamped.y;
@@ -54,7 +51,6 @@
     });
 
     onMount(() => {
-        // Initial placement
         const initialClamped = clampPosition(
             window.innerWidth - BUBBLE_SIZE - 20,
             window.innerHeight - BUBBLE_SIZE - 80,
@@ -135,7 +131,6 @@
 
         loading = true;
         try {
-            // Placeholder for AI API call
             setTimeout(() => {
                 chatHistory = [
                     ...chatHistory,
@@ -184,7 +179,6 @@
             class="assistant-window flex flex-col bg-white shadow-2xl border border-overlay rounded-2xl overflow-hidden cursor-default w-[320px]"
             in:fly={{ y: 20, duration: 300 }}
         >
-            <!-- Compact Header -->
             <header
                 class="px-3 py-2 bg-iris text-white flex items-center justify-between cursor-grab active:cursor-grabbing"
             >
@@ -210,7 +204,6 @@
                 </div>
             </header>
 
-            <!-- Compact Chat Area -->
             <div
                 class="flex-1 overflow-y-auto p-2.5 space-y-3 min-h-[250px] max-h-[300px] bg-surface/40"
             >
@@ -243,7 +236,6 @@
                 {/if}
             </div>
 
-            <!-- Compact Footer -->
             <footer class="p-2 border-t border-overlay bg-white">
                 <div
                     class="flex items-center gap-1.5 bg-overlay/30 p-1 rounded-xl"

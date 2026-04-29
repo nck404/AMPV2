@@ -9,7 +9,6 @@
     let loading = $state(false);
     let message = $state({ text: "", type: "" });
 
-    // Appearance Settings
     let selectedFont = $state("Inter");
     let selectedFontSize = $state("16px");
     const fonts = [
@@ -27,7 +26,6 @@
         { label: "Rất lớn", value: "20px" },
     ];
 
-    // Account Settings
     let email = $state("");
     let oldPassword = $state("");
     let newPassword = $state("");
@@ -130,7 +128,6 @@
             in:fly={{ y: 10, duration: 200 }}
             class="flex flex-col md:flex-row bg-white/40 backdrop-blur-md rounded-[2.5rem] border border-white/60 shadow-2xl shadow-rose-text/5 overflow-hidden min-h-[600px]"
         >
-            <!-- Sidebar -->
             <aside
                 class="w-full md:w-64 bg-white/30 border-r border-white/50 p-6 space-y-2"
             >
@@ -164,7 +161,6 @@
                 </button>
             </aside>
 
-            <!-- Content Area -->
             <main class="flex-1 p-8 md:p-10 overflow-y-auto bg-white/20">
                 {#if message.text}
                     <div
@@ -177,7 +173,6 @@
 
                 {#if activeSection === "appearance"}
                     <div in:fade={{ duration: 150 }} class="space-y-8">
-                        <!-- Chọn kiểu chữ -->
                         <div class="space-y-4">
                             <div>
                                 <h2
@@ -220,7 +215,6 @@
                             </div>
                         </div>
 
-                        <!-- Chọn cỡ chữ -->
                         <div class="space-y-4">
                             <div>
                                 <h2
@@ -249,7 +243,6 @@
                             </div>
                         </div>
 
-                        <!-- Preview Box -->
                         <div
                             class="p-4 bg-black/5 rounded-lg border border-dashed border-black/10 max-w-lg"
                         >
@@ -273,7 +266,6 @@
 
                 {#if activeSection === "account"}
                     <div in:fade={{ duration: 150 }} class="space-y-8 max-w-md">
-                        <!-- Email Section -->
                         <div class="space-y-4">
                             <h2
                                 class="text-lg font-bold text-rose-text border-b border-black/5 pb-2"
@@ -297,7 +289,6 @@
                             </div>
                         </div>
 
-                        <!-- Password Section -->
                         <div class="space-y-4">
                             <h2
                                 class="text-lg font-bold text-rose-text border-b border-black/5 pb-2"

@@ -122,7 +122,6 @@
 
 <svelte:window bind:innerWidth />
 
-<!-- Desktop: Top Dynamic Island -->
 {#if innerWidth === 0 || innerWidth >= 1024}
     <div
         class="top-nav-container fixed top-6 left-0 right-0 z-50 justify-center px-6 pointer-events-none hidden lg:flex {page
@@ -134,7 +133,6 @@
             class="dynamic-island pointer-events-auto flex items-center gap-2 p-1.5 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
             class:scrolled
         >
-            <!-- Logo section -->
             <a
                 href="/"
                 class="logo-circle flex items-center justify-center bg-iris text-white rounded-full transition-all duration-500 w-10 h-10 shadow-lg shadow-iris/20"
@@ -174,7 +172,6 @@
                     </a>
                 {/each}
 
-                <!-- TOOLS DROPDOWN -->
                 <div id="tools-dropdown-container" class="relative">
                     <button
                         onclick={() =>
@@ -225,10 +222,8 @@
 
             <div class="h-6 w-px bg-overlay/50 mx-1"></div>
 
-            <!-- Action icons -->
             <div class="flex items-center gap-1">
                 {#if currentUser}
-                    <!-- NOTIFICATIONS DROPDOWN -->
                     <div id="notif-dropdown-container" class="relative">
                         <button
                             onclick={() => {
@@ -396,7 +391,6 @@
     </div>
 {/if}
 
-<!-- Mobile: Bottom Navigation Bar -->
 {#if isMobileMenuOpen}
     <div
         class="fixed inset-0 bg-rose-text/20 backdrop-blur-md z-[90] lg:hidden"
@@ -462,7 +456,6 @@
             </a>
         {/each}
 
-        <!-- MOBILE NOTIFICATIONS -->
         {#if currentUser}
             <div id="notif-dropdown-container-mobile" class="relative">
                 <button
@@ -573,7 +566,6 @@
             </div>
         {/if}
 
-        <!-- MOBILE TOOLS -->
         <div id="tools-dropdown-container-mobile" class="relative">
             <button
                 onclick={() => {
@@ -623,7 +615,6 @@
             {/if}
         </div>
 
-        <!-- PROFILE / AVATAR -->
         {#if currentUser}
             <a
                 href="/profile"

@@ -63,7 +63,6 @@
         isScreenReaderActive = true;
         localStorage.setItem("screen-reader-active", "true");
 
-        // Play a silent sound to unlock audio context
         if (audioPlayer) {
             audioPlayer.src =
                 "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA== ";
@@ -183,7 +182,6 @@
     });
 </script>
 
-<!-- Visual Highlight Overlay -->
 <div
     class="reading-highlight"
     style="
@@ -195,7 +193,6 @@
     "
 ></div>
 
-<!-- Accessibility Activation Modal -->
 {#if showActivationModal}
     <div
         class="modal-overlay fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/10 backdrop-blur-sm"
@@ -237,12 +234,10 @@
     </div>
 {/if}
 
-<!-- macOS Style Dock Toolbox -->
 <div
     id="dock-wrapper"
     class="dock-wrapper fixed bottom-3 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none"
 >
-    <!-- Dock Container -->
     <div
         class="dock-container pointer-events-auto transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
         class:active={isVisible}
@@ -250,7 +245,6 @@
         aria-label="Accessibility Tools"
     >
         <div class="dock-content flex items-center gap-4 px-4 py-2">
-            <!-- Assistant Button -->
             <button
                 id="tour-assistant-btn"
                 onclick={toggleAssistant}
@@ -269,7 +263,6 @@
 
             <div class="dock-divider"></div>
 
-            <!-- Keyboard Button -->
             <button
                 id="tour-keyboard-btn"
                 onclick={toggleKeyboard}
@@ -288,7 +281,6 @@
 
             <div class="dock-divider"></div>
 
-            <!-- Screen Reader Toggle -->
             <button
                 id="tour-reader-btn"
                 onclick={toggleScreenReader}
@@ -311,7 +303,6 @@
 
             <div class="dock-divider"></div>
 
-            <!-- Custom Cursor Toggle -->
             <button
                 id="tour-cursor-btn"
                 onclick={toggleCustomCursor}
@@ -334,7 +325,6 @@
         </div>
     </div>
 
-    <!-- Clickable Handle Indicator -->
     <button
         id="tour-dock-trigger"
         class="dock-trigger mt-1"

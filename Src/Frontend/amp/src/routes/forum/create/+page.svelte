@@ -56,7 +56,6 @@
 <div class="max-w-6xl mx-auto px-6 py-12">
     {#if mounted}
         <div in:fly={{ y: 20 }} class="space-y-8">
-            <!-- Header -->
             <div
                 class="flex items-center justify-between border-b border-overlay pb-8"
             >
@@ -104,7 +103,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
-                <!-- Editor Area -->
                 <div class="space-y-6">
                     <div class="space-y-2">
                         <label
@@ -146,7 +144,6 @@
                                     placeholder="Nội dung bài viết... Bạn có thể dùng Markdown để định dạng văn bản, thêm code, bảng biểu, v.v."
                                     class="w-full min-h-[500px] bg-white border-2 border-overlay rounded-[2rem] p-10 text-lg focus:border-iris outline-none transition-all shadow-sm resize-none font-medium"
                                 ></textarea>
-                                <!-- MD Help Mini Bar -->
                                 <div
                                     class="absolute bottom-6 left-6 right-6 flex items-center justify-between border-t border-overlay pt-4 opacity-40 group-focus-within:opacity-100 transition-opacity"
                                 >
