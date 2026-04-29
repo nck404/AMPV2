@@ -14,6 +14,7 @@ venv.bak/
 scratch/
 Docs/
 Src/tools/
+README.md
 
 # IDEs
 .vscode/
