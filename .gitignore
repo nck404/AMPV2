@@ -11,6 +11,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+scratch/
+Docs/
+Src/tools/
 
 # IDEs
 .vscode/

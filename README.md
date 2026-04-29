@@ -1,6 +1,7 @@
 # AMP - Hướng dẫn Quản trị Server
+By Nguyen Khoa
 
-Tài liệu này hướng dẫn cách vận hành và quản lý dự án AMP trên server Linux sử dụng **Systemd**.
+hướng dẫn cách vận hành và quản lý dự án AMP trên server Linux 
 
 ## 1. Triển khai (Deploy)
 Để cập nhật mã nguồn mới nhất và khởi động lại toàn bộ hệ thống, hãy chạy:
@@ -49,7 +50,3 @@ Dùng lệnh sau để xem log thời gian thực:
 tail -f Src/Backend/server.log
 ```
 
-## 4. Giải thích ý nghĩa các thành phần
-- **Autostart**: Các dịch vụ được thiết lập `Restart=always`, nghĩa là nếu ứng dụng bị lỗi đột ngột (crash), hệ thống sẽ tự động bật lại nó ngay lập tức.
-- **Environment**: Các biến môi trường như `PORT`, `NODE_ENV` được cấu hình trực tiếp trong file service để đảm bảo tính nhất quán.
-- **Adapter Node**: Frontend SvelteKit được chạy bằng Node.js (thay vì web server tĩnh) để hỗ trợ các tính năng động và tối ưu hóa phía server.
