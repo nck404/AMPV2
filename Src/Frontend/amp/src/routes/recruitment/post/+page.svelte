@@ -68,7 +68,7 @@
                             bind:value={jobData.title}
                             placeholder="VD: Senior Web Developer"
                             required
-                            class="w-full h-16 px-6 rounded-2xl bg-white border border-overlay focus:border-gold/50 transition-all font-medium shadow-sm"
+                            class="w-full h-16 px-6 rounded-2xl bg-surface border border-overlay focus:border-gold/50 transition-all font-medium shadow-sm"
                         />
                     </div>
 
@@ -82,7 +82,7 @@
                             bind:value={jobData.company}
                             placeholder="VD: AMP Technology"
                             required
-                            class="w-full h-16 px-6 rounded-2xl bg-white border border-overlay focus:border-gold/50 transition-all font-medium shadow-sm"
+                            class="w-full h-16 px-6 rounded-2xl bg-surface border border-overlay focus:border-gold/50 transition-all font-medium shadow-sm"
                         />
                     </div>
 
@@ -95,7 +95,7 @@
                             type="text" 
                             bind:value={jobData.salary}
                             placeholder="VD: 15 - 20 Triệu"
-                            class="w-full h-16 px-6 rounded-2xl bg-white border border-overlay focus:border-gold/50 transition-all font-medium shadow-sm"
+                            class="w-full h-16 px-6 rounded-2xl bg-surface border border-overlay focus:border-gold/50 transition-all font-medium shadow-sm"
                         />
                     </div>
 
@@ -108,7 +108,7 @@
                             type="text" 
                             bind:value={jobData.location}
                             placeholder="VD: TP. Hồ Chí Minh / Remote"
-                            class="w-full h-16 px-6 rounded-2xl bg-white border border-overlay focus:border-gold/50 transition-all font-medium shadow-sm"
+                            class="w-full h-16 px-6 rounded-2xl bg-surface border border-overlay focus:border-gold/50 transition-all font-medium shadow-sm"
                         />
                     </div>
 
@@ -122,7 +122,7 @@
                                     type="button"
                                     on:click={() => jobData.type = type}
                                     class="h-14 rounded-2xl border-2 transition-all font-black uppercase text-[10px] tracking-widest
-                                    {jobData.type === type ? 'border-gold bg-gold/5 text-gold' : 'border-overlay bg-white text-muted hover:border-gold/30'}"
+                                    {jobData.type === type ? 'border-gold bg-gold/5 text-gold' : 'border-overlay bg-surface text-muted hover:border-gold/30'}"
                                 >
                                     {type}
                                 </button>
@@ -140,7 +140,7 @@
                             placeholder="Mô tả chi tiết vị trí, yêu cầu kỹ năng và các quyền lợi..."
                             required
                             rows="8"
-                            class="w-full p-6 rounded-[2rem] bg-white border border-overlay focus:border-gold/50 transition-all font-medium shadow-sm"
+                            class="w-full p-6 rounded-[2rem] bg-surface border border-overlay focus:border-gold/50 transition-all font-medium shadow-sm"
                         ></textarea>
                     </div>
                 </div>

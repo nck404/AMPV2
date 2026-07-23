@@ -79,7 +79,7 @@
         {#if job}
             <div class="mb-12" in:fly={{ y: -20 }}>
                 <div class="flex items-center gap-6 mb-6">
-                    <div class="w-20 h-20 bg-white border border-overlay rounded-[2rem] flex items-center justify-center text-4xl shadow-sm">
+                    <div class="w-20 h-20 bg-surface border border-overlay rounded-[2rem] flex items-center justify-center text-4xl shadow-sm">
                         <i class="bx bx-briefcase text-gold"></i>
                     </div>
                     <div>
@@ -122,7 +122,7 @@
                                 bind:value={formData.name}
                                 placeholder="Nguyễn Văn A"
                                 required
-                                class="w-full h-16 px-6 rounded-2xl bg-white border border-overlay focus:border-gold/50 transition-all font-medium"
+                                class="w-full h-16 px-6 rounded-2xl bg-surface border border-overlay focus:border-gold/50 transition-all font-medium"
                             />
                         </div>
 
@@ -134,7 +134,7 @@
                                 bind:value={formData.email}
                                 placeholder="user@example.com"
                                 required
-                                class="w-full h-16 px-6 rounded-2xl bg-white border border-overlay focus:border-gold/50 transition-all font-medium"
+                                class="w-full h-16 px-6 rounded-2xl bg-surface border border-overlay focus:border-gold/50 transition-all font-medium"
                             />
                         </div>
 
@@ -145,7 +145,7 @@
                                 type="tel" 
                                 bind:value={formData.phone}
                                 placeholder="0901 xxx xxx"
-                                class="w-full h-16 px-6 rounded-2xl bg-white border border-overlay focus:border-gold/50 transition-all font-medium"
+                                class="w-full h-16 px-6 rounded-2xl bg-surface border border-overlay focus:border-gold/50 transition-all font-medium"
                             />
                         </div>
 
@@ -188,7 +188,7 @@
                                 bind:value={formData.cover_letter}
                                 placeholder="Tóm tắt ngắn gọn lý do tại sao bạn phù hợp với công việc này..."
                                 rows="5"
-                                class="w-full p-6 rounded-[2rem] bg-white border border-overlay focus:border-gold/50 transition-all font-medium shadow-sm"
+                                class="w-full p-6 rounded-[2rem] bg-surface border border-overlay focus:border-gold/50 transition-all font-medium shadow-sm"
                             ></textarea>
                         </div>
                     </div>

@@ -105,7 +105,7 @@
                         class="flex items-center gap-4 py-6 border-y border-overlay"
                     >
                         <div
-                            class="w-14 h-14 rounded-2xl bg-white shadow-lg border border-overlay overflow-hidden"
+                            class="w-14 h-14 rounded-2xl bg-surface shadow-lg border border-overlay overflow-hidden"
                         >
                             {#if post.author.avatar_url}
                                 <img

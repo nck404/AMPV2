@@ -228,7 +228,7 @@
     {#if mounted}
         <div in:fly={{ y: 20 }} class="space-y-8">
             <div
-                class="glass p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-white/60 relative overflow-hidden"
+                class="glass p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-overlay/60 relative overflow-hidden"
             >
                 <div
                     class="absolute top-0 right-0 w-64 h-64 bg-iris/5 rounded-full blur-3xl -mr-20 -mt-20"
@@ -424,7 +424,7 @@
                     >
                         <div class="relative group/avatar">
                             <div
-                                class="w-40 h-40 bg-white shadow-2xl shadow-rose-text/10 rounded-[2.5rem] flex items-center justify-center text-8xl border border-overlay text-iris overflow-hidden"
+                                class="w-40 h-40 bg-surface shadow-2xl shadow-rose-text/10 rounded-[2.5rem] flex items-center justify-center text-8xl border border-overlay text-iris overflow-hidden"
                             >
                                 {#if uploadLoading}
                                     <div
@@ -476,7 +476,7 @@
                                     </h1>
                                     <div class="flex items-center gap-2">
                                         <span
-                                            class="px-3 py-1 bg-overlay text-rose-text font-bold text-[10px] rounded-full uppercase tracking-widest border border-white"
+                                            class="px-3 py-1 bg-overlay text-rose-text font-bold text-[10px] rounded-full uppercase tracking-widest border border-overlay"
                                         >
                                             @{user.public_id || "N/A"}
                                         </span>
@@ -540,7 +540,7 @@
                             >
                                 <button
                                     onclick={startEditing}
-                                    class="px-6 py-3 bg-white text-rose-text font-bold rounded-xl shadow-sm hover:shadow-lg transition-all border border-overlay text-sm"
+                                    class="px-6 py-3 bg-surface text-rose-text font-bold rounded-xl shadow-sm hover:shadow-lg transition-all border border-overlay text-sm"
                                 >
                                     <i class="bx bx-edit-alt mr-1"></i> Thiết lập
                                 </button>
@@ -636,7 +636,7 @@
 
     {#if cropperModalOpen}
         <div class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-rose-text/90 backdrop-blur-lg" in:fade>
-            <div class="bg-white w-full max-w-xl rounded-[3rem] overflow-hidden shadow-2xl flex flex-col p-6 md:p-10 space-y-6 md:space-y-8" in:fly={{ y: 30 }}>
+            <div class="bg-surface w-full max-w-xl rounded-[3rem] overflow-hidden shadow-2xl flex flex-col p-6 md:p-10 space-y-6 md:space-y-8" in:fly={{ y: 30 }}>
                 <div class="flex items-center justify-between relative px-2">
                     <div class="flex flex-col">
                         <h2 class="text-2xl md:text-3xl font-black text-rose-text">Căn chỉnh <span class="text-iris">Avatar</span></h2>
@@ -648,7 +648,7 @@
                 <div class="aspect-square w-full bg-overlay/10 rounded-[2rem] overflow-hidden relative border border-overlay/30 shadow-inner group">
                     <img bind:this={cropperImageElement} src={imageToCrop} alt="Review" class="max-w-full block" />
                     
-                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white/80 backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-surface/80 backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl z-10 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button onclick={zoomOut} class="w-8 h-8 rounded-lg hover:bg-iris hover:text-white transition-all flex items-center justify-center border border-overlay" aria-label="Thu nhỏ"><i class="bx bx-minus"></i></button>
                         <div class="w-px h-4 bg-overlay mx-1"></div>
                         <button onclick={zoomIn} class="w-8 h-8 rounded-lg hover:bg-iris hover:text-white transition-all flex items-center justify-center border border-overlay" aria-label="Phóng to"><i class="bx bx-plus"></i></button>

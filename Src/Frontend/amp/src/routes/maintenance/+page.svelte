@@ -13,7 +13,7 @@
     {#if mounted}
         <div 
             in:fly={{ y: 30, duration: 800 }}
-            class="max-w-2xl w-full glass p-12 rounded-[3rem] border border-white/10 text-center space-y-8 relative overflow-hidden"
+            class="max-w-2xl w-full glass p-12 rounded-[3rem] border border-overlay/10 text-center space-y-8 relative overflow-hidden"
         >
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-iris/10 blur-3xl rounded-full"></div>
             <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-rose-text/5 blur-3xl rounded-full"></div>

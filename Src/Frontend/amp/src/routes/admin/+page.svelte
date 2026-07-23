@@ -211,7 +211,7 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="glass p-6 rounded-[2rem] border border-white/10 flex items-center gap-4">
+        <div class="glass p-6 rounded-[2rem] border border-overlay/10 flex items-center gap-4">
             <div class="w-12 h-12 rounded-2xl bg-iris/10 flex items-center justify-center text-iris text-2xl">
                 <i class="bx bx-user"></i>
             </div>
@@ -220,7 +220,7 @@
                 <p class="text-2xl font-black text-rose-text">{stats.total_users || 0}</p>
             </div>
         </div>
-        <div class="glass p-6 rounded-[2rem] border border-white/10 flex items-center gap-4">
+        <div class="glass p-6 rounded-[2rem] border border-overlay/10 flex items-center gap-4">
             <div class="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center text-gold text-2xl">
                 <i class="bx bx-briefcase"></i>
             </div>
@@ -229,7 +229,7 @@
                 <p class="text-2xl font-black text-rose-text">{stats.total_businesses || 0}</p>
             </div>
         </div>
-        <div class="glass p-6 rounded-[2rem] border border-white/10 flex items-center gap-4">
+        <div class="glass p-6 rounded-[2rem] border border-overlay/10 flex items-center gap-4">
             <div class="w-12 h-12 rounded-2xl bg-love/10 flex items-center justify-center text-love text-2xl">
                 <i class="bx bx-news"></i>
             </div>
@@ -238,7 +238,7 @@
                 <p class="text-2xl font-black text-rose-text">{stats.total_posts || 0}</p>
             </div>
         </div>
-        <div class="glass p-6 rounded-[2rem] border border-white/10 flex items-center gap-4">
+        <div class="glass p-6 rounded-[2rem] border border-overlay/10 flex items-center gap-4">
             <div class="w-12 h-12 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-500 text-2xl">
                 <i class="bx bx-check-circle"></i>
             </div>
@@ -249,7 +249,7 @@
         </div>
     </div>
 
-    <div class="flex space-x-2 border-b border-white/10 pb-2">
+    <div class="flex space-x-2 border-b border-overlay/10 pb-2">
         <button
             class="px-6 py-3 text-sm font-black rounded-t-2xl transition-all {activeTab === 'users' ? 'bg-iris text-white shadow-lg shadow-iris/20' : 'text-subtle hover:text-rose-text'}"
             onclick={() => (activeTab = "users")}
@@ -282,16 +282,16 @@
         </button>
     </div>
 
-    <div class="glass rounded-[2rem] border border-white/10 overflow-hidden min-h-[400px]">
+    <div class="glass rounded-[2rem] border border-overlay/10 overflow-hidden min-h-[400px]">
         {#if activeTab === "users"}
-            <div class="p-6 border-b border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 bg-white/5">
+            <div class="p-6 border-b border-overlay/10 flex flex-col md:flex-row justify-between items-center gap-4 bg-surface/5">
                 <div class="relative w-full md:w-96 group">
                     <i class="bx bx-search absolute left-4 top-1/2 -translate-y-1/2 text-xl text-subtle group-focus-within:text-iris transition-colors"></i>
                     <input 
                         type="text" 
                         placeholder="Tìm kiếm theo tên hoặc email..." 
                         bind:value={userSearchTerm}
-                        class="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-rose-text focus:outline-none focus:ring-2 focus:ring-iris/50 transition-all input-icon"
+                        class="w-full pl-12 pr-4 py-3 bg-surface/5 border border-overlay/10 rounded-2xl text-rose-text focus:outline-none focus:ring-2 focus:ring-iris/50 transition-all input-icon"
                     />
                 </div>
                 <button
@@ -304,7 +304,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
                     <thead>
-                        <tr class="text-xs text-subtle uppercase border-b border-white/10 bg-white/2">
+                        <tr class="text-xs text-subtle uppercase border-b border-overlay/10 bg-surface/2">
                             <th class="px-6 py-4 font-black">Người dùng</th>
                             <th class="px-6 py-4 font-black">Vai trò</th>
                             <th class="px-6 py-4 font-black">Trạng thái</th>
@@ -313,7 +313,7 @@
                     </thead>
                     <tbody>
                         {#each filteredUsers as user}
-                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <tr class="border-b border-overlay/5 hover:bg-surface/5 transition-colors">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 rounded-full bg-iris/10 flex items-center justify-center text-iris font-bold">
@@ -327,7 +327,7 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider 
-                                        {user.role === 'admin' ? 'bg-iris/20 text-iris' : user.role === 'business' ? 'bg-gold/20 text-gold' : 'bg-white/10 text-subtle'}">
+                                        {user.role === 'admin' ? 'bg-iris/20 text-iris' : user.role === 'business' ? 'bg-gold/20 text-gold' : 'bg-surface/10 text-subtle'}">
                                         {user.role}
                                     </span>
                                 </td>
@@ -339,7 +339,7 @@
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex justify-end gap-2">
-                                        <div class="flex bg-white/5 rounded-xl p-1 border border-white/5">
+                                        <div class="flex bg-surface/5 rounded-xl p-1 border border-overlay/5">
                                             <button 
                                                 onclick={() => changeUserRole(user.id, "user")}
                                                 class="p-2 rounded-lg transition-all {user.role === 'user' ? 'bg-iris text-white' : 'text-subtle hover:text-rose-text'}"
@@ -389,7 +389,7 @@
         {#if activeTab === "posts"}
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
-                    <thead class="text-xs text-subtle uppercase border-b border-white/10 bg-white/2">
+                    <thead class="text-xs text-subtle uppercase border-b border-overlay/10 bg-surface/2">
                         <tr>
                             <th class="px-6 py-4 font-black">Tiêu đề bài viết</th>
                             <th class="px-6 py-4 font-black">Người đăng</th>
@@ -399,7 +399,7 @@
                     </thead>
                     <tbody>
                         {#each posts as post}
-                            <tr class="border-b border-white/5 hover:bg-white/5 transition-all">
+                            <tr class="border-b border-overlay/5 hover:bg-surface/5 transition-all">
                                 <td class="px-6 py-4 font-bold text-rose-text">{post.title}</td>
                                 <td class="px-6 py-4 text-subtle">{post.author}</td>
                                 <td class="px-6 py-4 text-subtle">{post.date}</td>
@@ -421,7 +421,7 @@
         {#if activeTab === "jobs"}
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
-                    <thead class="text-xs text-subtle uppercase border-b border-white/10 bg-white/2">
+                    <thead class="text-xs text-subtle uppercase border-b border-overlay/10 bg-surface/2">
                         <tr>
                             <th class="px-6 py-4 font-black">Vị trí tuyển dụng</th>
                             <th class="px-6 py-4 font-black">Công ty</th>
@@ -431,7 +431,7 @@
                     </thead>
                     <tbody>
                         {#each jobs as job}
-                            <tr class="border-b border-white/5 hover:bg-white/5 transition-all">
+                            <tr class="border-b border-overlay/5 hover:bg-surface/5 transition-all">
                                 <td class="px-6 py-4 font-bold text-rose-text">{job.title}</td>
                                 <td class="px-6 py-4 text-subtle">{job.company}</td>
                                 <td class="px-6 py-4">
@@ -465,7 +465,7 @@
         {#if activeTab === "notifications"}
             <div class="p-8">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-1 border-r border-white/10 pr-0 lg:pr-8">
+                    <div class="lg:col-span-1 border-r border-overlay/10 pr-0 lg:pr-8">
                         <h2 class="text-2xl font-black text-rose-text mb-6">Gửi thông báo mới</h2>
                         <form onsubmit={sendNotification} class="space-y-4">
                             <div>
@@ -473,7 +473,7 @@
                                 <input 
                                     type="text" 
                                     bind:value={newNotification.title}
-                                    class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-rose-text focus:ring-2 focus:ring-iris/50 outline-none"
+                                    class="w-full px-4 py-3 bg-surface/5 border border-overlay/10 rounded-2xl text-rose-text focus:ring-2 focus:ring-iris/50 outline-none"
                                     placeholder="Tiêu đề thông báo..."
                                     required
                                 />
@@ -483,7 +483,7 @@
                                 <textarea 
                                     bind:value={newNotification.content}
                                     rows="4"
-                                    class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-rose-text focus:ring-2 focus:ring-iris/50 outline-none resize-none"
+                                    class="w-full px-4 py-3 bg-surface/5 border border-overlay/10 rounded-2xl text-rose-text focus:ring-2 focus:ring-iris/50 outline-none resize-none"
                                     placeholder="Nội dung thông báo chi tiết..."
                                     required
                                 ></textarea>
@@ -495,7 +495,7 @@
                                         <button 
                                             type="button"
                                             onclick={() => newNotification.type = type}
-                                            class="flex-1 py-2 rounded-xl text-[10px] font-black uppercase border transition-all {newNotification.type === type ? 'bg-iris text-white border-iris shadow-lg shadow-iris/20' : 'border-white/10 text-subtle hover:border-iris/50'}"
+                                            class="flex-1 py-2 rounded-xl text-[10px] font-black uppercase border transition-all {newNotification.type === type ? 'bg-iris text-white border-iris shadow-lg shadow-iris/20' : 'border-overlay/10 text-subtle hover:border-iris/50'}"
                                         >
                                             {type}
                                         </button>
@@ -516,7 +516,7 @@
                         <h2 class="text-2xl font-black text-rose-text mb-6">Lịch sử thông báo</h2>
                         <div class="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                             {#each notifications as notif}
-                                <div class="glass p-5 rounded-3xl border border-white/10 group hover:border-iris/30 transition-all">
+                                <div class="glass p-5 rounded-3xl border border-overlay/10 group hover:border-iris/30 transition-all">
                                     <div class="flex items-start justify-between gap-4">
                                         <div class="flex items-start gap-4">
                                             <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-xl
@@ -564,7 +564,7 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {#each availableRoutes as route}
-                        <div class="glass p-6 rounded-3xl border border-white/10 flex items-center justify-between group hover:border-iris/30 transition-all">
+                        <div class="glass p-6 rounded-3xl border border-overlay/10 flex items-center justify-between group hover:border-iris/30 transition-all">
                             <div class="flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-2xl {lockedRoutes.includes(route) ? 'bg-rose-500/10 text-rose-500' : 'bg-iris/10 text-iris'} flex items-center justify-center text-2xl">
                                     <i class="bx {lockedRoutes.includes(route) ? 'bx-error-circle' : 'bx-link'}"></i>
@@ -578,7 +578,7 @@
                             </div>
                             <button 
                                 onclick={() => toggleRouteLock(route)}
-                                class="px-6 py-2 rounded-xl text-xs font-black uppercase tracking-tighter transition-all {lockedRoutes.includes(route) ? 'bg-love text-white shadow-lg shadow-love/20' : 'bg-white/10 text-subtle hover:bg-iris hover:text-white'}"
+                                class="px-6 py-2 rounded-xl text-xs font-black uppercase tracking-tighter transition-all {lockedRoutes.includes(route) ? 'bg-love text-white shadow-lg shadow-love/20' : 'bg-surface/10 text-subtle hover:bg-iris hover:text-white'}"
                             >
                                 {lockedRoutes.includes(route) ? 'Mở khóa' : 'Khóa'}
                             </button>
@@ -592,10 +592,10 @@
 
 {#if showAddUserModal}
     <div
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-rose-text/50 px-4"
     >
         <div
-            class="glass rounded-lg shadow-lg w-full max-w-md p-6 relative border border-white/10"
+            class="glass rounded-lg shadow-lg w-full max-w-md p-6 relative border border-overlay/10"
         >
             <h3 class="text-xl font-bold text-rose-text mb-4">
                 Thêm tài khoản mới
@@ -612,7 +612,7 @@
                         type="text"
                         required
                         bind:value={newUser.name}
-                        class="w-full px-3 py-2 bg-white/5 border border-white/10 text-rose-text rounded focus:outline-none focus:ring-2 focus:ring-iris"
+                        class="w-full px-3 py-2 bg-surface/5 border border-overlay/10 text-rose-text rounded focus:outline-none focus:ring-2 focus:ring-iris"
                         placeholder="Nhập tên người dùng"
                     />
                 </div>
@@ -627,7 +627,7 @@
                         type="email"
                         required
                         bind:value={newUser.email}
-                        class="w-full px-3 py-2 bg-white/5 border border-white/10 text-rose-text rounded focus:outline-none focus:ring-2 focus:ring-iris"
+                        class="w-full px-3 py-2 bg-surface/5 border border-overlay/10 text-rose-text rounded focus:outline-none focus:ring-2 focus:ring-iris"
                         placeholder="Nhập địa chỉ email"
                     />
                 </div>
@@ -642,7 +642,7 @@
                         type="password"
                         required
                         bind:value={newUser.password}
-                        class="w-full px-3 py-2 bg-white/5 border border-white/10 text-rose-text rounded focus:outline-none focus:ring-2 focus:ring-iris"
+                        class="w-full px-3 py-2 bg-surface/5 border border-overlay/10 text-rose-text rounded focus:outline-none focus:ring-2 focus:ring-iris"
                         placeholder="Nhập mật khẩu"
                     />
                 </div>
@@ -655,7 +655,7 @@
                     <select
                         id="role"
                         bind:value={newUser.role}
-                        class="w-full px-3 py-2 bg-white/5 border border-white/10 text-rose-text rounded focus:outline-none focus:ring-2 focus:ring-iris"
+                        class="w-full px-3 py-2 bg-surface/5 border border-overlay/10 text-rose-text rounded focus:outline-none focus:ring-2 focus:ring-iris"
                     >
                         <option value="user" class="text-gray-900"
                             >User (Người dùng)</option
@@ -673,7 +673,7 @@
                     <button
                         type="button"
                         onclick={() => (showAddUserModal = false)}
-                        class="button px-4 py-2 text-sm font-medium text-rose-text glass rounded hover:bg-white/10"
+                        class="button px-4 py-2 text-sm font-medium text-rose-text glass rounded hover:bg-surface/10"
                     >
                         Hủy
                     </button>

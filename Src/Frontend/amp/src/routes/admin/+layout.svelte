@@ -47,7 +47,7 @@
 {:else if accessDenied}
     <div class="min-h-[85vh] flex items-center justify-center p-4">
         <div
-            class="max-w-md w-full glass rounded-[3rem] shadow-2xl shadow-rose-text/5 p-10 flex flex-col items-center text-center gap-4 border border-white/60"
+            class="max-w-md w-full glass rounded-[3rem] shadow-2xl shadow-rose-text/5 p-10 flex flex-col items-center text-center gap-4 border border-overlay/60"
         >
             <div
                 class="w-24 h-24 rounded-full bg-love/10 flex items-center justify-center mb-2 shadow-inner"

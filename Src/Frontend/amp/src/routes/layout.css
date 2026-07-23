@@ -35,6 +35,21 @@
         system-ui;
 }
 
+:root.dark {
+    --color-base: #191724;
+    --color-surface: #1f1d2e;
+    --color-overlay: #26233a;
+    --color-muted: #6e6a86;
+    --color-subtle: #908caa;
+    --color-rose-text: #e0def4;
+    --color-love: #eb6f92;
+    --color-gold: #f6c177;
+    --color-rose: #ebbcba;
+    --color-pine: #31748f;
+    --color-foam: #9ccfd8;
+    --color-iris: #c4a7e7;
+}
+
 :root {
     --bg-main: var(--color-base);
     --fg-main: var(--color-rose-text);
@@ -202,11 +217,11 @@ input:focus {
 
 /* Glassmorphism utility */
 .glass {
-    background: rgba(255, 250, 243, 0.7);
+    background: color-mix(in srgb, var(--color-surface) 70%, transparent);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(242, 233, 225, 0.5);
-    box-shadow: 0 8px 32px 0 rgba(87, 82, 121, 0.05);
+    border: 1px solid color-mix(in srgb, var(--color-overlay) 50%, transparent);
+    box-shadow: 0 8px 32px 0 color-mix(in srgb, var(--color-rose-text) 5%, transparent);
 }
 
 /* Dynamic Island keyframes */

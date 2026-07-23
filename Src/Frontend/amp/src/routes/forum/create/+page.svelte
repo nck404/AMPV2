@@ -83,7 +83,7 @@
                         onclick={() => (previewMode = !previewMode)}
                         class="px-6 py-3 rounded-xl border border-overlay font-bold text-sm transition-all {previewMode
                             ? 'bg-iris text-white shadow-lg'
-                            : 'bg-white text-rose-text hover:bg-overlay/50'}"
+                            : 'bg-surface text-rose-text hover:bg-overlay/50'}"
                     >
                         <i
                             class="bx {previewMode
@@ -114,7 +114,7 @@
                             id="title"
                             bind:value={title}
                             placeholder="Nhập tiêu đề ấn tượng giúp bài viết nổi bật..."
-                            class="w-full h-16 bg-white border-2 border-overlay rounded-[1.5rem] px-8 text-xl font-bold focus:border-iris outline-none transition-all shadow-sm"
+                            class="w-full h-16 bg-surface border-2 border-overlay rounded-[1.5rem] px-8 text-xl font-bold focus:border-iris outline-none transition-all shadow-sm"
                         />
                     </div>
 
@@ -125,7 +125,7 @@
                                 >Bản xem trước</span
                             >
                             <div
-                                class="w-full min-h-[500px] bg-white border-2 border-iris/20 rounded-[2rem] p-10 prose prose-rose max-w-none shadow-xl shadow-rose-text/5 overflow-y-auto"
+                                class="w-full min-h-[500px] bg-surface border-2 border-iris/20 rounded-[2rem] p-10 prose prose-rose max-w-none shadow-xl shadow-rose-text/5 overflow-y-auto"
                             >
                                 {@html renderedMarkdown}
                             </div>
@@ -142,7 +142,7 @@
                                     id="content"
                                     bind:value={content}
                                     placeholder="Nội dung bài viết... Bạn có thể dùng Markdown để định dạng văn bản, thêm code, bảng biểu, v.v."
-                                    class="w-full min-h-[500px] bg-white border-2 border-overlay rounded-[2rem] p-10 text-lg focus:border-iris outline-none transition-all shadow-sm resize-none font-medium"
+                                    class="w-full min-h-[500px] bg-surface border-2 border-overlay rounded-[2rem] p-10 text-lg focus:border-iris outline-none transition-all shadow-sm resize-none font-medium"
                                 ></textarea>
                                 <div
                                     class="absolute bottom-6 left-6 right-6 flex items-center justify-between border-t border-overlay pt-4 opacity-40 group-focus-within:opacity-100 transition-opacity"
@@ -174,7 +174,7 @@
                             id="tags"
                             bind:value={tags}
                             placeholder="ví dụ: Học tập, Kinh nghiệm, BAS, 3D..."
-                            class="w-full h-12 bg-white border-2 border-overlay rounded-xl px-6 text-sm focus:border-iris outline-none transition-all shadow-sm"
+                            class="w-full h-12 bg-surface border-2 border-overlay rounded-xl px-6 text-sm focus:border-iris outline-none transition-all shadow-sm"
                         />
                     </div>
                 </div>

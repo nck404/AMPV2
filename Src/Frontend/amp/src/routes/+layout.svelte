@@ -19,6 +19,12 @@
             ? localStorage.getItem("custom-cursor-active") === "true"
             : false,
     );
+    let isDarkMode = $state(
+        typeof window !== "undefined"
+            ? localStorage.getItem("theme") === "dark" || 
+              (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+            : false
+    );
 
     $effect(() => {
         if (typeof document !== "undefined") {
@@ -30,6 +36,14 @@
                 "custom-cursor-active",
                 isCustomCursorActive.toString(),
             );
+            
+            if (isDarkMode) {
+                document.documentElement.classList.add("dark");
+                localStorage.setItem("theme", "dark");
+            } else {
+                document.documentElement.classList.remove("dark");
+                localStorage.setItem("theme", "light");
+            }
         }
     });
 
@@ -86,7 +100,7 @@
 {/if}
 <OnboardingGuide />
 <Navbar />
-<Toolbox bind:isCustomCursorActive />
+<Toolbox bind:isCustomCursorActive bind:isDarkMode />
 
 <main class="{page.url.pathname === '/chat' ? 'pt-0 lg:pt-32' : 'pt-6 lg:pt-32'} pb-24 lg:pb-0 min-h-screen">
     {#key page.url.pathname}

@@ -132,21 +132,21 @@
                                         <a
                                             href="/docs/{doc.slug}"
                                             target="_blank"
-                                            class="w-10 h-10 flex items-center justify-center bg-white border border-overlay text-subtle rounded-xl hover:text-iris transition-colors"
+                                            class="w-10 h-10 flex items-center justify-center bg-surface border border-overlay text-subtle rounded-xl hover:text-iris transition-colors"
                                             title="Xem trước"
                                         >
                                             <i class="bx bx-show text-xl"></i>
                                         </a>
                                         <a
                                             href="/admin/docs/editor?id={doc.id}"
-                                            class="w-10 h-10 flex items-center justify-center bg-white border border-overlay text-subtle rounded-xl hover:text-iris transition-colors"
+                                            class="w-10 h-10 flex items-center justify-center bg-surface border border-overlay text-subtle rounded-xl hover:text-iris transition-colors"
                                             title="Chỉnh sửa"
                                         >
                                             <i class="bx bx-edit text-xl"></i>
                                         </a>
                                         <button
                                             onclick={() => deleteDoc(doc.id)}
-                                            class="w-10 h-10 flex items-center justify-center bg-white border border-overlay text-subtle rounded-xl hover:text-love transition-colors"
+                                            class="w-10 h-10 flex items-center justify-center bg-surface border border-overlay text-subtle rounded-xl hover:text-love transition-colors"
                                             title="Xóa"
                                         >
                                             <i class="bx bx-trash text-xl"></i>

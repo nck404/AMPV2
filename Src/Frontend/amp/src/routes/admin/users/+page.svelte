@@ -179,7 +179,7 @@
                                             >
                                         {:else}
                                             <span
-                                                class="px-3 py-1 bg-overlay text-rose-text text-[9px] font-black rounded-full border border-white/50"
+                                                class="px-3 py-1 bg-overlay text-rose-text text-[9px] font-black rounded-full border border-overlay/50"
                                                 >USER</span
                                             >
                                         {/if}
@@ -191,7 +191,7 @@
                                             <button
                                                 onclick={() =>
                                                     toggleAdmin(user)}
-                                                class="px-4 py-2 bg-white border border-overlay rounded-xl text-xs font-black hover:border-iris hover:text-iris transition-all"
+                                                class="px-4 py-2 bg-surface border border-overlay rounded-xl text-xs font-black hover:border-iris hover:text-iris transition-all"
                                                 title="Đổi vai trò"
                                             >
                                                 {user.is_admin
@@ -201,7 +201,7 @@
                                             <button
                                                 onclick={() =>
                                                     deleteUser(user.id)}
-                                                class="w-10 h-10 flex items-center justify-center bg-white border border-overlay text-love rounded-xl hover:bg-love hover:text-white transition-all"
+                                                class="w-10 h-10 flex items-center justify-center bg-surface border border-overlay text-love rounded-xl hover:bg-love hover:text-white transition-all"
                                                 title="Xóa tài khoản"
                                             >
                                                 <i class="bx bx-trash text-lg"

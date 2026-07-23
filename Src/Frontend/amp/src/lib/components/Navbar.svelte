@@ -164,7 +164,7 @@
                         {/if}
                         {#if item.path === "/chat" && unreadChatCount > 0}
                             <span
-                                class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-love text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white shadow-sm animate-pulse"
+                                class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-love text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-overlay shadow-sm animate-pulse"
                             >
                                 {unreadChatCount > 99 ? "99+" : unreadChatCount}
                             </span>
@@ -239,7 +239,7 @@
                             <i class="bx bx-bell text-2xl"></i>
                             {#if notifications.some((n) => !n.is_read)}
                                 <span
-                                    class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-text rounded-full border-2 border-white"
+                                    class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-text rounded-full border-2 border-overlay"
                                 ></span>
                             {/if}
                         </button>
@@ -254,7 +254,7 @@
                                 }}
                             >
                                 <div
-                                    class="p-4 border-b border-white/10 bg-iris/5"
+                                    class="p-4 border-b border-overlay/10 bg-iris/5"
                                 >
                                     <h3
                                         class="text-sm font-black text-rose-text uppercase tracking-widest"
@@ -267,7 +267,7 @@
                                 >
                                     {#each notifications as notif}
                                         <div
-                                            class="p-4 border-b border-white/5 hover:bg-white/5 transition-colors cursor-default"
+                                            class="p-4 border-b border-overlay/5 hover:bg-surface/5 transition-colors cursor-default"
                                         >
                                             <div class="flex gap-3">
                                                 <div
@@ -381,7 +381,7 @@
                     </a>
                     <a
                         href="/login"
-                        class="login-btn ml-1 px-5 py-2.5 bg-rose-text text-white rounded-full text-sm font-bold hover:bg-iris hover:shadow-lg transition-all duration-300 whitespace-nowrap"
+                        class="button ml-1 !py-2 !px-5 !rounded-full !text-sm whitespace-nowrap"
                     >
                         Bắt đầu
                     </a>
@@ -416,7 +416,7 @@
     class="lg:hidden fixed bottom-0 left-0 right-0 z-[100] flex justify-center pointer-events-none"
 >
     <nav
-        class="glass pointer-events-auto flex items-center justify-around w-full px-1 pt-3 pb-6 rounded-t-[2.5rem] shadow-[0_-15px_40px_rgba(87,82,121,0.2)] border-t border-white/60 relative"
+        class="glass pointer-events-auto flex items-center justify-around w-full px-1 pt-3 pb-6 rounded-t-[2.5rem] shadow-[0_-15px_40px_rgba(87,82,121,0.2)] border-t border-overlay/60 relative"
     >
         {#each navItems.filter((i) => i.path === "/" || i.path === "/chat") as item}
             {@const isActive = page.url.pathname === item.path}
@@ -448,7 +448,7 @@
                 </span>
                 {#if item.path === "/chat" && unreadChatCount > 0}
                     <span
-                        class="absolute top-1 right-2 min-w-[16px] h-[16px] px-1 bg-love text-white text-[8px] font-black rounded-full flex items-center justify-center border-2 border-white shadow-sm"
+                        class="absolute top-1 right-2 min-w-[16px] h-[16px] px-1 bg-love text-white text-[8px] font-black rounded-full flex items-center justify-center border-2 border-overlay shadow-sm"
                     >
                         {unreadChatCount > 99 ? "99+" : unreadChatCount}
                     </span>
@@ -473,7 +473,7 @@
                         <i class="bx bx-bell text-2xl"></i>
                         {#if notifications.some((n) => !n.is_read)}
                             <span
-                                class="absolute top-0 right-0 w-2 h-2 bg-rose-text rounded-full border-2 border-white"
+                                class="absolute top-0 right-0 w-2 h-2 bg-rose-text rounded-full border-2 border-overlay"
                             ></span>
                         {/if}
                     </div>
@@ -490,7 +490,7 @@
                         out:fly={{ y: 20, duration: 300, easing: cubicOut }}
                     >
                         <div
-                            class="p-5 border-b border-white/10 bg-iris/5 flex items-center justify-between"
+                            class="p-5 border-b border-overlay/10 bg-iris/5 flex items-center justify-between"
                         >
                             <h3
                                 class="text-xs font-black text-rose-text uppercase tracking-widest"
@@ -509,7 +509,7 @@
                         >
                             {#each notifications as notif}
                                 <div
-                                    class="p-5 border-b border-white/5 hover:bg-iris/5 transition-colors"
+                                    class="p-5 border-b border-overlay/5 hover:bg-iris/5 transition-colors"
                                 >
                                     <div class="flex gap-4">
                                         <div
@@ -589,7 +589,7 @@
                     in:fly={{ y: 20, duration: 400, easing: cubicOut }}
                     out:fly={{ y: 20, duration: 300, easing: cubicOut }}
                 >
-                    <div class="px-6 py-4 border-b border-white/10 mb-2">
+                    <div class="px-6 py-4 border-b border-overlay/10 mb-2">
                         <h3
                             class="text-xs font-black text-rose-text uppercase tracking-widest text-center"
                         >
@@ -624,7 +624,7 @@
                     : 'text-muted'}"
             >
                 <div
-                    class="w-7 h-7 rounded-full border-2 border-white shadow-sm overflow-hidden bg-white/50 {page
+                    class="w-7 h-7 rounded-full border-2 border-overlay shadow-sm overflow-hidden bg-surface/50 {page
                         .url.pathname === '/profile'
                         ? 'ring-2 ring-iris/30'
                         : ''}"
@@ -665,23 +665,23 @@
 
 <style>
     .dynamic-island {
-        background: rgba(255, 250, 243, 0.8);
+        background: color-mix(in srgb, var(--color-surface) 80%, transparent);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(215, 130, 126, 0.2);
+        border: 1px solid color-mix(in srgb, var(--color-love) 20%, transparent);
         border-radius: 999px;
         box-shadow:
-            0 4px 6px -1px rgba(87, 82, 121, 0.05),
-            0 10px 30px -5px rgba(87, 82, 121, 0.1);
+            0 4px 6px -1px color-mix(in srgb, var(--color-subtle) 5%, transparent),
+            0 10px 30px -5px color-mix(in srgb, var(--color-subtle) 10%, transparent);
         width: auto;
         max-width: fit-content;
     }
 
     .dynamic-island.scrolled {
         transform: translateY(-5px) scale(0.98);
-        background: rgba(255, 250, 243, 0.95);
-        border-color: rgba(144, 122, 169, 0.3);
-        box-shadow: 0 20px 40px -10px rgba(87, 82, 121, 0.15);
+        background: color-mix(in srgb, var(--color-surface) 95%, transparent);
+        border-color: color-mix(in srgb, var(--color-iris) 30%, transparent);
+        box-shadow: 0 20px 40px -10px color-mix(in srgb, var(--color-subtle) 15%, transparent);
     }
 
     .nav-item {

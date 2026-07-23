@@ -91,7 +91,7 @@
                 <button 
                     disabled={selectedApps.length === 0}
                     onclick={exportEmails}
-                    class="px-6 h-14 bg-white border border-overlay rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-gold/5 hover:border-gold transition-all disabled:opacity-30"
+                    class="px-6 h-14 bg-surface border border-overlay rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-gold/5 hover:border-gold transition-all disabled:opacity-30"
                 >
                     <i class="bx bx-export text-xl text-gold"></i> Xuất file (.txt)
                 </button>
@@ -119,7 +119,7 @@
                 {#each applications as app, i}
                     <div 
                         in:fly={{ y: 20, delay: i * 50 }}
-                        class="group p-8 bg-surface border border-overlay rounded-[3rem] hover:bg-white hover:border-gold/30 transition-all duration-500 flex flex-col lg:flex-row lg:items-center justify-between gap-8 shadow-sm hover:shadow-2xl hover:shadow-gold/5"
+                        class="group p-8 bg-surface border border-overlay rounded-[3rem] hover:bg-surface hover:border-gold/30 transition-all duration-500 flex flex-col lg:flex-row lg:items-center justify-between gap-8 shadow-sm hover:shadow-2xl hover:shadow-gold/5"
                         class:border-gold={selectedApps.includes(app.id)}
                     >
                         <div class="flex items-center gap-8 flex-1">
@@ -127,7 +127,7 @@
                                 <button 
                                     onclick={() => toggleSelect(app.id)}
                                     class="w-12 h-12 rounded-2xl border-2 flex items-center justify-center transition-all
-                                    {selectedApps.includes(app.id) ? 'bg-gold border-gold text-white' : 'bg-white border-overlay text-transparent hover:border-gold/50'}"
+                                    {selectedApps.includes(app.id) ? 'bg-gold border-gold text-white' : 'bg-surface border-overlay text-transparent hover:border-gold/50'}"
                                 >
                                     <i class="bx bx-check text-2xl"></i>
                                 </button>
@@ -195,7 +195,7 @@
             tabindex="-1"
             aria-label="Close modal"
         ></div>
-        <div class="bg-white w-full max-w-2xl rounded-[3rem] shadow-2xl relative overflow-hidden flex flex-col" in:fly={{ y: 50 }}>
+        <div class="bg-surface w-full max-w-2xl rounded-[3rem] shadow-2xl relative overflow-hidden flex flex-col" in:fly={{ y: 50 }}>
             <div class="p-10 border-b border-overlay bg-gold/5 flex items-center justify-between">
                 <div>
                     <h3 class="text-2xl font-black text-rose-text">Gửi Email Hàng Loạt</h3>
@@ -213,7 +213,7 @@
                         id="subject"
                         type="text" 
                         bind:value={emailData.subject}
-                        class="w-full h-14 px-6 rounded-2xl bg-white border border-overlay focus:border-gold/50 transition-all font-medium"
+                        class="w-full h-14 px-6 rounded-2xl bg-surface border border-overlay focus:border-gold/50 transition-all font-medium"
                     />
                 </div>
 
@@ -223,7 +223,7 @@
                         id="body" 
                         bind:value={emailData.body}
                         rows="10"
-                        class="w-full p-6 rounded-[2rem] bg-white border border-overlay focus:border-gold/50 transition-all font-medium"
+                        class="w-full p-6 rounded-[2rem] bg-surface border border-overlay focus:border-gold/50 transition-all font-medium"
                     ></textarea>
                 </div>
             </div>

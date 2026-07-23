@@ -10,7 +10,7 @@
     {#if mounted}
         <div
             in:fly={{ y: 20 }}
-            class="glass p-10 md:p-16 rounded-[4rem] border border-white/60 shadow-2xl"
+            class="glass p-10 md:p-16 rounded-[4rem] border border-overlay/60 shadow-2xl"
         >
             <h1
                 class="text-5xl font-black text-rose-text mb-10 text-center tracking-tight"

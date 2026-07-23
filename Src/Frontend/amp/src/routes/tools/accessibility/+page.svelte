@@ -100,7 +100,7 @@
 <div class="max-w-7xl mx-auto px-6 py-16 min-h-screen">
     {#if mounted}
         <div in:fly={{ y: 20 }} class="space-y-16">
-            <section class="relative p-12 md:p-20 glass rounded-[4rem] border-white/60 overflow-hidden text-center">
+            <section class="relative p-12 md:p-20 glass rounded-[4rem] border-overlay/60 overflow-hidden text-center">
                 <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-iris/10 via-transparent to-love/10 opacity-30"></div>
                 <div class="absolute -top-24 -left-24 w-64 h-64 bg-iris/20 rounded-full blur-[100px]"></div>
                 <div class="absolute -bottom-24 -right-24 w-80 h-80 bg-love/20 rounded-full blur-[100px]"></div>
@@ -121,7 +121,7 @@
                             TRẢI NGHIỆM NGAY
                         </button>
                         <button onclick={() => speak("Chào mừng bạn tới với trung tâm trợ năng của AMP. Chúng tôi cung cấp các công cụ nhận diện tiền tệ, quét văn bản và hỗ trợ thị giác.")} 
-                                class="px-10 py-5 glass border border-overlay text-rose-text font-black rounded-3xl hover:bg-white transition-all">
+                                class="px-10 py-5 glass border border-overlay text-rose-text font-black rounded-3xl hover:bg-surface transition-all">
                             <i class="bx bx-play-circle mr-2"></i> NGHE GIỚI THIỆU
                         </button>
                     </div>
@@ -146,7 +146,7 @@
                         <button
                             onclick={() => handleToolSelect(tool.id)}
                             class="group relative p-10 glass rounded-[3rem] border-2 transition-all text-center
-                                {activeTool === tool.id ? 'border-iris ring-4 ring-iris/10 bg-white' : 'border-white/60 hover:border-iris/40'}"
+                                {activeTool === tool.id ? 'border-iris ring-4 ring-iris/10 bg-surface' : 'border-overlay/60 hover:border-iris/40'}"
                         >
                             <div class="w-20 h-20 bg-{tool.color}/10 rounded-[2rem] flex items-center justify-center text-{tool.color} text-4xl mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
                                 <i class="bx {tool.icon}"></i>
@@ -159,14 +159,14 @@
             </div>
 
             {#if activeTool}
-                <div in:fly={{ y: 50 }} class="glass p-12 md:p-20 rounded-[4rem] border-white/60 shadow-2xl relative">
+                <div in:fly={{ y: 50 }} class="glass p-12 md:p-20 rounded-[4rem] border-overlay/60 shadow-2xl relative">
                     <div class="flex flex-col lg:flex-row gap-16 items-start">
                         <div class="w-full lg:w-3/5 space-y-10">
                             {#if activeTool === 'currency' || activeTool === 'ocr'}
-                                <div class="bg-black rounded-[3rem] overflow-hidden relative shadow-2xl border-[12px] border-white/30 aspect-square md:aspect-video group">
+                                <div class="bg-rose-text rounded-[3rem] overflow-hidden relative shadow-2xl border-[12px] border-overlay/30 aspect-square md:aspect-video group">
                                     <video bind:this={video} autoplay playsinline class="w-full h-full object-cover grayscale-[0.2]"></video>
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 border-2 border-white/20 border-dashed rounded-[2rem]"></div>
+                                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 border-2 border-overlay/20 border-dashed rounded-[2rem]"></div>
                                     <div class="absolute bottom-6 left-6 text-white/50 text-[10px] tracking-widest font-black uppercase">Live stream: Encrypted</div>
                                 </div>
                             {/if}
@@ -229,7 +229,7 @@
             <section class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="col-span-1 md:col-span-2 space-y-8">
                     <h2 class="text-4xl font-black text-rose-text">Hành trình hòa nhập</h2>
-                    <div class="p-10 glass border-white/60 rounded-[4rem] space-y-6">
+                    <div class="p-10 glass border-overlay/60 rounded-[4rem] space-y-6">
                         <p class="text-lg text-subtle leading-relaxed italic">
                             "Tại AMP, chúng tôi không chỉ xây dựng phần mềm, chúng tôi xây dựng những nhịp cầu. Công vụ hỗ trợ dành cho người khuyết tật là một phần trong cam kết dài hạn về một thế giới phẳng, nơi kiến thức và sự tiện nghi dành cho tất cả mọi người."
                         </p>
@@ -249,7 +249,7 @@
                     </div>
                     <h3 class="font-black text-rose-text text-xl">Câu hỏi thường gặp?</h3>
                     <p class="text-sm text-muted">Chúng tôi đã tổng hợp các mẹo sử dụng camera và thiết bị ngoại vi tại đây.</p>
-                    <button class="px-8 py-3 bg-white border border-overlay text-rose-text font-black rounded-2xl hover:bg-love hover:text-white transition-all">XEM WIKI</button>
+                    <button class="px-8 py-3 bg-surface border border-overlay text-rose-text font-black rounded-2xl hover:bg-love hover:text-white transition-all">XEM WIKI</button>
                 </div>
             </section>
         </div>

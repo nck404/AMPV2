@@ -56,7 +56,7 @@
                             type="text"
                             bind:value={searchTerm}
                             placeholder="Vị trí, công ty hoặc từ khóa..."
-                            class="w-full pl-14 h-16 rounded-2xl bg-white shadow-xl shadow-rose-text/5 border-overlay focus:border-gold/50 transition-all font-medium"
+                            class="w-full pl-14 h-16 rounded-2xl bg-surface shadow-xl shadow-rose-text/5 border-overlay focus:border-gold/50 transition-all font-medium"
                         />
                     </div>
                     <button
@@ -75,7 +75,7 @@
                 ></div>
                 <div class="space-y-6 relative z-10 flex-1">
                     <span
-                        class="px-4 py-1.5 bg-white text-gold rounded-full text-[10px] font-black tracking-widest uppercase shadow-sm border border-gold/10"
+                        class="px-4 py-1.5 bg-surface text-gold rounded-full text-[10px] font-black tracking-widest uppercase shadow-sm border border-gold/10"
                         >Đối tác doanh nghiệp</span
                     >
                     <h2
@@ -90,7 +90,7 @@
                     <div class="flex flex-wrap gap-4">
                         <a
                             href="/recruitment/post"
-                            class="px-8 py-4 bg-white text-rose-text font-black rounded-2xl shadow-sm hover:shadow-xl transition-all border border-overlay flex items-center gap-2"
+                            class="px-8 py-4 bg-surface text-rose-text font-black rounded-2xl shadow-sm hover:shadow-xl transition-all border border-overlay flex items-center gap-2"
                         >
                             <i class="bx bx-plus-circle"></i> Đăng tin tuyển dụng
                         </a>
@@ -107,7 +107,7 @@
                 <div class="hidden lg:grid grid-cols-2 gap-4">
                     {#each [1, 2, 3, 4] as i}
                         <div
-                            class="w-24 h-24 bg-white/60 rounded-3xl shadow-sm border border-white flex items-center justify-center grayscale opacity-30 hover:opacity-100 hover:grayscale-0 transition-all cursor-pointer"
+                            class="w-24 h-24 bg-surface/60 rounded-3xl shadow-sm border border-overlay flex items-center justify-center grayscale opacity-30 hover:opacity-100 hover:grayscale-0 transition-all cursor-pointer"
                         >
                             <i class="bx bx-建物 text-3xl opacity-20"></i>
                         </div>
@@ -130,11 +130,11 @@
                     {#each jobs as job, i}
                         <div
                             in:fly={{ y: 20, delay: i * 100 }}
-                            class="group p-8 bg-surface border border-overlay rounded-[3.5rem] hover:border-gold/30 hover:bg-white transition-all duration-500 flex flex-col md:flex-row md:items-center justify-between gap-10 shadow-sm hover:shadow-2xl hover:shadow-gold/5"
+                            class="group p-8 bg-surface border border-overlay rounded-[3.5rem] hover:border-gold/30 hover:bg-surface transition-all duration-500 flex flex-col md:flex-row md:items-center justify-between gap-10 shadow-sm hover:shadow-2xl hover:shadow-gold/5"
                         >
                             <div class="flex items-center gap-8">
                                 <div
-                                    class="w-24 h-24 bg-white shadow-lg shadow-rose-text/5 rounded-[2rem] flex items-center justify-center text-5xl border border-overlay group-hover:scale-110 transition-transform duration-500"
+                                    class="w-24 h-24 bg-surface shadow-lg shadow-rose-text/5 rounded-[2rem] flex items-center justify-center text-5xl border border-overlay group-hover:scale-110 transition-transform duration-500"
                                 >
                                     {job.logo}
                                 </div>

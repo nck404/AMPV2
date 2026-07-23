@@ -92,7 +92,7 @@
     in:fly={{ y: 50, duration: 500 }}
 >
     <div
-        class="keyboard-container bg-white/90 backdrop-blur-2xl shadow-2xl border border-overlay rounded-[2.5rem] overflow-hidden"
+        class="keyboard-container bg-surface/90 backdrop-blur-2xl shadow-2xl border border-overlay rounded-[2.5rem] overflow-hidden"
     >
         <div
             class="h-10 bg-overlay/20 flex items-center justify-between px-6 cursor-move select-none"
@@ -136,7 +136,7 @@
                                 ? 'w-64'
                                 : key === 'Enter' || key === '⌫'
                                   ? 'w-24 bg-overlay/40'
-                                  : 'w-12'} h-12 rounded-xl flex items-center justify-center font-bold text-rose-text hover:bg-iris hover:text-white transition-all active:scale-90 shadow-sm border border-overlay/20 bg-white"
+                                  : 'w-12'} h-12 rounded-xl flex items-center justify-center font-bold text-rose-text hover:bg-iris hover:text-white transition-all active:scale-90 shadow-sm border border-overlay/20 bg-surface"
                         >
                             {key === "Space" ? "DẤU CÁCH" : key}
                         </button>

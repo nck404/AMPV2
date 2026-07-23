@@ -165,7 +165,7 @@
                 </div>
             </div>
             <div class="grid grid-cols-1 gap-6">
-                <div class="glass p-8 rounded-[2.5rem] border border-white relative overflow-hidden group">
+                <div class="glass p-8 rounded-[2.5rem] border border-overlay relative overflow-hidden group">
                     <div class="flex items-start gap-6 relative z-10">
                         <div class="w-12 h-12 bg-gold/10 text-gold rounded-full flex items-center justify-center shrink-0">
                             <i class="bx bx-shield-check text-2xl"></i>
@@ -177,7 +177,7 @@
                     </div>
                     <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-gold/5 rounded-full blur-2xl"></div>
                 </div>
-                <div class="glass p-8 rounded-[2.5rem] border border-white relative overflow-hidden group translate-x-4">
+                <div class="glass p-8 rounded-[2.5rem] border border-overlay relative overflow-hidden group translate-x-4">
                     <div class="flex items-start gap-6 relative z-10">
                         <div class="w-12 h-12 bg-iris/10 text-iris rounded-full flex items-center justify-center shrink-0">
                             <i class="bx bx-group text-2xl"></i>
@@ -189,7 +189,7 @@
                     </div>
                     <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-iris/5 rounded-full blur-2xl"></div>
                 </div>
-                <div class="glass p-8 rounded-[2.5rem] border border-white relative overflow-hidden group translate-x-8">
+                <div class="glass p-8 rounded-[2.5rem] border border-overlay relative overflow-hidden group translate-x-8">
                     <div class="flex items-start gap-6 relative z-10">
                         <div class="w-12 h-12 bg-love/10 text-love rounded-full flex items-center justify-center shrink-0">
                             <i class="bx bx-accessibility text-2xl"></i>
@@ -221,7 +221,7 @@
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
             {#each supportGroups as group}
-                <div class="group text-center p-8 rounded-[2.5rem] bg-white border border-overlay/40 hover:border-iris/20 hover:shadow-lg transition-all duration-300">
+                <div class="group text-center p-8 rounded-[2.5rem] bg-surface border border-overlay/40 hover:border-iris/20 hover:shadow-lg transition-all duration-300">
                     <div class="w-16 h-16 bg-iris/5 text-iris rounded-full flex items-center justify-center text-3xl mx-auto mb-5 group-hover:bg-iris group-hover:text-white transition-all duration-300">
                         <i class="bx {group.icon}"></i>
                     </div>
@@ -239,7 +239,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {#each tools as tool}
-                <a href={tool.path} class="group relative p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] bg-white border border-overlay/40 hover:border-iris/20 hover:shadow-[0_20px_50px_-15px_rgba(144,122,169,0.12)] transition-all duration-500 overflow-hidden">
+                <a href={tool.path} class="group relative p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] bg-surface border border-overlay/40 hover:border-iris/20 hover:shadow-[0_20px_50px_-15px_rgba(144,122,169,0.12)] transition-all duration-500 overflow-hidden">
                     <div class="absolute top-6 right-6">
                         <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest {tool.color} {tool.textColor}">
                             {tool.tag}
@@ -260,11 +260,11 @@
 
     </section>
 
-    <section class="py-24 bg-rose-text rounded-[4rem] px-8 lg:px-20 overflow-hidden relative shadow-2xl">
+    <section class="py-24 bg-pine rounded-[4rem] px-8 lg:px-20 overflow-hidden relative shadow-2xl">
         <!-- removed missing noise.png -->
         <div class="flex flex-col lg:flex-row items-center gap-16 relative z-10">
             <div class="flex-1 space-y-8">
-                <div class="px-4 py-1.5 bg-white/10 text-white border border-white/20 rounded-full text-[10px] font-black uppercase tracking-[0.2em] w-fit">
+                <div class="px-4 py-1.5 bg-surface/10 text-white border border-overlay/20 rounded-full text-[10px] font-black uppercase tracking-[0.2em] w-fit">
                     AI powered learning
                 </div>
                 <h2 class="text-4xl md:text-6xl font-black text-white leading-tight">
@@ -274,18 +274,18 @@
                     Hệ thống học tập ngôn ngữ kí hiệu thông minh với lộ trình bài bản, kết hợp video karaoke cử chỉ và nhận diện AI ngay trên trình duyệt.
                 </p>
                 <div class="flex flex-wrap gap-4">
-                    <a href="/sign-language" class="bg-white text-rose-text px-10 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition-all">
+                    <a href="/sign-language" class="bg-surface text-pine px-10 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition-all">
                         Trải nghiệm Học tập
                     </a>
-                    <a href="/tools/accessibility" class="bg-white/10 text-white border border-white/20 px-8 py-4 rounded-2xl font-bold hover:bg-white/20 transition-all">
+                    <a href="/tools/accessibility" class="bg-surface/10 text-white border border-overlay/20 px-8 py-4 rounded-2xl font-bold hover:bg-surface/20 transition-all">
                         Xem Công cụ Trợ năng
                     </a>
                 </div>
             </div>
             <div class="flex-1 relative">
                 <div class="absolute inset-0 bg-iris/20 blur-[100px] rounded-full"></div>
-                <div class="bg-white/10 backdrop-blur-xl rounded-[2.5rem] p-4 border border-white/10 relative z-10 shadow-2xl">
-                    <div class="aspect-video bg-black/40 rounded-[2rem] flex flex-col items-center justify-center text-white/50 p-8 text-center border border-white/5">
+                <div class="bg-surface/10 backdrop-blur-xl rounded-[2.5rem] p-4 border border-overlay/10 relative z-10 shadow-2xl">
+                    <div class="aspect-video bg-rose-text/40 rounded-[2rem] flex flex-col items-center justify-center text-white/50 p-8 text-center border border-overlay/5">
                         <i class="bx bx-video-off text-6xl mb-4 opacity-20"></i>
                         <p class="text-sm font-black uppercase tracking-widest">Sign Language AI Module Preview</p>
                         <div class="mt-4 flex gap-2">

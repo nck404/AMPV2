@@ -28,7 +28,7 @@
     {#if mounted}
         <div
             in:fly={{ y: 20 }}
-            class="glass p-8 md:p-12 rounded-[3rem] border border-white/60 shadow-2xl relative overflow-hidden"
+            class="glass p-8 md:p-12 rounded-[3rem] border border-overlay/60 shadow-2xl relative overflow-hidden"
         >
             <div
                 class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-love via-iris to-gold opacity-90"
@@ -197,7 +197,7 @@
                                     href="https://frendas.pages.dev/bio"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    class="inline-flex items-center gap-2 text-iris font-bold hover:underline bg-white/50 px-4 py-2 rounded-lg"
+                                    class="inline-flex items-center gap-2 text-iris font-bold hover:underline bg-surface/50 px-4 py-2 rounded-lg"
                                 >
                                     <i class="bx bx-link-external"></i> https://frendas.pages.dev/bio
                                 </a>

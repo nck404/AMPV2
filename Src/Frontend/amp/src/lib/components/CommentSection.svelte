@@ -101,7 +101,7 @@
             {#if activePicker?.type === "post"}
                 <div
                     in:fly={{ y: 5 }}
-                    class="absolute bottom-full mb-1 left-0 bg-white shadow-xl border border-overlay rounded-full px-3 py-1.5 flex items-center gap-1 z-50 animate-in fade-in zoom-in duration-200"
+                    class="absolute bottom-full mb-1 left-0 bg-surface shadow-xl border border-overlay rounded-full px-3 py-1.5 flex items-center gap-1 z-50 animate-in fade-in zoom-in duration-200"
                     onmouseleave={() => (activePicker = null)}
                 >
                     {#each reactions as r}
@@ -155,7 +155,7 @@
                 <div class="flex -space-x-1">
                     {#each Object.keys(post.reactions) as type}
                         <span
-                            class="text-xs bg-white border border-overlay rounded-full w-5 h-5 flex items-center justify-center shadow-sm z-10"
+                            class="text-xs bg-surface border border-overlay rounded-full w-5 h-5 flex items-center justify-center shadow-sm z-10"
                             >{getReactionIcon(type)}</span
                         >
                     {/each}
@@ -173,7 +173,7 @@
     <div class="space-y-4 bg-overlay/5 p-4 rounded-2xl">
         <div class="flex gap-2 items-start">
             <div
-                class="w-8 h-8 mt-1 rounded-full bg-iris/20 border border-white flex-shrink-0 flex items-center justify-center font-bold text-iris text-xs"
+                class="w-8 h-8 mt-1 rounded-full bg-iris/20 border border-overlay flex-shrink-0 flex items-center justify-center font-bold text-iris text-xs"
             >
                 {#if post.user_avatar}
                     <img
@@ -189,7 +189,7 @@
                 <textarea
                     bind:value={newComment}
                     placeholder="Viết bình luận công khai..."
-                    class="flex-1 px-4 py-2.5 bg-white border border-overlay rounded-2xl outline-none focus:border-iris transition-all min-h-[40px] max-h-[120px] text-[13px] shadow-sm resize-none overflow-hidden"
+                    class="flex-1 px-4 py-2.5 bg-surface border border-overlay rounded-2xl outline-none focus:border-iris transition-all min-h-[40px] max-h-[120px] text-[13px] shadow-sm resize-none overflow-hidden"
                     rows="1"
                     oninput={(e) => {
                         e.target.style.height = "auto";
@@ -219,7 +219,7 @@
                 {#each comments as comment}
                     <div class="flex gap-2">
                         <div
-                            class="w-8 h-8 rounded-full bg-white border border-overlay flex-shrink-0 overflow-hidden shadow-sm mt-0.5"
+                            class="w-8 h-8 rounded-full bg-surface border border-overlay flex-shrink-0 overflow-hidden shadow-sm mt-0.5"
                         >
                             {#if comment.author.avatar_url}
                                 <img
@@ -241,7 +241,7 @@
                         </div>
                         <div class="flex-1 space-y-0.5">
                             <div
-                                class="inline-block bg-white px-3 py-2 rounded-2xl rounded-tl-none shadow-sm relative pr-10"
+                                class="inline-block bg-surface px-3 py-2 rounded-2xl rounded-tl-none shadow-sm relative pr-10"
                             >
                                 <div class="flex items-center gap-2">
                                     <span
@@ -265,7 +265,7 @@
 
                                 {#if getTotalReactions(comment.reactions) > 0}
                                     <div
-                                        class="absolute -bottom-2 right-0 translate-x-1/4 bg-white border border-overlay rounded-full px-1.5 py-0.5 shadow-sm flex items-center gap-0.5 z-10"
+                                        class="absolute -bottom-2 right-0 translate-x-1/4 bg-surface border border-overlay rounded-full px-1.5 py-0.5 shadow-sm flex items-center gap-0.5 z-10"
                                     >
                                         {#each Object.keys(comment.reactions).slice(0, 3) as type}
                                             <span class="text-[10px]"
@@ -320,7 +320,7 @@
                                     {#if activePicker?.type === "comment" && activePicker?.id === comment.id}
                                         <div
                                             in:fly={{ y: 5 }}
-                                            class="absolute bottom-full mb-1 left-0 bg-white shadow-xl border border-overlay rounded-full px-2 py-1 flex items-center gap-1 z-50"
+                                            class="absolute bottom-full mb-1 left-0 bg-surface shadow-xl border border-overlay rounded-full px-2 py-1 flex items-center gap-1 z-50"
                                             onmouseleave={() =>
                                                 (activePicker = null)}
                                         >
@@ -357,7 +357,7 @@
                                     {#each comment.replies as reply}
                                         <div class="flex gap-2">
                                             <div
-                                                class="w-6 h-6 rounded-full bg-white border border-overlay flex-shrink-0 overflow-hidden shadow-xs mt-0.5"
+                                                class="w-6 h-6 rounded-full bg-surface border border-overlay flex-shrink-0 overflow-hidden shadow-xs mt-0.5"
                                             >
                                                 {#if reply.author.avatar_url}
                                                     <img
@@ -380,7 +380,7 @@
                                                 {/if}
                                             </div>
                                             <div
-                                                class="inline-block bg-white px-2.5 py-1.5 rounded-xl rounded-tl-none shadow-xs border border-overlay/30"
+                                                class="inline-block bg-surface px-2.5 py-1.5 rounded-xl rounded-tl-none shadow-xs border border-overlay/30"
                                             >
                                                 <div
                                                     class="font-bold text-[10px] text-rose-text"
@@ -403,7 +403,7 @@
                                     <input
                                         bind:value={newComment}
                                         placeholder="Để lại phản hồi..."
-                                        class="flex-1 h-8 px-3 bg-white border border-overlay rounded-full text-[13px] outline-none focus:border-iris transition-all shadow-sm"
+                                        class="flex-1 h-8 px-3 bg-surface border border-overlay rounded-full text-[13px] outline-none focus:border-iris transition-all shadow-sm"
                                     />
                                     <button
                                         onclick={() =>

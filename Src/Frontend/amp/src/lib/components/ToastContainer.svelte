@@ -30,7 +30,7 @@
 			animate:flip={{ duration: 300 }}
 			in:fly={{ x: 50, duration: 300 }}
 			out:fade={{ duration: 200 }}
-			class="pointer-events-auto flex items-center p-4 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl shadow-black/5 border-l-4 {getBorderColor(toast.type)}"
+			class="pointer-events-auto flex items-center p-4 bg-surface/90 backdrop-blur-md rounded-2xl shadow-xl shadow-black/5 border-l-4 {getBorderColor(toast.type)}"
 			role="alert"
 		>
 			<div class="inline-flex items-center justify-center flex-shrink-0">

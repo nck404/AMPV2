@@ -201,7 +201,7 @@
         ></div>
 
         <div
-            class="tooltip-box bg-white shadow-2xl rounded-2xl p-6 border border-overlay"
+            class="tooltip-box bg-surface shadow-2xl rounded-2xl p-6 border border-overlay"
             style="
                 top: {tooltipPos.top}px;
                 left: {tooltipPos.left}px;

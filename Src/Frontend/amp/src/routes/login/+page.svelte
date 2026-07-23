@@ -52,7 +52,7 @@
     {#if mounted}
         <div in:fly={{ y: 20, duration: 800 }} class="w-full max-w-md">
             <div
-                class="glass p-8 md:p-12 rounded-[3.5rem] shadow-2xl shadow-rose-text/5 border border-white/40"
+                class="glass p-8 md:p-12 rounded-[3.5rem] shadow-2xl shadow-rose-text/5 border border-overlay/40"
             >
                 <div class="text-center mb-6">
                     <div
@@ -109,7 +109,7 @@
                                 bind:value={email}
                                 placeholder="your@email.com"
                                 required
-                                class="w-full h-14 pl-14 bg-surface/50 border-overlay focus:bg-white focus:border-iris focus:ring-4 focus:ring-iris/5 transition-all text-base input-icon"
+                                class="w-full h-14 pl-14 bg-surface/50 border-overlay focus:bg-surface focus:border-iris focus:ring-4 focus:ring-iris/5 transition-all text-base input-icon"
                             />
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                                 bind:value={password}
                                 placeholder="••••••••"
                                 required
-                                class="w-full h-14 pl-14 pr-14 bg-surface/50 border-overlay focus:bg-white focus:border-iris focus:ring-4 focus:ring-iris/5 transition-all text-base input-icon"
+                                class="w-full h-14 pl-14 pr-14 bg-surface/50 border-overlay focus:bg-surface focus:border-iris focus:ring-4 focus:ring-iris/5 transition-all text-base input-icon"
                             />
                             <button
                                 type="button"

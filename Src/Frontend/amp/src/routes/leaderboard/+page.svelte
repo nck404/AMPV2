@@ -154,7 +154,7 @@
                         <div class="space-y-4">
                             {#each leaderboard as user, i}
                                 <div
-                                    class="glass p-6 rounded-2xl hover:bg-white/50 transition-all"
+                                    class="glass p-6 rounded-2xl hover:bg-surface/50 transition-all"
                                     in:fly={{
                                         y: 20,
                                         delay: i * 50,

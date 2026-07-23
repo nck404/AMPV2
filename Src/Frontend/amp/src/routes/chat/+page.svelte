@@ -250,7 +250,7 @@
             class="bg-surface border-x md:border border-overlay rounded-none md:rounded-[3rem] h-full overflow-hidden flex shadow-2xl shadow-rose-text/5 relative pb-20 md:pb-0"
         >
             <aside
-                class="w-full md:w-80 lg:w-96 border-r border-overlay bg-white/50 backdrop-blur flex flex-col {showMobileSidebar
+                class="w-full md:w-80 lg:w-96 border-r border-overlay bg-surface/50 backdrop-blur flex flex-col {showMobileSidebar
                     ? 'flex'
                     : 'hidden md:flex'}"
             >
@@ -279,7 +279,7 @@
                         <input
                             type="text"
                             placeholder="Tìm kiếm hội thoại..."
-                            class="w-full pl-12 py-3 bg-overlay/30 rounded-2xl border-transparent focus:bg-white focus:border-iris/30 text-sm outline-none transition-all input-icon"
+                            class="w-full pl-12 py-3 bg-overlay/30 rounded-2xl border-transparent focus:bg-surface focus:border-iris/30 text-sm outline-none transition-all input-icon"
                         />
                     </div>
                 </div>
@@ -294,7 +294,7 @@
                                 : 'hover:bg-overlay/50'}"
                         >
                             <div
-                                class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-2xl relative shadow-sm text-iris overflow-hidden"
+                                class="w-12 h-12 bg-surface/20 rounded-2xl flex items-center justify-center text-2xl relative shadow-sm text-iris overflow-hidden"
                             >
                                 {#if chat.avatar_url}
                                     <img
@@ -308,7 +308,7 @@
                                     <i class="bx {chat.icon}"></i>
                                 {/if}
                                 {#if chat.unread_count > 0}
-                                    <span class="absolute -top-1 -right-1 w-5 h-5 bg-love text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white animate-bounce-short">
+                                    <span class="absolute -top-1 -right-1 w-5 h-5 bg-love text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-overlay animate-bounce-short">
                                         {chat.unread_count > 9 ? '9+' : chat.unread_count}
                                     </span>
                                 {/if}
@@ -365,7 +365,7 @@
             </aside>
 
             <main
-                class="flex-1 flex flex-col bg-white {showMobileSidebar
+                class="flex-1 flex flex-col bg-surface {showMobileSidebar
                     ? 'hidden md:flex'
                     : 'flex'}"
             >
@@ -373,7 +373,7 @@
                     {#key selectedChatId}
                         <div in:fly={{ x: 20, duration: 450, easing: cubicOut }} class="flex flex-col h-full">
                             <header
-                        class="hidden md:flex p-4 md:p-6 border-b border-overlay flex items-center justify-between bg-white/50 backdrop-blur sticky top-0 z-30"
+                        class="hidden md:flex p-4 md:p-6 border-b border-overlay flex items-center justify-between bg-surface/50 backdrop-blur sticky top-0 z-30"
                     >
                         <div class="flex items-center gap-3 md:gap-4">
                             <button
@@ -496,7 +496,7 @@
                                         class="px-4 py-2.5 md:px-5 md:py-3 rounded-2xl text-sm leading-relaxed shadow-sm {msg.sender ===
                                         'me'
                                             ? 'bg-iris text-white rounded-br-none'
-                                            : 'bg-white border border-overlay text-rose-text rounded-bl-none'}"
+                                            : 'bg-surface border border-overlay text-rose-text rounded-bl-none'}"
                                     >
                                         {msg.text}
                                     </div>
@@ -513,12 +513,12 @@
                         {/each}
                     </div>
 
-                    <div class="p-4 md:p-6 border-t border-overlay bg-white">
+                    <div class="p-4 md:p-6 border-t border-overlay bg-surface">
                         <div
                             class="flex items-center gap-2 md:gap-4 bg-overlay/30 p-2 md:p-3 rounded-2xl"
                         >
                             <button
-                                class="w-12 h-12 text-2xl md:text-2xl hover:scale-110 transition-transform flex items-center justify-center bg-white/50 rounded-xl"
+                                class="w-12 h-12 text-2xl md:text-2xl hover:scale-110 transition-transform flex items-center justify-center bg-surface/50 rounded-xl"
                                 aria-label="Emoji"
                                 ><i class="bx bx-smile"></i></button
                             >

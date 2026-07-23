@@ -126,10 +126,10 @@
     {#if mounted}
         <div
             in:fly={{ y: 10, duration: 200 }}
-            class="flex flex-col md:flex-row bg-white/40 backdrop-blur-md rounded-[2.5rem] border border-white/60 shadow-2xl shadow-rose-text/5 overflow-hidden min-h-[600px]"
+            class="flex flex-col md:flex-row bg-surface/40 backdrop-blur-md rounded-[2.5rem] border border-overlay/60 shadow-2xl shadow-rose-text/5 overflow-hidden min-h-[600px]"
         >
             <aside
-                class="w-full md:w-64 bg-white/30 border-r border-white/50 p-6 space-y-2"
+                class="w-full md:w-64 bg-surface/30 border-r border-overlay/50 p-6 space-y-2"
             >
                 <div class="mb-4 px-4">
                     <span
@@ -141,27 +141,27 @@
 
                 <button
                     onclick={() => (activeSection = "appearance")}
-                    class={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all ${activeSection === "appearance" ? "bg-iris text-white shadow-md shadow-iris/20 scale-[1.02]" : "text-subtle hover:text-rose-text hover:bg-white/50"}`}
+                    class={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all ${activeSection === "appearance" ? "bg-iris text-white shadow-md shadow-iris/20 scale-[1.02]" : "text-subtle hover:text-rose-text hover:bg-surface/50"}`}
                 >
                     <i class="bx bx-palette text-xl"></i> Giao diện
                 </button>
 
                 <button
                     onclick={() => (activeSection = "account")}
-                    class={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all ${activeSection === "account" ? "bg-iris text-white shadow-md shadow-iris/20 scale-[1.02]" : "text-subtle hover:text-rose-text hover:bg-white/50"}`}
+                    class={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all ${activeSection === "account" ? "bg-iris text-white shadow-md shadow-iris/20 scale-[1.02]" : "text-subtle hover:text-rose-text hover:bg-surface/50"}`}
                 >
                     <i class="bx bx-user-circle text-xl"></i> Tài khoản
                 </button>
 
                 <button
                     onclick={() => (activeSection = "notifications")}
-                    class={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all ${activeSection === "notifications" ? "bg-iris text-white shadow-md shadow-iris/20 scale-[1.02]" : "text-subtle hover:text-rose-text hover:bg-white/50"}`}
+                    class={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all ${activeSection === "notifications" ? "bg-iris text-white shadow-md shadow-iris/20 scale-[1.02]" : "text-subtle hover:text-rose-text hover:bg-surface/50"}`}
                 >
                     <i class="bx bx-bell text-xl"></i> Thông báo
                 </button>
             </aside>
 
-            <main class="flex-1 p-8 md:p-10 overflow-y-auto bg-white/20">
+            <main class="flex-1 p-8 md:p-10 overflow-y-auto bg-surface/20">
                 {#if message.text}
                     <div
                         in:fade={{ duration: 150 }}
@@ -192,7 +192,7 @@
                                             selectedFont = font;
                                             applyFont(font);
                                         }}
-                                        class={`p-4 rounded-2xl border-2 transition-all text-left flex items-center justify-between group ${selectedFont === font ? "border-iris bg-iris/5 shadow-md shadow-iris/10 scale-[1.02]" : "border-transparent hover:border-iris/30 bg-white/50"}`}
+                                        class={`p-4 rounded-2xl border-2 transition-all text-left flex items-center justify-between group ${selectedFont === font ? "border-iris bg-iris/5 shadow-md shadow-iris/10 scale-[1.02]" : "border-transparent hover:border-iris/30 bg-surface/50"}`}
                                     >
                                         <div>
                                             <div
@@ -235,7 +235,7 @@
                                             selectedFontSize = size.value;
                                             applyFontSize(size.value);
                                         }}
-                                        class={`px-4 py-2 rounded-xl border-2 transition-all flex items-center justify-center font-bold text-sm ${selectedFontSize === size.value ? "border-iris bg-iris text-white shadow-md shadow-iris/20 scale-[1.02]" : "border-transparent bg-white/50 text-subtle hover:text-rose-text hover:border-iris/30 hover:bg-white"}`}
+                                        class={`px-4 py-2 rounded-xl border-2 transition-all flex items-center justify-center font-bold text-sm ${selectedFontSize === size.value ? "border-iris bg-iris text-white shadow-md shadow-iris/20 scale-[1.02]" : "border-transparent bg-surface/50 text-subtle hover:text-rose-text hover:border-iris/30 hover:bg-surface"}`}
                                     >
                                         {size.label}
                                     </button>
@@ -244,7 +244,7 @@
                         </div>
 
                         <div
-                            class="p-4 bg-black/5 rounded-lg border border-dashed border-black/10 max-w-lg"
+                            class="p-4 bg-rose-text/5 rounded-lg border border-dashed border-black/10 max-w-lg"
                         >
                             <p
                                 class="text-muted leading-relaxed transition-all"
@@ -277,7 +277,7 @@
                                     type="email"
                                     bind:value={email}
                                     placeholder="your-email@example.com"
-                                    class="flex-1 h-12 bg-white/50 border-2 border-transparent rounded-2xl px-4 text-sm outline-none focus:border-iris focus:bg-white transition-all shadow-sm"
+                                    class="flex-1 h-12 bg-surface/50 border-2 border-transparent rounded-2xl px-4 text-sm outline-none focus:border-iris focus:bg-surface transition-all shadow-sm"
                                 />
                                 <button
                                     onclick={updateEmail}
@@ -306,7 +306,7 @@
                                         id="oldPassword"
                                         type="password"
                                         bind:value={oldPassword}
-                                        class="w-full h-12 bg-white/50 border-2 border-transparent rounded-2xl px-4 text-sm outline-none focus:border-iris focus:bg-white transition-all shadow-sm"
+                                        class="w-full h-12 bg-surface/50 border-2 border-transparent rounded-2xl px-4 text-sm outline-none focus:border-iris focus:bg-surface transition-all shadow-sm"
                                     />
                                 </div>
                                 <div class="space-y-1">
@@ -319,7 +319,7 @@
                                         id="newPassword"
                                         type="password"
                                         bind:value={newPassword}
-                                        class="w-full h-12 bg-white/50 border-2 border-transparent rounded-2xl px-4 text-sm outline-none focus:border-iris focus:bg-white transition-all shadow-sm"
+                                        class="w-full h-12 bg-surface/50 border-2 border-transparent rounded-2xl px-4 text-sm outline-none focus:border-iris focus:bg-surface transition-all shadow-sm"
                                     />
                                 </div>
                                 <div class="space-y-1">
@@ -332,7 +332,7 @@
                                         id="confirmPassword"
                                         type="password"
                                         bind:value={confirmPassword}
-                                        class="w-full h-12 bg-white/50 border-2 border-transparent rounded-2xl px-4 text-sm outline-none focus:border-iris focus:bg-white transition-all shadow-sm"
+                                        class="w-full h-12 bg-surface/50 border-2 border-transparent rounded-2xl px-4 text-sm outline-none focus:border-iris focus:bg-surface transition-all shadow-sm"
                                     />
                                 </div>
                                 <div class="pt-4">

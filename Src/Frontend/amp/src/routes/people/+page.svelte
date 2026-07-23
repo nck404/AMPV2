@@ -106,7 +106,7 @@
                     bind:value={searchQuery}
                     oninput={onInput}
                     placeholder="Tìm kiếm theo tên hoặc @public_id..."
-                    class="w-full h-16 bg-white border-2 border-overlay rounded-[2rem] pl-12 pr-8 text-lg font-bold outline-none focus:border-iris focus:shadow-xl focus:shadow-iris/5 transition-all"
+                    class="w-full h-16 bg-surface border-2 border-overlay rounded-[2rem] pl-12 pr-8 text-lg font-bold outline-none focus:border-iris focus:shadow-xl focus:shadow-iris/5 transition-all"
                 />
             </div>
 
@@ -125,10 +125,10 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {#each pendingRequests as req}
                                 <div
-                                    class="glass p-6 rounded-[2.5rem] flex items-center gap-4 border border-white/60"
+                                    class="glass p-6 rounded-[2.5rem] flex items-center gap-4 border border-overlay/60"
                                 >
                                     <div
-                                        class="w-14 h-14 rounded-2xl bg-white border border-overlay overflow-hidden shadow-sm"
+                                        class="w-14 h-14 rounded-2xl bg-surface border border-overlay overflow-hidden shadow-sm"
                                     >
                                         {#if req.avatar_url}
                                             <img
@@ -197,13 +197,13 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {#each searchResults as user}
                                 <div
-                                    class="glass p-8 rounded-[3rem] border border-white/60 hover:bg-white transition-all group relative overflow-hidden"
+                                    class="glass p-8 rounded-[3rem] border border-overlay/60 hover:bg-surface transition-all group relative overflow-hidden"
                                 >
                                     <div
                                         class="flex items-center gap-6 relative z-10"
                                     >
                                         <div
-                                            class="w-20 h-20 rounded-[1.5rem] bg-white border border-overlay overflow-hidden shadow-xl group-hover:scale-105 transition-transform"
+                                            class="w-20 h-20 rounded-[1.5rem] bg-surface border border-overlay overflow-hidden shadow-xl group-hover:scale-105 transition-transform"
                                         >
                                             {#if user.avatar_url}
                                                 <img
@@ -259,7 +259,7 @@
                                                             goto(
                                                                 `/chat?id=${user.id}`,
                                                             )}
-                                                        class="flex-1 bg-white border border-iris text-iris px-4 py-2 rounded-xl text-xs font-bold hover:bg-iris/5 transition-all"
+                                                        class="flex-1 bg-surface border border-iris text-iris px-4 py-2 rounded-xl text-xs font-bold hover:bg-iris/5 transition-all"
                                                     >
                                                         Nhắn tin
                                                     </button>

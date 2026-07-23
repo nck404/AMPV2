@@ -6,7 +6,7 @@
     import VirtualKeyboard from "./VirtualKeyboard.svelte";
 
     let showAssistant = $state(false);
-    let { isCustomCursorActive = $bindable(true) } = $props();
+    let { isCustomCursorActive = $bindable(true), isDarkMode = $bindable(false) } = $props();
     let showKeyboard = $state(false);
     let isVisible = $state(false);
     let isScreenReaderActive = $state(false);
@@ -37,6 +37,10 @@
 
     function toggleCustomCursor() {
         isCustomCursorActive = !isCustomCursorActive;
+    }
+
+    function toggleTheme() {
+        isDarkMode = !isDarkMode;
     }
 
     function toggleScreenReader() {
@@ -195,11 +199,11 @@
 
 {#if showActivationModal}
     <div
-        class="modal-overlay fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/10 backdrop-blur-sm"
+        class="modal-overlay fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-rose-text/10 backdrop-blur-sm"
         transition:fade
     >
         <div
-            class="activation-modal bg-white/90 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-2xl border border-white max-w-sm w-full text-center space-y-6"
+            class="activation-modal bg-surface/90 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-2xl border border-overlay max-w-sm w-full text-center space-y-6"
             transition:scale={{ duration: 400, start: 0.95 }}
         >
             <div
@@ -322,6 +326,28 @@
                 </div>
                 <span class="label text-pine">Chuột</span>
             </button>
+
+            <div class="dock-divider"></div>
+
+            <button
+                id="tour-theme-btn"
+                onclick={toggleTheme}
+                class="dock-item group"
+                title="Giao diện"
+            >
+                <div
+                    class="icon-box bg-foam {isDarkMode
+                        ? 'active shadow-foam'
+                        : ''}"
+                >
+                    <i
+                        class="bx {isDarkMode
+                            ? 'bx-moon'
+                            : 'bx-sun'}"
+                    ></i>
+                </div>
+                <span class="label text-foam">Giao diện</span>
+            </button>
         </div>
     </div>
 
@@ -395,14 +421,14 @@
         opacity: 0;
         visibility: hidden;
         transform: translateY(30px) scale(0.95);
-        background: rgba(255, 255, 255, 0.8);
+        background: color-mix(in srgb, var(--color-surface) 80%, transparent);
         backdrop-filter: blur(24px);
         -webkit-backdrop-filter: blur(24px);
-        border: 1px solid rgba(255, 255, 255, 0.4);
+        border: 1px solid color-mix(in srgb, var(--color-overlay) 40%, transparent);
         border-radius: 1.5rem;
         box-shadow:
             0 20px 40px -10px rgba(0, 0, 0, 0.15),
-            0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+            0 0 0 1px color-mix(in srgb, var(--color-overlay) 60%, transparent) inset;
     }
 
     .dock-container.active {
@@ -454,6 +480,9 @@
     .bg-pine {
         background: var(--color-pine, #31748f);
     }
+    .bg-foam {
+        background: var(--color-foam, #56949f);
+    }
 
     .icon-box.active {
         transform: scale(1.1);
@@ -472,6 +501,9 @@
     }
     .shadow-pine {
         box-shadow: 0 8px 16px -4px var(--color-pine, #31748f);
+    }
+    .shadow-foam {
+        box-shadow: 0 8px 16px -4px var(--color-foam, #56949f);
     }
 
     .label {
@@ -493,6 +525,9 @@
     }
     .text-pine {
         color: var(--color-pine, #31748f);
+    }
+    .text-foam {
+        color: var(--color-foam, #56949f);
     }
 
     .dock-divider {

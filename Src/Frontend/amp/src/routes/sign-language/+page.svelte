@@ -603,7 +603,7 @@
     <div class="fixed inset-0 z-[200] flex items-center justify-center" in:fade>
         <div class="absolute inset-0 bg-rose-text/50 backdrop-blur-md"></div>
         <div
-            class="relative bg-white rounded-[4rem] p-14 shadow-2xl text-center space-y-6 max-w-md w-full mx-6"
+            class="relative bg-surface rounded-[4rem] p-14 shadow-2xl text-center space-y-6 max-w-md w-full mx-6"
             in:scale={{ start: 0.8 }}
         >
             <div class="text-8xl animate-bounce">🎉</div>
@@ -757,7 +757,7 @@
                         {/if}
                     </div>
                     <div class="flex gap-4">
-                        <div class="flex-1 bg-white rounded-xl p-2 text-center">
+                        <div class="flex-1 bg-surface rounded-xl p-2 text-center">
                             <div class="text-xl font-black text-iris">
                                 {streak}
                             </div>
@@ -767,7 +767,7 @@
                                 Streak
                             </div>
                         </div>
-                        <div class="flex-1 bg-white rounded-xl p-2 text-center">
+                        <div class="flex-1 bg-surface rounded-xl p-2 text-center">
                             <div class="text-xl font-black text-iris">
                                 {completedSet.size}
                             </div>
@@ -862,7 +862,7 @@
                                             ? 'bg-green-100 text-green-600 border-2 border-green-400 scale-95'
                                             : ci === currentIdx
                                               ? 'bg-iris text-white shadow-xl shadow-iris/30 scale-110'
-                                              : 'bg-white border-2 border-overlay text-muted opacity-40'}"
+                                              : 'bg-surface border-2 border-overlay text-muted opacity-40'}"
                                     >
                                         {ci < currentIdx ? "✓" : char}
                                     </div>
@@ -919,10 +919,10 @@
                         </div>
 
                         <div
-                            class="bg-black rounded-[2.5rem] overflow-hidden relative h-[380px] shadow-xl"
+                            class="bg-rose-text rounded-[2.5rem] overflow-hidden relative h-[380px] shadow-xl"
                         >
                             <div
-                                class="absolute top-4 left-4 z-20 bg-black/50 backdrop-blur px-4 py-1.5 rounded-full text-xs font-bold text-white flex items-center gap-2 border border-white/10"
+                                class="absolute top-4 left-4 z-20 bg-rose-text/50 backdrop-blur px-4 py-1.5 rounded-full text-xs font-bold text-white flex items-center gap-2 border border-overlay/10"
                             >
                                 <div
                                     class="w-2 h-2 rounded-full {handDetected
@@ -1030,7 +1030,7 @@
                                     : 'border-overlay'} overflow-hidden flex flex-col shadow-sm transition-colors duration-300"
                             >
                                 <div
-                                    class="p-5 border-b border-overlay bg-white/50 backdrop-blur flex items-center justify-between"
+                                    class="p-5 border-b border-overlay bg-surface/50 backdrop-blur flex items-center justify-between"
                                 >
                                     <h3
                                         class="font-bold text-rose-text flex items-center gap-2"
@@ -1047,7 +1047,7 @@
                                     {/if}
                                 </div>
                                 <div
-                                    class="flex-1 relative bg-white flex items-center justify-center overflow-hidden"
+                                    class="flex-1 relative bg-surface flex items-center justify-center overflow-hidden"
                                 >
                                     <div
                                         class="absolute inset-0 pattern-grid opacity-5 pointer-events-none"
@@ -1076,7 +1076,7 @@
                                         </div>
                                     {/if}
                                     <div
-                                        class="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur p-3 rounded-2xl border border-overlay shadow text-sm"
+                                        class="absolute bottom-4 left-4 right-4 bg-surface/90 backdrop-blur p-3 rounded-2xl border border-overlay shadow text-sm"
                                     >
                                         <span class="font-bold text-iris"
                                             >Hướng dẫn:
@@ -1089,10 +1089,10 @@
                             </div>
 
                             <div
-                                class="bg-black rounded-[2.5rem] overflow-hidden flex flex-col relative shadow-xl"
+                                class="bg-rose-text rounded-[2.5rem] overflow-hidden flex flex-col relative shadow-xl"
                             >
                                 <div
-                                    class="absolute top-5 left-5 z-20 bg-black/50 backdrop-blur px-4 py-1.5 rounded-full text-xs font-bold text-white flex items-center gap-2 border border-white/10"
+                                    class="absolute top-5 left-5 z-20 bg-rose-text/50 backdrop-blur px-4 py-1.5 rounded-full text-xs font-bold text-white flex items-center gap-2 border border-overlay/10"
                                 >
                                     <div
                                         class="w-2 h-2 rounded-full {handDetected
@@ -1142,7 +1142,7 @@
                                     </div>
                                 {/if}
                                 <div
-                                    class="absolute bottom-5 left-5 right-5 z-20 bg-black/60 backdrop-blur text-white text-xs text-center py-2 px-4 rounded-xl border border-white/10"
+                                    class="absolute bottom-5 left-5 right-5 z-20 bg-rose-text/60 backdrop-blur text-white text-xs text-center py-2 px-4 rounded-xl border border-overlay/10"
                                 >
                                     Thực hiện ký hiệu <span
                                         class="font-black text-gold"
@@ -1287,7 +1287,7 @@
                                                     class="h-12 w-12 rounded-2xl flex items-center justify-center text-2xl font-black shadow-sm border
                                                 {done
                                                         ? 'bg-green-100 text-green-600 border-green-300'
-                                                        : 'bg-white text-iris border-overlay'}"
+                                                        : 'bg-surface text-iris border-overlay'}"
                                                 >
                                                     {done
                                                         ? "✓"

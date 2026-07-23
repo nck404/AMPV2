@@ -141,7 +141,7 @@
                             bind:value={title}
                             onblur={autoSlug}
                             placeholder="Vd: Cách sử dụng Chat AI"
-                            class="w-full px-4 py-3 rounded-xl bg-white border border-overlay outline-none focus:border-iris transition-all"
+                            class="w-full px-4 py-3 rounded-xl bg-surface border border-overlay outline-none focus:border-iris transition-all"
                         />
                     </div>
                     <div class="space-y-1">
@@ -153,7 +153,7 @@
                             type="text"
                             bind:value={slug}
                             placeholder="vd-cach-dung-chat-ai"
-                            class="w-full px-4 py-3 rounded-xl bg-white border border-overlay outline-none focus:border-iris transition-all"
+                            class="w-full px-4 py-3 rounded-xl bg-surface border border-overlay outline-none focus:border-iris transition-all"
                         />
                     </div>
                     <div class="space-y-1">
@@ -164,7 +164,7 @@
                         <input
                             type="text"
                             bind:value={category}
-                            class="w-full px-4 py-3 rounded-xl bg-white border border-overlay outline-none focus:border-iris transition-all"
+                            class="w-full px-4 py-3 rounded-xl bg-surface border border-overlay outline-none focus:border-iris transition-all"
                         />
                     </div>
                     <div class="space-y-1">
@@ -175,7 +175,7 @@
                         <input
                             type="number"
                             bind:value={order}
-                            class="w-full px-4 py-3 rounded-xl bg-white border border-overlay outline-none focus:border-iris transition-all"
+                            class="w-full px-4 py-3 rounded-xl bg-surface border border-overlay outline-none focus:border-iris transition-all"
                         />
                     </div>
                 </div>
@@ -185,7 +185,7 @@
                 {#if preview}
                     <div
                         in:fade
-                        class="glass p-10 rounded-[3rem] border border-overlay bg-white min-h-[600px] prose prose-iris max-w-none"
+                        class="glass p-10 rounded-[3rem] border border-overlay bg-surface min-h-[600px] prose prose-iris max-w-none"
                     >
                         {@html renderPreview(content)}
                     </div>

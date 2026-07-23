@@ -176,7 +176,7 @@
         </button>
     {:else}
         <div
-            class="assistant-window flex flex-col bg-white shadow-2xl border border-overlay rounded-2xl overflow-hidden cursor-default w-[320px]"
+            class="assistant-window flex flex-col bg-surface shadow-2xl border border-overlay rounded-2xl overflow-hidden cursor-default w-[320px]"
             in:fly={{ y: 20, duration: 300 }}
         >
             <header
@@ -189,14 +189,14 @@
                 <div class="flex items-center gap-0.5">
                     <button
                         onclick={() => (isExpanded = false)}
-                        class="p-1 hover:bg-white/20 rounded-md transition-colors flex items-center justify-center"
+                        class="p-1 hover:bg-surface/20 rounded-md transition-colors flex items-center justify-center"
                         title="Thu nhỏ"
                     >
                         <i class="bx bx-minus text-lg"></i>
                     </button>
                     <button
                         onclick={onClose}
-                        class="p-1 hover:bg-white/20 rounded-md transition-colors flex items-center justify-center"
+                        class="p-1 hover:bg-surface/20 rounded-md transition-colors flex items-center justify-center"
                         title="Đóng"
                     >
                         <i class="bx bx-x text-lg"></i>
@@ -217,7 +217,7 @@
                             class="max-w-[85%] px-3 py-1.5 rounded-2xl text-sm leading-relaxed {msg.role ===
                             'user'
                                 ? 'bg-iris text-white rounded-br-sm'
-                                : 'bg-white border border-overlay text-rose-text rounded-bl-sm shadow-sm'}"
+                                : 'bg-surface border border-overlay text-rose-text rounded-bl-sm shadow-sm'}"
                         >
                             {msg.content}
                         </div>
@@ -226,7 +226,7 @@
                 {#if loading}
                     <div class="flex justify-start">
                         <div
-                            class="bg-white border border-overlay px-3 py-1.5 rounded-2xl rounded-bl-sm shadow-sm"
+                            class="bg-surface border border-overlay px-3 py-1.5 rounded-2xl rounded-bl-sm shadow-sm"
                         >
                             <i
                                 class="bx bx-dots-horizontal-rounded animate-pulse text-iris text-lg"
@@ -236,7 +236,7 @@
                 {/if}
             </div>
 
-            <footer class="p-2 border-t border-overlay bg-white">
+            <footer class="p-2 border-t border-overlay bg-surface">
                 <div
                     class="flex items-center gap-1.5 bg-overlay/30 p-1 rounded-xl"
                 >
