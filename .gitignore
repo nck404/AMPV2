@@ -1,35 +1,40 @@
-# General
+# General / OS
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*.swo
+.vscode/
+.idea/
+package-lock.json
+
+# Python Backend
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Environments
-.env
 .venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-scratch/
-Docs/
-Src/tools/
-README.md
-
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Flask
+venv
+env
+ENV
+env.bak
+venv.bak
 instance/
 .webassets-cache
 
-# Distribution / packaging
+# Frontend / Node
+node_modules/
+.svelte-kit/
 build/
 dist/
-eggs/
-.eggs/
-*.egg-info/
-*.egg
+.output/
+.vercel/
+.netlify/
+.wrangler/
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Environment Secrets
+.env
+.env.*
+!.env.example
+!.env.test

@@ -28,9 +28,24 @@ def create_app():
 
     print("--- Backend Neural Core starting on port 6333 ---")
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-        "DATABASE_URL", "sqlite:///humanbio.db"
-    )
+    db_url = os.environ.get("DATABASE_URL", "sqlite:///humanbio.db")
+    if db_url.startswith("libsql://") or db_url.startswith("http://") or db_url.startswith("https://"):
+        import libsql
+        class LibSqlConnectionWrapper:
+            def __init__(self, conn):
+                self._conn = conn
+            def __getattr__(self, name):
+                return getattr(self._conn, name)
+            def create_function(self, *args, **kwargs):
+                pass
+        def create_conn():
+            token = os.environ.get("TURSO_AUTH_TOKEN", "")
+            return LibSqlConnectionWrapper(libsql.connect(db_url, auth_token=token))
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite://"
+        app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"creator": create_conn}
+    else:
+        app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY", "super-secret-key")
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=7)
