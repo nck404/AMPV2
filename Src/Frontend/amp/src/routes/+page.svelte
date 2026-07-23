@@ -261,7 +261,7 @@
     </section>
 
     <section class="py-24 bg-rose-text rounded-[4rem] px-8 lg:px-20 overflow-hidden relative shadow-2xl">
-        <div class="absolute inset-0 bg-[url('/noise.png')] opacity-10"></div>
+        <!-- removed missing noise.png -->
         <div class="flex flex-col lg:flex-row items-center gap-16 relative z-10">
             <div class="flex-1 space-y-8">
                 <div class="px-4 py-1.5 bg-white/10 text-white border border-white/20 rounded-full text-[10px] font-black uppercase tracking-[0.2em] w-fit">

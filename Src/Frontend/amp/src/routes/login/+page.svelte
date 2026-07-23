@@ -37,7 +37,11 @@
                 errorMsg = res.msg || "Email hoặc mật khẩu không chính xác.";
             }
         } catch (err) {
-            errorMsg = "Không thể kết nối với máy chủ.";
+            if (err.status === 401 || err.response?.status === 401) {
+                errorMsg = "Email hoặc mật khẩu không chính xác.";
+            } else {
+                errorMsg = "Không thể kết nối với máy chủ.";
+            }
         } finally {
             loading = false;
         }
