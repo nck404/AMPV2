@@ -3,7 +3,10 @@ from datetime import datetime
 from extensions import db
 from werkzeug.security import check_password_hash, generate_password_hash
 
+
 class User(db.Model):
+    __tablename__ = "user"
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -24,6 +27,10 @@ class User(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def __repr__(self):
+        return f"<User {self.username}>"
+
+
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -33,6 +40,10 @@ class Message(db.Model):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     sender = db.relationship("User", foreign_keys=[sender_id])
+
+    def __repr__(self):
+        return f"<Message {self.id} from {self.sender_id}>"
+
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -44,6 +55,10 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     author = db.relationship("User", backref="posts")
+
+    def __repr__(self):
+        return f"<Post {self.id} by {self.author_id}>"
+
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -58,6 +73,10 @@ class Comment(db.Model):
         "Comment", backref=db.backref("parent", remote_side=[id]), lazy="dynamic"
     )
 
+    def __repr__(self):
+        return f"<Comment {self.id} on post {self.post_id}>"
+
+
 class Reaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -66,6 +85,11 @@ class Reaction(db.Model):
     type = db.Column(db.String(20), nullable=False)
 
     user = db.relationship("User", backref="reactions")
+
+    def __repr__(self):
+        target = self.post_id or self.comment_id
+        return f"<Reaction {self.type} by {self.user_id} on {target}>"
+
 
 class Friendship(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -76,6 +100,10 @@ class Friendship(db.Model):
 
     user = db.relationship("User", foreign_keys=[user_id], backref="friendships")
     friend = db.relationship("User", foreign_keys=[friend_id])
+
+    def __repr__(self):
+        return f"<Friendship {self.user_id} -> {self.friend_id} ({self.status})>"
+
 
 class Documentation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -90,10 +118,18 @@ class Documentation(db.Model):
         onupdate=db.func.current_timestamp(),
     )
 
+    def __repr__(self):
+        return f"<Doc {self.slug}>"
+
+
 class SystemConfig(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     key = db.Column(db.String(255), unique=True, nullable=False)
     value = db.Column(db.Text, nullable=False)
+
+    def __repr__(self):
+        return f"<Config {self.key}>"
+
 
 class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -109,6 +145,10 @@ class Job(db.Model):
 
     author = db.relationship("User", backref="jobs")
 
+    def __repr__(self):
+        return f"<Job {self.id} {self.title}>"
+
+
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(
@@ -121,6 +161,10 @@ class Notification(db.Model):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     user = db.relationship("User", backref="notifications")
+
+    def __repr__(self):
+        return f"<Notification {self.id} {self.title}>"
+
 
 class JobApplication(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -139,6 +183,10 @@ class JobApplication(db.Model):
     job = db.relationship("Job", backref="applications")
     user = db.relationship("User", backref="applications")
 
+    def __repr__(self):
+        return f"<Application {self.id} for job {self.job_id}>"
+
+
 class LearningProgress(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -154,6 +202,10 @@ class LearningProgress(db.Model):
     last_attempt = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     user = db.relationship("User", backref="learning_progress")
+
+    def __repr__(self):
+        return f"<Progress {self.user_id} {self.lesson_title}>"
+
 
 class Leaderboard(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -171,9 +223,16 @@ class Leaderboard(db.Model):
 
     user = db.relationship("User", backref="leaderboard")
 
+    def __repr__(self):
+        return f"<Leaderboard {self.user_id} rank {self.rank}>"
+
+
 class LessonLock(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    target_type = db.Column(db.String(20), nullable=False)  # 'lesson' or 'category'
+    target_type = db.Column(db.String(20), nullable=False)
     target_name = db.Column(db.String(200), nullable=False)
     is_locked = db.Column(db.Boolean, default=True)
+
+    def __repr__(self):
+        return f"<LessonLock {self.target_type}:{self.target_name}>"
 

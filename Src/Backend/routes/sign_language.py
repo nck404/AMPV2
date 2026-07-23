@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from extensions import db
 from flask import Blueprint, jsonify, request
@@ -6,6 +6,25 @@ from models import Leaderboard, LearningProgress, LessonLock, User
 from utils import token_required
 
 sign_lang_bp = Blueprint("sign_lang", __name__)
+
+
+def _leaderboard_entry_to_dict(entry, user):
+    return {
+        "rank": entry.rank,
+        "user_id": user.id,
+        "username": user.username,
+        "avatar_url": user.avatar_url,
+        "total_score": entry.total_score,
+        "total_lessons_completed": entry.total_lessons_completed,
+        "current_streak": entry.current_streak,
+        "highest_streak": entry.highest_streak,
+        "average_accuracy": entry.average_accuracy,
+        "total_practice_score": entry.total_practice_score,
+        "last_updated": entry.last_updated.isoformat()
+        if entry.last_updated
+        else None,
+    }
+
 
 @sign_lang_bp.route("/progress", methods=["GET"])
 @token_required
@@ -22,6 +41,7 @@ def get_progress(current_user):
             for p in progress
         ]
     )
+
 
 @sign_lang_bp.route("/progress", methods=["POST"])
 @token_required
@@ -43,8 +63,8 @@ def save_progress(current_user):
         p.time_spent += time_spent
         p.accuracy = accuracy
         p.session_count += 1
-        p.completed_at = datetime.utcnow()
-        p.last_attempt = datetime.utcnow()
+        p.completed_at = datetime.now(timezone.utc)
+        p.last_attempt = datetime.now(timezone.utc)
     else:
         p = LearningProgress(
             user_id=current_user.id,
@@ -56,8 +76,8 @@ def save_progress(current_user):
             time_spent=time_spent,
             accuracy=accuracy,
             session_count=1,
-            completed_at=datetime.utcnow(),
-            last_attempt=datetime.utcnow(),
+            completed_at=datetime.now(timezone.utc),
+            last_attempt=datetime.now(timezone.utc),
         )
         db.session.add(p)
 
@@ -76,6 +96,7 @@ def save_progress(current_user):
         }
     )
 
+
 @sign_lang_bp.route("/locks", methods=["GET"])
 def get_locks():
     locks = LessonLock.query.filter_by(is_locked=True).all()
@@ -83,14 +104,15 @@ def get_locks():
         [{"target_type": l.target_type, "target_name": l.target_name} for l in locks]
     )
 
+
 @sign_lang_bp.route("/locks/toggle", methods=["POST"])
 @token_required
 def toggle_lock(current_user):
     if current_user.role != "admin":
-        return jsonify({"message": "Unauthorized"}), 403
+        return jsonify({"msg": "Unauthorized"}), 403
 
     data = request.get_json()
-    target_type = data.get("target_type")  # 'lesson' or 'category'
+    target_type = data.get("target_type")
     target_name = data.get("target_name")
 
     lock = LessonLock.query.filter_by(
@@ -107,7 +129,8 @@ def toggle_lock(current_user):
         status = "locked"
 
     db.session.commit()
-    return jsonify({"message": f"Target {status} successfully", "status": status})
+    return jsonify({"msg": f"Target {status} successfully", "status": status})
+
 
 @sign_lang_bp.route("/leaderboard", methods=["GET"])
 def get_leaderboard():
@@ -126,27 +149,10 @@ def get_leaderboard():
         .all()
     )
 
-    result = []
-    for entry, user in entries:
-        result.append(
-            {
-                "rank": entry.rank,
-                "user_id": user.id,
-                "username": user.username,
-                "avatar_url": user.avatar_url,
-                "total_score": entry.total_score,
-                "total_lessons_completed": entry.total_lessons_completed,
-                "current_streak": entry.current_streak,
-                "highest_streak": entry.highest_streak,
-                "average_accuracy": entry.average_accuracy,
-                "total_practice_score": entry.total_practice_score,
-                "last_updated": entry.last_updated.isoformat()
-                if entry.last_updated
-                else None,
-            }
-        )
+    result = [_leaderboard_entry_to_dict(entry, user) for entry, user in entries]
 
     return jsonify(result)
+
 
 @sign_lang_bp.route("/leaderboard/me", methods=["GET"])
 @token_required
@@ -155,25 +161,10 @@ def get_my_leaderboard(current_user):
 
     entry = Leaderboard.query.filter_by(user_id=current_user.id).first()
     if not entry:
-        return jsonify({"message": "No leaderboard data found"}), 404
+        return jsonify({"msg": "No leaderboard data found"}), 404
 
-    return jsonify(
-        {
-            "rank": entry.rank,
-            "user_id": current_user.id,
-            "username": current_user.username,
-            "avatar_url": current_user.avatar_url,
-            "total_score": entry.total_score,
-            "total_lessons_completed": entry.total_lessons_completed,
-            "current_streak": entry.current_streak,
-            "highest_streak": entry.highest_streak,
-            "average_accuracy": entry.average_accuracy,
-            "total_practice_score": entry.total_practice_score,
-            "last_updated": entry.last_updated.isoformat()
-            if entry.last_updated
-            else None,
-        }
-    )
+    return jsonify(_leaderboard_entry_to_dict(entry, current_user))
+
 
 @sign_lang_bp.route("/leaderboard/user/<int:user_id>", methods=["GET"])
 @token_required
@@ -184,25 +175,10 @@ def get_user_leaderboard(current_user, user_id):
     user = User.query.get(user_id)
 
     if not entry or not user or user.is_banned:
-        return jsonify({"message": "User not found or no data"}), 404
+        return jsonify({"msg": "User not found or no data"}), 404
 
-    return jsonify(
-        {
-            "rank": entry.rank,
-            "user_id": user.id,
-            "username": user.username,
-            "avatar_url": user.avatar_url,
-            "total_score": entry.total_score,
-            "total_lessons_completed": entry.total_lessons_completed,
-            "current_streak": entry.current_streak,
-            "highest_streak": entry.highest_streak,
-            "average_accuracy": entry.average_accuracy,
-            "total_practice_score": entry.total_practice_score,
-            "last_updated": entry.last_updated.isoformat()
-            if entry.last_updated
-            else None,
-        }
-    )
+    return jsonify(_leaderboard_entry_to_dict(entry, user))
+
 
 def update_leaderboard(user_id):
     """Update or create leaderboard entry for a user"""
@@ -230,9 +206,10 @@ def update_leaderboard(user_id):
     entry.total_score = total_score
     entry.total_lessons_completed = total_lessons
     entry.average_accuracy = average_accuracy
-    entry.last_updated = datetime.utcnow()
+    entry.last_updated = datetime.now(timezone.utc)
 
     db.session.commit()
+
 
 def update_all_ranks():
     """Update ranks for all leaderboard entries based on total_score"""
@@ -242,4 +219,3 @@ def update_all_ranks():
         entry.rank = i
 
     db.session.commit()
-

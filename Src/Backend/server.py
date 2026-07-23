@@ -6,7 +6,7 @@ import signal
 import platform
 
 BACKEND_FILE = "app.py"
-PORT = 5000
+PORT = 6333
 TUNNEL_COMMAND = ["cloudflared", "tunnel", "--url", f"http://localhost:{PORT}"]
 
 class AMPManager:

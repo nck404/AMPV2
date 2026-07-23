@@ -2,15 +2,10 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import User, Documentation
 from extensions import db
+from utils import admin_required
 
 docs_bp = Blueprint('docs', __name__)
 
-def admin_required():
-    user_id = int(get_jwt_identity())
-    user = User.query.get(user_id)
-    if not user or not user.is_admin:
-        return False
-    return True
 
 @docs_bp.route('/', methods=['GET'])
 def get_all_docs():
@@ -26,12 +21,13 @@ def get_all_docs():
         })
     return jsonify(result), 200
 
+
 @docs_bp.route('/<slug>', methods=['GET'])
 def get_doc(slug):
     doc = Documentation.query.filter_by(slug=slug).first()
     if not doc:
         return jsonify({"msg": "Documentation not found"}), 404
-    
+
     return jsonify({
         "id": doc.id,
         "title": doc.title,
@@ -42,12 +38,11 @@ def get_doc(slug):
         "last_updated": doc.last_updated
     }), 200
 
+
 @docs_bp.route('/', methods=['POST'])
 @jwt_required()
-def create_doc():
-    if not admin_required():
-        return jsonify({"msg": "Admin privilege required"}), 403
-    
+@admin_required
+def create_doc(current_user):
     data = request.get_json()
     title = data.get('title')
     slug = data.get('slug')
@@ -73,16 +68,15 @@ def create_doc():
 
     return jsonify({"msg": "Documentation created successfully", "id": new_doc.id}), 201
 
+
 @docs_bp.route('/<int:doc_id>', methods=['PUT'])
 @jwt_required()
-def update_doc(doc_id):
-    if not admin_required():
-        return jsonify({"msg": "Admin privilege required"}), 403
-    
+@admin_required
+def update_doc(current_user, doc_id):
     doc = Documentation.query.get(doc_id)
     if not doc:
         return jsonify({"msg": "Documentation not found"}), 404
-    
+
     data = request.get_json()
     doc.title = data.get('title', doc.title)
     doc.slug = data.get('slug', doc.slug)
@@ -93,17 +87,15 @@ def update_doc(doc_id):
     db.session.commit()
     return jsonify({"msg": "Documentation updated successfully"}), 200
 
+
 @docs_bp.route('/<int:doc_id>', methods=['DELETE'])
 @jwt_required()
-def delete_doc(doc_id):
-    if not admin_required():
-        return jsonify({"msg": "Admin privilege required"}), 403
-    
+@admin_required
+def delete_doc(current_user, doc_id):
     doc = Documentation.query.get(doc_id)
     if not doc:
         return jsonify({"msg": "Documentation not found"}), 404
-    
+
     db.session.delete(doc)
     db.session.commit()
     return jsonify({"msg": "Documentation deleted successfully"}), 200
-

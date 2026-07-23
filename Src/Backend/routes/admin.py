@@ -1,44 +1,22 @@
 import json
-from functools import wraps
 
-from extensions import db
 from flask import Blueprint, jsonify, request
-
-try:
-    from flask_jwt_extended import get_jwt_identity, jwt_required
-except ImportError:
-    from utils import token_required as jwt_required
-
-from models import SystemConfig, User, Post, Job, Comment
+from flask_jwt_extended import get_jwt_identity, jwt_required
+from models import Notification, SystemConfig, User, Post, Job, Comment
+from extensions import db
+from utils import admin_required
 
 admin_bp = Blueprint("admin_bp", __name__)
 
 
-def admin_required(f):
-    @wraps(f)
-    @jwt_required()
-    def decorated_function(*args, **kwargs):
-        try:
-            current_user_id = get_jwt_identity()
-            current_user = User.query.filter_by(id=current_user_id).first()
-        except Exception:
-            return jsonify({"message": "Authentication context error"}), 401
-
-        if not current_user or not current_user.is_admin:
-            return jsonify({"message": "Admin privilege required!"}), 403
-        return f(*args, **kwargs)
-
-    return decorated_function
-
-
 @admin_bp.route("/stats", methods=["GET"])
 @admin_required
-def get_stats():
+def get_stats(current_user):
     total_users = User.query.count()
     total_businesses = User.query.filter_by(role="business").count()
     total_posts = Post.query.count()
     total_jobs = Job.query.count()
-    
+
     return jsonify({
         "total_users": total_users,
         "total_businesses": total_businesses,
@@ -49,7 +27,7 @@ def get_stats():
 
 @admin_bp.route("/users", methods=["GET"])
 @admin_required
-def get_all_users():
+def get_all_users(current_user):
     users = User.query.all()
     output = []
     for user in users:
@@ -69,42 +47,48 @@ def get_all_users():
 
 @admin_bp.route("/users/<int:user_id>/ban", methods=["PUT"])
 @admin_required
-def ban_user(user_id):
-    user = User.query.get_or_404(user_id)
+def ban_user(current_user, user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
     data = request.get_json() or {}
     ban_status = data.get("ban", True)
     user.is_banned = ban_status
     db.session.commit()
-    return jsonify({"message": f"User {user.username} has been {'banned' if ban_status else 'unbanned'}."}), 200
+    return jsonify({"msg": f"User {user.username} has been {'banned' if ban_status else 'unbanned'}."}), 200
 
 
 @admin_bp.route("/users/<int:user_id>/role", methods=["PUT"])
 @admin_required
-def change_role(user_id):
-    user = User.query.get_or_404(user_id)
+def change_role(current_user, user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
     data = request.get_json()
     if "role" in data:
         new_role = data["role"]
         user.role = new_role
         user.is_admin = (new_role == "admin")
         db.session.commit()
-        return jsonify({"message": f"User {user.username} role updated to {new_role}."}), 200
-    return jsonify({"message": "Missing role field."}), 400
+        return jsonify({"msg": f"User {user.username} role updated to {new_role}."}), 200
+    return jsonify({"msg": "Missing role field."}), 400
 
 
 @admin_bp.route("/users/<int:user_id>", methods=["DELETE"])
 @admin_required
-def delete_user(user_id):
-    user = User.query.get_or_404(user_id)
+def delete_user(current_user, user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
     Post.query.filter_by(author_id=user_id).delete()
     db.session.delete(user)
     db.session.commit()
-    return jsonify({"message": f"User {user.username} deleted."}), 200
+    return jsonify({"msg": f"User {user.username} deleted."}), 200
 
 
 @admin_bp.route("/routes", methods=["GET", "POST"])
 @admin_required
-def manage_locked_routes():
+def manage_locked_routes(current_user):
     config_key = "locked_routes"
     config = SystemConfig.query.filter_by(key=config_key).first()
 
@@ -122,7 +106,7 @@ def manage_locked_routes():
         data = request.get_json()
         new_locked_routes = data.get("locked_routes", [])
         if not isinstance(new_locked_routes, list):
-            return jsonify({"message": "locked_routes must be a list"}), 400
+            return jsonify({"msg": "locked_routes must be a list"}), 400
         json_value = json.dumps(new_locked_routes)
         if config:
             config.value = json_value
@@ -130,7 +114,7 @@ def manage_locked_routes():
             new_config = SystemConfig(key=config_key, value=json_value)
             db.session.add(new_config)
         db.session.commit()
-        return jsonify({"message": "Locked routes updated successfully.", "locked_routes": new_locked_routes}), 200
+        return jsonify({"msg": "Locked routes updated successfully.", "locked_routes": new_locked_routes}), 200
 
 
 @admin_bp.route("/check-route", methods=["GET"])
@@ -142,14 +126,14 @@ def check_route_lock():
             locked_routes = json.loads(config.value)
             if path in locked_routes:
                 return jsonify({"locked": True}), 200
-        except:
+        except Exception:
             pass
     return jsonify({"locked": False}), 200
 
 
 @admin_bp.route("/posts", methods=["GET"])
 @admin_required
-def get_all_posts():
+def get_all_posts(current_user):
     posts = Post.query.all()
     output = []
     for post in posts:
@@ -164,17 +148,19 @@ def get_all_posts():
 
 @admin_bp.route("/posts/<int:post_id>", methods=["DELETE"])
 @admin_required
-def delete_post(post_id):
-    post = Post.query.get_or_404(post_id)
+def delete_post(current_user, post_id):
+    post = Post.query.get(post_id)
+    if not post:
+        return jsonify({"msg": "Post not found"}), 404
     Comment.query.filter_by(post_id=post_id).delete()
     db.session.delete(post)
     db.session.commit()
-    return jsonify({"message": "Post deleted"}), 200
+    return jsonify({"msg": "Post deleted"}), 200
 
 
 @admin_bp.route("/jobs", methods=["GET"])
 @admin_required
-def get_all_jobs():
+def get_all_jobs(current_user):
     jobs = Job.query.all()
     output = []
     for job in jobs:
@@ -189,35 +175,38 @@ def get_all_jobs():
 
 @admin_bp.route("/jobs/<int:job_id>", methods=["DELETE"])
 @admin_required
-def delete_job(job_id):
-    job = Job.query.get_or_404(job_id)
+def delete_job(current_user, job_id):
+    job = Job.query.get(job_id)
+    if not job:
+        return jsonify({"msg": "Job not found"}), 404
     db.session.delete(job)
     db.session.commit()
-    return jsonify({"message": "Job deleted"}), 200
+    return jsonify({"msg": "Job deleted"}), 200
 
 
 @admin_bp.route("/jobs/<int:job_id>/approve", methods=["PUT"])
 @admin_required
-def approve_job(job_id):
-    job = Job.query.get_or_404(job_id)
+def approve_job(current_user, job_id):
+    job = Job.query.get(job_id)
+    if not job:
+        return jsonify({"msg": "Job not found"}), 404
     job.status = "approved"
     db.session.commit()
-    return jsonify({"message": "Job approved"}), 200
+    return jsonify({"msg": "Job approved"}), 200
 
 
 @admin_bp.route("/notifications", methods=["POST"])
 @admin_required
-def create_notification():
+def create_notification(current_user):
     data = request.get_json()
     title = data.get("title")
     content = data.get("content")
     notif_type = data.get("type", "admin")
-    user_id = data.get("user_id") # Optional
+    user_id = data.get("user_id")
 
     if not title or not content:
-        return jsonify({"message": "Title and content are required."}), 400
+        return jsonify({"msg": "Title and content are required."}), 400
 
-    from models import Notification
     new_notif = Notification(
         user_id=user_id,
         title=title,
@@ -227,13 +216,12 @@ def create_notification():
     db.session.add(new_notif)
     db.session.commit()
 
-    return jsonify({"message": "Notification sent successfully."}), 201
+    return jsonify({"msg": "Notification sent successfully."}), 201
 
 
 @admin_bp.route("/notifications", methods=["GET"])
 @admin_required
-def get_all_notifications_admin():
-    from models import Notification
+def get_all_notifications_admin(current_user):
     notifs = Notification.query.order_by(Notification.created_at.desc()).all()
     output = []
     for n in notifs:
@@ -250,9 +238,10 @@ def get_all_notifications_admin():
 
 @admin_bp.route("/notifications/<int:notif_id>", methods=["DELETE"])
 @admin_required
-def delete_notification(notif_id):
-    from models import Notification
-    notif = Notification.query.get_or_404(notif_id)
+def delete_notification(current_user, notif_id):
+    notif = Notification.query.get(notif_id)
+    if not notif:
+        return jsonify({"msg": "Notification not found"}), 404
     db.session.delete(notif)
     db.session.commit()
-    return jsonify({"message": "Notification deleted."}), 200
+    return jsonify({"msg": "Notification deleted."}), 200

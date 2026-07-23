@@ -3,9 +3,9 @@ from datetime import timedelta
 
 from dotenv import load_dotenv
 from extensions import db, jwt, socketio, migrate
-from flask import Flask
+from flask import Flask, current_app
 from flask_cors import CORS
-from models import User
+from models import User, Message
 from routes.admin import admin_bp
 from routes.auth import auth_bp
 from routes.chat import chat_bp
@@ -17,6 +17,26 @@ from routes.recruitment import recruitment_bp
 from routes.sign_language import sign_lang_bp
 
 load_dotenv()
+
+
+def create_libsql_connection(db_url):
+    import libsql
+
+    token = os.environ.get("TURSO_AUTH_TOKEN", "")
+    conn = libsql.connect(db_url, auth_token=token)
+
+    class LibSqlConnectionWrapper:
+        def __init__(self, conn):
+            self._conn = conn
+
+        def __getattr__(self, name):
+            return getattr(self._conn, name)
+
+        def create_function(self, *args, **kwargs):
+            pass
+
+    return LibSqlConnectionWrapper(conn)
+
 
 def create_app():
     upload_folder = os.path.join(os.getcwd(), "static", "uploads")
@@ -30,30 +50,19 @@ def create_app():
 
     db_url = os.environ.get("DATABASE_URL", "sqlite:///humanbio.db")
     if db_url.startswith("libsql://") or db_url.startswith("http://") or db_url.startswith("https://"):
-        import libsql
-        class LibSqlConnectionWrapper:
-            def __init__(self, conn):
-                self._conn = conn
-            def __getattr__(self, name):
-                return getattr(self._conn, name)
-            def create_function(self, *args, **kwargs):
-                pass
-        def create_conn():
-            token = os.environ.get("TURSO_AUTH_TOKEN", "")
-            return LibSqlConnectionWrapper(libsql.connect(db_url, auth_token=token))
         app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite://"
-        app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"creator": create_conn}
+        app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"creator": lambda: create_libsql_connection(db_url)}
     else:
         app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY", "super-secret-key")
+    app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY") or os.urandom(32)
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=7)
     app.config["UPLOAD_FOLDER"] = upload_folder
 
     db.init_app(app)
     jwt.init_app(app)
-    socketio.init_app(app)
+    socketio.init_app(app, cors_allowed_origins="*")
     migrate.init_app(app, db)
 
     app.register_blueprint(auth_bp, url_prefix="/api")
@@ -66,32 +75,36 @@ def create_app():
     app.register_blueprint(recruitment_bp, url_prefix="/api/recruitment")
     app.register_blueprint(sign_lang_bp, url_prefix="/api/sign-language")
 
+    register_socket_handlers()
+
+    with app.app_context():
+        db.create_all()
+
     return app
 
-@socketio.on("connect")
-def handle_connect():
-    print("Client connected")
 
-@socketio.on("message")
-def handle_message(data):
-    print(f"Message received: {data}")
-    socketio.emit("message", data)
+def register_socket_handlers():
+    @socketio.on("connect")
+    def handle_connect():
+        print("Client connected via Socket.IO")
 
-    from models import Message
+    @socketio.on("message")
+    def handle_message(data):
+        print(f"Message received: {data}")
+        socketio.emit("message", data)
 
-    content = data.get("content") or data.get("text")
-    sender_id = data.get("sender_id")
-    receiver_id = data.get("receiver_id")
+        with current_app.app_context():
+            content = data.get("content") or data.get("text")
+            sender_id = data.get("sender_id")
+            receiver_id = data.get("receiver_id")
 
-    from flask import current_app
+            if content and sender_id:
+                msg = Message(sender_id=sender_id, content=content, receiver_id=receiver_id)
+                db.session.add(msg)
+                db.session.commit()
 
-    with current_app.app_context():
-        if content and sender_id:
-            msg = Message(sender_id=sender_id, content=content, receiver_id=receiver_id)
-            db.session.add(msg)
-            db.session.commit()
 
 if __name__ == "__main__":
     app = create_app()
-    socketio.run(app, host="0.0.0.0", debug=True, port=6333)
+    socketio.run(app, host="0.0.0.0", port=6333)
 
