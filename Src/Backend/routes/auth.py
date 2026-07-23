@@ -31,18 +31,7 @@ def register():
     if not all([username, email, password]):
         return jsonify({"msg": "Missing required fields"}), 400
 
-    recaptcha_secret = os.environ.get('RECAPTCHA_SECRET_KEY')
-    if recaptcha_secret:
-        import requests as req
-        resp = req.post(
-            'https://www.google.com/recaptcha/api/siteverify',
-            data={'secret': recaptcha_secret, 'response': recaptcha_token}
-        )
-        result = resp.json()
-        if not result.get('success'):
-            return jsonify({"msg": "Invalid reCAPTCHA"}), 400
-    elif not recaptcha_token:
-        return jsonify({"msg": "reCAPTCHA token required"}), 400
+    # reCAPTCHA logic removed
 
     if User.query.filter_by(username=username).first():
         return jsonify({"msg": "Username already exists"}), 400

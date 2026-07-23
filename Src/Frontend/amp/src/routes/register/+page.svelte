@@ -28,10 +28,7 @@
             return;
         }
 
-        if (!recaptchaChecked) {
-            errorMsg = "Vui lòng xác nhận bạn không phải là người máy!";
-            return;
-        }
+        // recaptcha check removed
 
         if (password !== confirmPassword) {
             errorMsg = "Mật khẩu xác nhận không khớp!";
@@ -44,7 +41,6 @@
                 username: name,
                 email,
                 password,
-                recaptcha_token: "test-token",
             });
 
             if (res.msg === "User created successfully") {
@@ -195,39 +191,7 @@
                         </div>
                     </div>
 
-                    <div class="py-2">
-                        <button
-                            type="button"
-                            onclick={() => (recaptchaChecked = true)}
-                            class="w-full bg-surface/50 border border-overlay/50 rounded-2xl p-4 flex items-center justify-between group hover:border-iris/30 transition-all cursor-pointer"
-                        >
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="w-6 h-6 border-2 {recaptchaChecked
-                                        ? 'border-cat-green bg-cat-green text-white'
-                                        : 'border-overlay/50 bg-white text-iris'} rounded flex items-center justify-center transition-all"
-                                >
-                                    <i
-                                        class="bx bx-check text-xl {recaptchaChecked
-                                            ? 'opacity-100'
-                                            : 'opacity-0 group-hover:opacity-50'} transition-opacity"
-                                    ></i>
-                                </div>
-                                <span
-                                    class="text-sm font-bold text-rose-text/70"
-                                    >Tôi không phải là người máy</span
-                                >
-                            </div>
-                            <div class="flex flex-col items-center">
-                                <i class="bx bxl-google text-2xl text-blue-500"
-                                ></i>
-                                <span
-                                    class="text-[8px] font-bold opacity-40 uppercase"
-                                    >reCAPTCHA</span
-                                >
-                            </div>
-                        </button>
-                    </div>
+                    <!-- recaptcha block removed -->
 
                     <div class="flex items-center gap-3 py-2 px-1">
                         <label
