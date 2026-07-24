@@ -46,7 +46,7 @@ def create_app():
     app = Flask(__name__, static_folder="static")
     CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-    print("--- Backend Neural Core starting on port 6333 ---")
+    print("--- Backend strated on port 6333 ---")
 
     db_url = os.environ.get("DATABASE_URL", "sqlite:///humanbio.db")
     if db_url.startswith("libsql://") or db_url.startswith("http://") or db_url.startswith("https://"):

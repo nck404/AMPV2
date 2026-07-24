@@ -13,7 +13,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
     public_id = db.Column(db.String(20), unique=True, nullable=False)
     bio = db.Column(
-        db.String(255), default="Đam mê công nghệ và mong muốn đóng góp cho cộng đồng."
+        db.String(255), default="Chào mừng đến với cộng đồng AMP"
     )
     avatar_url = db.Column(db.String(255))
     is_admin = db.Column(db.Boolean, default=False)
