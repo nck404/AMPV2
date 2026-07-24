@@ -3,8 +3,8 @@
   <rect width="512" height="512" fill="#907aa9" rx="120" />
   
   <!-- Chữ A lớn, nổi bật nhất -->
-  <text x="256" y="270" font-family="system-ui, sans-serif" font-weight="900" font-size="340" fill="#faf4ed" text-anchor="middle" dominant-baseline="central">A</text>
+  <text x="256" y="235" font-family="system-ui, sans-serif" font-weight="900" font-size="340" fill="#faf4ed" text-anchor="middle" dominant-baseline="central">A</text>
   
   <!-- Chữ M và P nhỏ hơn ở dưới -->
-  <text x="256" y="460" font-family="system-ui, sans-serif" font-weight="700" font-size="100" fill="#faf4ed" text-anchor="middle" letter-spacing="20">MP</text>
+  <text x="256" y="475" font-family="system-ui, sans-serif" font-weight="700" font-size="90" fill="#faf4ed" text-anchor="middle" letter-spacing="20">MP</text>
 </svg>
