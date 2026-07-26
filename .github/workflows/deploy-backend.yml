@@ -4,12 +4,6 @@ on:
   push:
     branches:
       - main
-    # Tạm thời mình comment phần paths này lại để cứ push là chạy, 
-    # và thêm workflow_dispatch để bạn có thể bấm nút chạy bằng tay trên GitHub.
-    # paths:
-    #   - 'source/backend/**'
-  
-  # Thêm dòng này để cho phép bạn bấm nút "Run workflow" thủ công trên web GitHub
   workflow_dispatch:
 
 jobs:
@@ -38,6 +32,19 @@ jobs:
           password: PLaa6jtq
           port: 22
           script: |
+            # Tự động cài đặt Node.js và npm nếu chưa có
+            if ! command -v npm &> /dev/null; then
+                echo "Installing Node.js..."
+                curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+                apt-get install -y nodejs
+            fi
+            
+            # Tự động cài đặt pm2 nếu chưa có
+            if ! command -v pm2 &> /dev/null; then
+                echo "Installing PM2..."
+                npm install -g pm2
+            fi
+            
             cd /var/www/AMPV2/source/backend
             npm install
             npx prisma generate
