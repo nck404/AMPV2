@@ -1,0 +1,42 @@
+name: Deploy Backend to Ubuntu Server
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'source/backend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Bước 1: GitHub lấy code mới nhất từ repo
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Bước 2: Copy toàn bộ thư mục source/backend từ GitHub sang Server
+      - name: Copy files via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 103.249.201.193
+          username: root
+          password: PLaa6jtq
+          port: 22
+          source: "source/backend/*"
+          target: "/var/www/AMPV2"
+          strip_components: 0
+
+      # Bước 3: Đăng nhập Server để chạy lệnh cài đặt và restart
+      - name: Restart Backend
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 103.249.201.193
+          username: root
+          password: PLaa6jtq
+          port: 22
+          script: |
+            cd /var/www/AMPV2/source/backend
+            npm install
+            npx prisma generate
+            pm2 restart backend-api || pm2 start server.js --name backend-api
