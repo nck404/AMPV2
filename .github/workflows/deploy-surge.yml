@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-web:
+  deploy-mobile:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install dependencies and Build Web App
+      - name: Install dependencies and Build Mobile Web
         run: |
           cd source/frontend/mobile
           npm install
@@ -25,11 +25,41 @@ jobs:
       - name: Install Surge
         run: npm install -g surge
 
-      - name: Deploy to Surge
+      - name: Deploy Mobile to Surge
         run: |
           cd source/frontend/mobile
           # Deploy the build folder to the domain specified in capacitor.config.json
           surge ./build amp0.surge.sh
+        env:
+          SURGE_LOGIN: slaekhoa@gmail.com
+          SURGE_TOKEN: 4dea59f76d6a699cdb2fdd3302d44767
+
+  deploy-amp:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies and Build AMP Web
+        run: |
+          cd source/frontend/amp
+          npm install
+          npm run build
+
+      - name: Install Surge
+        run: npm install -g surge
+
+      - name: Deploy AMP Web to Surge
+        run: |
+          cd source/frontend/amp
+          # CHÚ Ý: Thay đổi "amp-web.surge.sh" thành tên domain bạn muốn cho frontend amp
+          surge ./build amp-web.surge.sh
         env:
           SURGE_LOGIN: slaekhoa@gmail.com
           SURGE_TOKEN: 4dea59f76d6a699cdb2fdd3302d44767
