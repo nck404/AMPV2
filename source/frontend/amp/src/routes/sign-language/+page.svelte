@@ -1,10 +1,11 @@
 <script>
     import { onMount, onDestroy } from "svelte";
     import { fly, fade, scale } from "svelte/transition";
-    import * as mpHands from "@mediapipe/hands";
-    import * as mpCamera from "@mediapipe/camera_utils";
-    const Hands = mpHands.Hands || mpHands;
-    const Camera = mpCamera.Camera || mpCamera;
+    // Using global window.Hands and window.Camera from script tag in app.html
+    let Hands;
+    let Camera;
+    
+    // Import GestureEstimator dynamically or standard
     import { GestureEstimator } from "fingerpose";
     import { allGestureList } from "$lib/gestures.js";
     import confetti from "canvas-confetti";

@@ -47,7 +47,7 @@
         }
 
         if (typeof io !== "undefined") {
-            socket = io();
+            socket = io(STATIC_BASE);
 
             socket.on("connect", () => {
                 console.log("Connected to Chat Server");
