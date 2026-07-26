@@ -1,9 +1,6 @@
 name: Deploy Backend to Ubuntu Server
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
@@ -32,19 +29,7 @@ jobs:
           password: PLaa6jtq
           port: 22
           script: |
-            # Tự động cài đặt Node.js và npm nếu chưa có
-            if ! command -v npm &> /dev/null; then
-                echo "Installing Node.js..."
-                curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-                apt-get install -y nodejs
-            fi
-            
-            # Tự động cài đặt pm2 nếu chưa có
-            if ! command -v pm2 &> /dev/null; then
-                echo "Installing PM2..."
-                npm install -g pm2
-            fi
-            
+            # Môi trường đã được setup Node.js v20 và PM2 trên server
             cd /var/www/AMPV2/source/backend
             npm install
             npx prisma generate
