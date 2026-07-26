@@ -1,0 +1,5 @@
+# Coding Rules & Guidelines
+
+- DO NOT add any comments when writing or modifying code.
+- Always output clean code without explanations inside the source files.
+- If you need to explain something, explain it in the chat interface, not in the code.

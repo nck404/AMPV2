@@ -31,12 +31,6 @@ jobs:
           script: |
             export PATH=$PATH:/usr/local/bin:/usr/bin
             cd /var/www/AMPV2/source/backend
-            
-            # Thêm --legacy-peer-deps để tránh lỗi xung đột phiên bản thư viện (ERESOLVE)
             npm install --legacy-peer-deps
-            
-            # Khởi tạo Prisma (npx sẽ dùng đúng bản prisma v5 nội bộ, không tải bản v7 gây lỗi schema)
             npx prisma generate
-            
-            # Chạy PM2 thông qua npx để tránh lỗi command not found
             npx pm2 restart backend-api || npx pm2 start server.js --name backend-api
