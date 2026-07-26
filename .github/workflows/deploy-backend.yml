@@ -29,8 +29,14 @@ jobs:
           password: PLaa6jtq
           port: 22
           script: |
-            # Môi trường đã được setup Node.js v20 và PM2 trên server
+            export PATH=$PATH:/usr/local/bin:/usr/bin
             cd /var/www/AMPV2/source/backend
-            npm install
+            
+            # Thêm --legacy-peer-deps để tránh lỗi xung đột phiên bản thư viện (ERESOLVE)
+            npm install --legacy-peer-deps
+            
+            # Khởi tạo Prisma (npx sẽ dùng đúng bản prisma v5 nội bộ, không tải bản v7 gây lỗi schema)
             npx prisma generate
-            pm2 restart backend-api || pm2 start server.js --name backend-api
+            
+            # Chạy PM2 thông qua npx để tránh lỗi command not found
+            npx pm2 restart backend-api || npx pm2 start server.js --name backend-api
