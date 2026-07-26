@@ -22,27 +22,14 @@ jobs:
           npm install
           npm run build
 
-      - name: Install Surge and Expect
-        run: |
-          npm install -g surge
-          sudo apt-get update && sudo apt-get install -y expect
+      - name: Install Surge
+        run: npm install -g surge
 
-      - name: Login and Deploy to Surge
+      - name: Deploy to Surge
         run: |
           cd source/frontend/mobile
-          
-          # Use expect to automate the login process. Added sleep to prevent timing issues.
-          expect << 'EOF'
-          set timeout 10
-          spawn surge login
-          expect "email:"
-          sleep 1
-          send "slaekhoa@gmail.com\r"
-          expect "password:"
-          sleep 1
-          send "khoadz123\r"
-          expect eof
-          EOF
-          
           # Deploy the build folder to the domain specified in capacitor.config.json
           surge ./build amp0.surge.sh
+        env:
+          SURGE_LOGIN: slaekhoa@gmail.com
+          SURGE_TOKEN: 4dea59f76d6a699cdb2fdd3302d44767
