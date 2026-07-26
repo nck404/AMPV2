@@ -1,13 +1,17 @@
 <script>
     import { onMount, onDestroy } from "svelte";
     import { fly, fade, scale } from "svelte/transition";
-    import { Hands } from "@mediapipe/hands";
-    import { Camera } from "@mediapipe/camera_utils";
+    import * as mpHands from "@mediapipe/hands";
+    import * as mpCamera from "@mediapipe/camera_utils";
+    const Hands = mpHands.Hands || mpHands;
+    const Camera = mpCamera.Camera || mpCamera;
     import { GestureEstimator } from "fingerpose";
-    import { gestureList } from "$lib/gestures.js";
+    import { allGestureList } from "$lib/gestures.js";
     import confetti from "canvas-confetti";
+    import { addToast } from "$lib/stores/toast.js";
+    import { PUBLIC_API_DOMAIN } from "$env/static/public";
 
-    const API_BASE = "http://localhost:6333/api/sign-language";
+    const API_BASE = `${PUBLIC_API_DOMAIN}/sign-language`;
 
     function getAuthHeaders() {
         const token = localStorage.getItem("token");
@@ -29,6 +33,7 @@
     let camera, hands, gestureEstimator;
     let isCameraRunning = $state(false);
     let handDetected = $state(false);
+    let cameraError = $state(false);
 
     let detectedLetter = $state(null);
     let stableBuffer = [];
@@ -198,6 +203,16 @@
         "Chữ X": "/handsigns/Xhand.svg",
         "Chữ Y": "/handsigns/Yhand.svg",
         "Chữ Z": "/handsigns/Zhand.svg",
+        "Số 0": "/handsigns/So0hand.svg",
+        "Số 1": "/handsigns/So1hand.svg",
+        "Số 2": "/handsigns/So2hand.svg",
+        "Số 3": "/handsigns/So3hand.svg",
+        "Số 4": "/handsigns/So4hand.svg",
+        "Số 5": "/handsigns/So5hand.svg",
+        "Số 6": "/handsigns/So6hand.svg",
+        "Số 7": "/handsigns/So7hand.svg",
+        "Số 8": "/handsigns/So8hand.svg",
+        "Số 9": "/handsigns/So9hand.svg",
     };
 
     const aslDesc = {
@@ -229,6 +244,19 @@
         Z: "Vẽ chữ Z bằng ngón trỏ.",
     };
 
+    const numDesc = {
+        0: "Cong các ngón tạo hình tròn, không chạm ngón cái.",
+        1: "Chỉ ngón trỏ thẳng lên, các ngón khác nắm lại.",
+        2: "Ngón trỏ và giữa xòe thẳng lên hình chữ V.",
+        3: "Ngón cái, trỏ và giữa giơ thẳng lên.",
+        4: "Bốn ngón (trừ ngón cái) giơ thẳng và xòe đều.",
+        5: "Xòe cả bàn tay, năm ngón thẳng và tách rời.",
+        6: "Ngón cái chạm ngón út, ba ngón còn lại giơ thẳng.",
+        7: "Ngón cái chạm ngón áp út, các ngón còn lại giơ thẳng.",
+        8: "Ngón cái chạm ngón giữa, các ngón còn lại giơ thẳng.",
+        9: "Ngón cái chạm ngón trỏ, các ngón còn lại giơ thẳng.",
+    };
+
     const allLessons = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         .split("")
         .map((l, i) => ({
@@ -240,6 +268,17 @@
             category: "Bảng chữ cái",
             description: aslDesc[l] ?? `Ký hiệu ASL cho chữ ${l}.`,
         }))
+        .concat(
+            Array.from({ length: 10 }, (_, n) => ({
+                id: 100 + n,
+                title: `Số ${n}`,
+                targetLetter: String(n),
+                difficulty: "Cơ bản",
+                duration: "2 phút",
+                category: "Số đếm",
+                description: numDesc[n] ?? `Ký hiệu số ${n}.`,
+            })),
+        )
         .concat([
             {
                 id: 27,
@@ -279,7 +318,7 @@
         try {
             currentUser = JSON.parse(localStorage.getItem("user"));
         } catch {}
-        gestureEstimator = new GestureEstimator(gestureList);
+        gestureEstimator = new GestureEstimator(allGestureList);
         initMediaPipe();
         fetchProgress();
         fetchLocks();
@@ -445,6 +484,7 @@
 
     async function startCamera() {
         if (!videoElement) return;
+        cameraError = false;
         try {
             camera = new Camera(videoElement, {
                 onFrame: async () => await hands.send({ image: videoElement }),
@@ -454,8 +494,38 @@
             await camera.start();
             isCameraRunning = true;
         } catch {
-            alert("Không thể truy cập Camera.");
+            cameraError = true;
+            addToast({
+                type: "error",
+                message:
+                    "Không thể truy cập Camera. Vui lòng cấp quyền camera cho trình duyệt.",
+            });
         }
+    }
+
+    function confirmWordSign() {
+        if (
+            cooldown ||
+            !activeLesson ||
+            activeLesson.targetLetter ||
+            completedSet.has(activeLesson.title)
+        )
+            return;
+        onCorrectSign();
+    }
+
+    function handleCardKeydown(e, lesson, idx) {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            selectLesson(lesson, idx);
+        }
+    }
+
+    function notifyLocked() {
+        addToast({
+            type: "info",
+            message: "Nội dung này đang được cập nhật, vui lòng quay lại sau.",
+        });
     }
 
     function stopCamera() {
@@ -466,7 +536,10 @@
     }
 
     function selectLesson(lesson, idx) {
-        if (isLocked(lesson.title)) return;
+        if (isLocked(lesson.title)) {
+            notifyLocked();
+            return;
+        }
         activeLesson = lesson;
         activeLessonIdx = idx;
         mode = "learn";
@@ -953,16 +1026,34 @@
                                 <div
                                     class="absolute inset-0 flex items-center justify-center bg-gray-900 z-30"
                                 >
-                                    <div class="text-center space-y-3">
-                                        <i
-                                            class="bx bx-loader-alt animate-spin text-4xl text-iris"
-                                        ></i>
-                                        <p
-                                            class="text-white text-sm opacity-70"
-                                        >
-                                            Đang khởi động Camera AI...
-                                        </p>
-                                    </div>
+                                    {#if cameraError}
+                                        <div class="text-center space-y-3 px-6">
+                                            <i
+                                                class="bx bx-camera-off text-4xl text-rose-text"
+                                            ></i>
+                                            <p class="text-white text-sm opacity-80">
+                                                Không thể truy cập Camera. Vui
+                                                lòng cấp quyền camera.
+                                            </p>
+                                            <button
+                                                onclick={startCamera}
+                                                class="px-4 py-2 bg-iris text-white text-xs font-black rounded-xl hover:bg-iris/80 transition-all"
+                                            >
+                                                Thử lại
+                                            </button>
+                                        </div>
+                                    {:else}
+                                        <div class="text-center space-y-3">
+                                            <i
+                                                class="bx bx-loader-alt animate-spin text-4xl text-iris"
+                                            ></i>
+                                            <p
+                                                class="text-white text-sm opacity-70"
+                                            >
+                                                Đang khởi động Camera AI...
+                                            </p>
+                                        </div>
+                                    {/if}
                                 </div>
                             {/if}
                         </div>
@@ -1129,28 +1220,67 @@
                                     <div
                                         class="absolute inset-0 flex items-center justify-center bg-gray-900 z-30"
                                     >
-                                        <div class="text-center space-y-3">
-                                            <i
-                                                class="bx bx-loader-alt animate-spin text-4xl text-iris"
-                                            ></i>
-                                            <p
-                                                class="text-white text-sm opacity-70"
-                                            >
-                                                Đang khởi động Camera AI...
-                                            </p>
-                                        </div>
+                                        {#if cameraError}
+                                            <div class="text-center space-y-3 px-6">
+                                                <i
+                                                    class="bx bx-camera-off text-4xl text-rose-text"
+                                                ></i>
+                                                <p class="text-white text-sm opacity-80">
+                                                    Không thể truy cập Camera.
+                                                    Vui lòng cấp quyền camera.
+                                                </p>
+                                                <button
+                                                    onclick={startCamera}
+                                                    class="px-4 py-2 bg-iris text-white text-xs font-black rounded-xl hover:bg-iris/80 transition-all"
+                                                >
+                                                    Thử lại
+                                                </button>
+                                            </div>
+                                        {:else}
+                                            <div class="text-center space-y-3">
+                                                <i
+                                                    class="bx bx-loader-alt animate-spin text-4xl text-iris"
+                                                ></i>
+                                                <p
+                                                    class="text-white text-sm opacity-70"
+                                                >
+                                                    Đang khởi động Camera AI...
+                                                </p>
+                                            </div>
+                                        {/if}
                                     </div>
                                 {/if}
-                                <div
-                                    class="absolute bottom-5 left-5 right-5 z-20 bg-rose-text/60 backdrop-blur text-white text-xs text-center py-2 px-4 rounded-xl border border-overlay/10"
-                                >
-                                    Thực hiện ký hiệu <span
-                                        class="font-black text-gold"
-                                        >"{activeLesson.title
-                                            .split(" ")
-                                            .pop()}"</span
-                                    > — camera sẽ tự nhận diện
-                                </div>
+                                {#if activeLesson.targetLetter}
+                                    <div
+                                        class="absolute bottom-5 left-5 right-5 z-20 bg-rose-text/60 backdrop-blur text-white text-xs text-center py-2 px-4 rounded-xl border border-overlay/10"
+                                    >
+                                        Thực hiện ký hiệu <span
+                                            class="font-black text-gold"
+                                            >"{activeLesson.title
+                                                .split(" ")
+                                                .pop()}"</span
+                                        > — camera sẽ tự nhận diện
+                                    </div>
+                                {:else}
+                                    <div
+                                        class="absolute bottom-5 left-5 right-5 z-20 space-y-2"
+                                    >
+                                        <p
+                                            class="bg-rose-text/60 backdrop-blur text-white text-xs text-center py-2 px-4 rounded-xl border border-overlay/10"
+                                        >
+                                            Đây là ký hiệu chuyển động — hãy tự
+                                            đánh giá sau khi thực hiện đúng
+                                        </p>
+                                        <button
+                                            onclick={confirmWordSign}
+                                            disabled={cooldown}
+                                            class="w-full h-11 bg-gold text-rose-text font-black rounded-xl shadow-lg hover:bg-gold/80 active:scale-95 transition-all disabled:opacity-50"
+                                        >
+                                            <i class="bx bx-check mr-1"></i>Tôi
+                                            đã làm đúng
+                                        </button>
+                                    </div>
+                                {/if}
                             </div>
                         </div>
                     </div>
@@ -1259,9 +1389,13 @@
                                     )}
                                     <div
                                         in:fly={{ y: 20, delay: i * 35 }}
-                                        onclick={() =>
-                                            !locked && selectLesson(lesson, i)}
-                                        class="group relative bg-surface rounded-[2rem] border transition-all duration-500 text-left w-full overflow-hidden
+                                        role="button"
+                                        tabindex="0"
+                                        aria-label={lesson.title}
+                                        onclick={() => selectLesson(lesson, i)}
+                                        onkeydown={(e) =>
+                                            handleCardKeydown(e, lesson, i)}
+                                        class="group relative bg-surface rounded-[2rem] border transition-all duration-500 text-left w-full overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-iris
                                         {locked
                                             ? 'opacity-50 cursor-not-allowed border-overlay'
                                             : done

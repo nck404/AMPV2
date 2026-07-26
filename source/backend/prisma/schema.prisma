@@ -1,0 +1,228 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  username      String   @unique
+  email         String   @unique
+  password_hash String
+  public_id     String   @unique
+  bio           String?  @default("Chào mừng đến với cộng đồng AMP")
+  avatar_url    String?
+  is_admin      Boolean  @default(false)
+  is_banned     Boolean  @default(false)
+  role          String   @default("user")
+  created_at    DateTime @default(now())
+
+  // Relations
+  messages_sent       Message[]          @relation("MessagesSent")
+  messages_received   Message[]          @relation("MessagesReceived")
+  posts               Post[]
+  comments            Comment[]
+  reactions           Reaction[]
+  friendships         Friendship[]       @relation("UserFriendships")
+  friendships_as_friend Friendship[]     @relation("FriendFriendships")
+  jobs                Job[]
+  notifications       Notification[]
+  applications        JobApplication[]
+  learning_progress   LearningProgress[]
+  leaderboard         Leaderboard?
+
+  @@map("user")
+}
+
+model Message {
+  id          Int      @id @default(autoincrement())
+  sender_id   Int
+  receiver_id Int?
+  content     String
+  is_read     Boolean  @default(false)
+  created_at  DateTime @default(now())
+
+  sender   User  @relation("MessagesSent", fields: [sender_id], references: [id])
+  receiver User? @relation("MessagesReceived", fields: [receiver_id], references: [id])
+
+  @@map("message")
+}
+
+model Post {
+  id         Int      @id @default(autoincrement())
+  author_id  Int
+  title      String
+  content    String
+  tags       String?
+  upvotes    Int      @default(0)
+  created_at DateTime @default(now())
+
+  author    User       @relation(fields: [author_id], references: [id])
+  comments  Comment[]
+  reactions Reaction[]
+
+  @@map("post")
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  post_id    Int
+  author_id  Int
+  parent_id  Int?
+  content    String
+  created_at DateTime @default(now())
+
+  post      Post       @relation(fields: [post_id], references: [id])
+  author    User       @relation(fields: [author_id], references: [id])
+  parent    Comment?   @relation("CommentReplies", fields: [parent_id], references: [id])
+  replies   Comment[]  @relation("CommentReplies")
+  reactions Reaction[]
+
+  @@map("comment")
+}
+
+model Reaction {
+  id         Int    @id @default(autoincrement())
+  user_id    Int
+  post_id    Int?
+  comment_id Int?
+  type       String
+
+  user    User     @relation(fields: [user_id], references: [id])
+  post    Post?    @relation(fields: [post_id], references: [id])
+  comment Comment? @relation(fields: [comment_id], references: [id])
+
+  @@map("reaction")
+}
+
+model Friendship {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  friend_id  Int
+  status     String   @default("pending")
+  created_at DateTime @default(now())
+
+  user   User @relation("UserFriendships", fields: [user_id], references: [id])
+  friend User @relation("FriendFriendships", fields: [friend_id], references: [id])
+
+  @@map("friendship")
+}
+
+model Documentation {
+  id           Int      @id @default(autoincrement())
+  title        String
+  slug         String   @unique
+  category     String   @default("Hướng dẫn")
+  content      String
+  order        Int      @default(0)
+  last_updated DateTime @default(now()) @updatedAt
+
+  @@map("documentation")
+}
+
+model SystemConfig {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String
+
+  @@map("system_config")
+}
+
+model Job {
+  id          Int      @id @default(autoincrement())
+  title       String
+  company     String
+  location    String?
+  salary      String?
+  type        String?
+  description String?
+  status      String   @default("pending")
+  created_at  DateTime @default(now())
+  author_id   Int?
+
+  author       User?            @relation(fields: [author_id], references: [id])
+  applications JobApplication[]
+
+  @@map("job")
+}
+
+model Notification {
+  id         Int      @id @default(autoincrement())
+  user_id    Int?
+  title      String
+  content    String
+  type       String   @default("info")
+  is_read    Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  user User? @relation(fields: [user_id], references: [id])
+
+  @@map("notification")
+}
+
+model JobApplication {
+  id           Int      @id @default(autoincrement())
+  job_id       Int
+  user_id      Int
+  name         String
+  email        String
+  phone        String?
+  cv_url       String?
+  cover_letter String?
+  status       String   @default("pending")
+  created_at   DateTime @default(now())
+
+  job  Job  @relation(fields: [job_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("job_application")
+}
+
+model LearningProgress {
+  id            Int      @id @default(autoincrement())
+  user_id       Int
+  lesson_title  String
+  category      String?
+  score         Int      @default(0)
+  best_score    Int      @default(0)
+  attempts      Int      @default(0)
+  time_spent    Int      @default(0)
+  accuracy      Float    @default(0.0)
+  session_count Int      @default(0)
+  completed_at  DateTime @default(now())
+  last_attempt  DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("learning_progress")
+}
+
+model Leaderboard {
+  id                      Int      @id @default(autoincrement())
+  user_id                 Int      @unique
+  total_score             Int      @default(0)
+  total_lessons_completed Int      @default(0)
+  current_streak          Int      @default(0)
+  highest_streak          Int      @default(0)
+  total_practice_score    Int      @default(0)
+  average_accuracy        Float    @default(0.0)
+  last_updated            DateTime @default(now()) @updatedAt
+  rank                    Int      @default(0)
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("leaderboard")
+}
+
+model LessonLock {
+  id          Int     @id @default(autoincrement())
+  target_type String
+  target_name String
+  is_locked   Boolean @default(true)
+
+  @@map("lesson_lock")
+}

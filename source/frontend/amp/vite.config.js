@@ -4,6 +4,9 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [tailwindcss(), sveltekit()],
+  optimizeDeps: {
+    exclude: ['@mediapipe/hands', '@mediapipe/camera_utils']
+  },
   server: {
     allowedHosts: ["amp.tfai.lol", "amp.prj.ydns.eu"],
     proxy: {

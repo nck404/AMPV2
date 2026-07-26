@@ -39,9 +39,7 @@
         uploadData.append("cv", file);
 
         try {
-            const res = await api.post("/recruitment/upload", uploadData, {
-                headers: { "Content-Type": "multipart/form-data" }
-            });
+            const res = await api.upload("/recruitment/upload", uploadData);
             formData.cv_url = res.cv_url;
         } catch (err) {
             error = err.response?.data?.message || "Lỗi khi tải lên CV.";

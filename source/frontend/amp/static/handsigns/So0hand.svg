@@ -1,0 +1,7 @@
+<svg width="96" height="120" viewBox="0 0 96 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="skinGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD458"/><stop offset="1" stop-color="#F9BF2E"/></linearGradient><radialGradient id="digitGrad" cx="0.3" cy="0.2" r="0.9"><stop stop-color="#FFD458"/><stop offset="1" stop-color="#F9BF2E"/></radialGradient><linearGradient id="palmShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD458" stop-opacity="0.9"/><stop offset="1" stop-color="#F9BF2E" stop-opacity="1"/></linearGradient></defs>
+<ellipse cx="48" cy="100" rx="22" ry="5" fill="#31748f" opacity="0.08"/>
+<ellipse cx="48" cy="72" rx="24" ry="28" fill="none" stroke="#F9BF2E" stroke-width="11" stroke-linecap="round"/>
+<ellipse cx="48" cy="72" rx="24" ry="28" fill="none" stroke="#31748f" stroke-width="2" stroke-opacity="0.5"/>
+<circle cx="78" cy="104" r="16" fill="#31748f" opacity="0.08"/><text x="78" y="112" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="24" fill="url(#digitGrad)">0</text>
+</svg>
