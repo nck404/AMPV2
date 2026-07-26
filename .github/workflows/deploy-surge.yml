@@ -58,7 +58,6 @@ jobs:
       - name: Deploy AMP Web to Surge
         run: |
           cd source/frontend/amp
-          # CHÚ Ý: Thay đổi "amp-web.surge.sh" thành tên domain bạn muốn cho frontend amp
           surge ./build amp-web.surge.sh
         env:
           SURGE_LOGIN: slaekhoa@gmail.com
