@@ -42,26 +42,34 @@ router.get('/posts', async (req, res) => {
     try {
         const posts = await prisma.post.findMany({
             orderBy: { created_at: 'desc' },
-            include: { author: true }
+            include: { 
+                author: true,
+                _count: { select: { comments: true } },
+                reactions: true
+            }
         });
 
-        const result = [];
-        for (const post of posts) {
-            const reactions_count = await buildReactionsCount(prisma, 'post_id', post.id);
-            const comments_count = await prisma.comment.count({ where: { post_id: post.id } });
+        const result = posts.map(post => {
+            const reactions_count = {};
+            if (post.reactions) {
+                for (const r of post.reactions) {
+                    reactions_count[r.type] = (reactions_count[r.type] || 0) + 1;
+                }
+            }
 
-            result.push({
+            return {
                 id: post.id,
                 title: post.title,
                 content: post.content,
                 tags: post.tags ? post.tags.split(',') : [],
                 upvotes: post.upvotes,
                 reactions: reactions_count,
-                comments_count,
+                comments_count: post._count.comments,
                 time: post.created_at.toISOString().replace('T', ' ').substring(0, 19),
                 author: serializeAuthor(post.author)
-            });
-        }
+            };
+        });
+        
         res.status(200).json(result);
     } catch (err) {
         console.error(err);
@@ -105,13 +113,24 @@ router.get('/posts/:id', optionalAuthenticateToken, async (req, res) => {
     try {
         const post = await prisma.post.findUnique({
             where: { id: postId },
-            include: { author: true }
+            include: { 
+                author: true,
+                reactions: true
+            }
         });
 
         if (!post) return res.status(404).json({ msg: "Post not found" });
 
-        const user_reaction = await getUserReaction(prisma, 'post_id', post.id, userId);
-        const reactions_count = await buildReactionsCount(prisma, 'post_id', post.id);
+        const reactions_count = {};
+        let user_reaction = null;
+        if (post.reactions) {
+            for (const r of post.reactions) {
+                reactions_count[r.type] = (reactions_count[r.type] || 0) + 1;
+                if (userId && r.user_id === userId) {
+                    user_reaction = r.type;
+                }
+            }
+        }
 
         res.status(200).json({
             id: post.id,
@@ -130,30 +149,35 @@ router.get('/posts/:id', optionalAuthenticateToken, async (req, res) => {
     }
 });
 
-// Helper for comments
-async function serializeCommentTree(prisma, comment, userId) {
-    const reactions_count = await buildReactionsCount(prisma, 'comment_id', comment.id);
-    const user_reaction = await getUserReaction(prisma, 'comment_id', comment.id, userId);
+// In-memory builder for comments to avoid N+1 query problem
+function serializeCommentsInMemory(comments, parentId, userId) {
+    const result = [];
+    const children = comments.filter(c => c.parent_id === parentId);
+    
+    for (const c of children) {
+        const reactions_count = {};
+        let user_reaction = null;
+        
+        if (c.reactions) {
+            for (const r of c.reactions) {
+                reactions_count[r.type] = (reactions_count[r.type] || 0) + 1;
+                if (userId && r.user_id === userId) {
+                    user_reaction = r.type;
+                }
+            }
+        }
 
-    const replies = await prisma.comment.findMany({
-        where: { parent_id: comment.id },
-        include: { author: true }
-    });
-
-    const serializedReplies = [];
-    for (const reply of replies) {
-        serializedReplies.push(await serializeCommentTree(prisma, reply, userId));
+        result.push({
+            id: c.id,
+            content: c.content,
+            time: c.created_at.toISOString().replace('T', ' ').substring(0, 19),
+            reactions: reactions_count,
+            user_reaction,
+            author: serializeAuthor(c.author),
+            replies: serializeCommentsInMemory(comments, c.id, userId)
+        });
     }
-
-    return {
-        id: comment.id,
-        content: comment.content,
-        time: comment.created_at.toISOString().replace('T', ' ').substring(0, 19),
-        reactions: reactions_count,
-        user_reaction,
-        author: serializeAuthor(comment.author),
-        replies: serializedReplies
-    };
+    return result;
 }
 
 // GET /posts/:id/comments
@@ -164,15 +188,16 @@ router.get('/posts/:id/comments', optionalAuthenticateToken, async (req, res) =>
 
     try {
         const comments = await prisma.comment.findMany({
-            where: { post_id: postId, parent_id: null },
+            where: { post_id: postId },
             orderBy: { created_at: 'desc' },
-            include: { author: true }
+            include: { 
+                author: true,
+                reactions: true
+            }
         });
 
-        const result = [];
-        for (const c of comments) {
-            result.push(await serializeCommentTree(prisma, c, userId));
-        }
+        // Group comments by parent_id in memory
+        const result = serializeCommentsInMemory(comments, null, userId);
 
         res.status(200).json(result);
     } catch (err) {

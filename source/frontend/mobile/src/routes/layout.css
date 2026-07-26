@@ -87,3 +87,42 @@ i.bx {
 
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+:root {
+    --a11y-scale: 1;
+}
+
+html {
+    font-size: calc(16px * var(--a11y-scale));
+}
+
+*:focus-visible {
+    outline: 3px solid var(--color-iris) !important;
+    outline-offset: 2px !important;
+}
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* High contrast mode: stronger borders/text for low-vision users */
+.high-contrast {
+    --color-base: #ffffff;
+    --color-surface: #ffffff;
+    --color-overlay: #000000;
+    --color-muted: #000000;
+    --color-subtle: #000000;
+    --color-rose-text: #000000;
+}
+
+.high-contrast .glass {
+    background: #ffffff;
+    border: 2px solid #000000;
+    box-shadow: none;
+}
+
+.high-contrast button,
+.high-contrast a {
+    text-decoration: underline;
+}

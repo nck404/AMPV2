@@ -1,0 +1,45 @@
+name: Deploy Web to Surge
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-web:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies and Build Web App
+        run: |
+          cd source/frontend/mobile
+          npm install
+          npm run build
+
+      - name: Install Surge and Expect
+        run: |
+          npm install -g surge
+          sudo apt-get update && sudo apt-get install -y expect
+
+      - name: Login and Deploy to Surge
+        run: |
+          cd source/frontend/mobile
+          
+          # Use expect to automate the login process
+          expect << 'EOF'
+          spawn surge login
+          expect "email:"
+          send "slaekhoa@gmail.com\r"
+          expect "password:"
+          send "khoadz123\r"
+          expect eof
+          EOF
+          
+          # Deploy the build folder to the domain specified in capacitor.config.json
+          surge ./build amp0.surge.sh

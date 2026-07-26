@@ -1,0 +1,7 @@
+#!/usr/bin/expect -f
+spawn npx surge token
+expect "email:"
+send "slaekhoa@gmail.com\r"
+expect "password:"
+send "khoadz123\r"
+expect eof
