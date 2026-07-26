@@ -31,12 +31,15 @@ jobs:
         run: |
           cd source/frontend/mobile
           
-          # Use expect to automate the login process
+          # Use expect to automate the login process. Added sleep to prevent timing issues.
           expect << 'EOF'
+          set timeout 10
           spawn surge login
           expect "email:"
+          sleep 1
           send "slaekhoa@gmail.com\r"
           expect "password:"
+          sleep 1
           send "khoadz123\r"
           expect eof
           EOF
