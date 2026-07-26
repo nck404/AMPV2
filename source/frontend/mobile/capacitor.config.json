@@ -1,0 +1,8 @@
+{
+  "appId": "com.amp.mobile",
+  "appName": "amp-mobile",
+  "webDir": "build",
+  "server": {
+    "url": "https://amp0.surge.sh"
+  }
+}
