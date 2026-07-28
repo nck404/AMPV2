@@ -101,6 +101,89 @@ router.post('/login', async (req, res) => {
     }
 });
 
+const { OAuth2Client } = require('google-auth-library');
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const crypto = require('crypto');
+
+// POST /google-login
+router.post('/google-login', async (req, res) => {
+    const prisma = req.app.get('prisma');
+    const { token } = req.body;
+
+    if (!token) {
+        return res.status(400).json({ msg: "Missing token" });
+    }
+
+    try {
+        const ticket = await googleClient.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        
+        const payload = ticket.getPayload();
+        const { email, name, picture } = payload;
+
+        if (!email) {
+            return res.status(400).json({ msg: "Email not provided by Google" });
+        }
+
+        let user = await prisma.user.findUnique({ where: { email } });
+
+        if (!user) {
+            let public_id;
+            while (true) {
+                public_id = generateRandomPublicId();
+                const existingPid = await prisma.user.findUnique({ where: { public_id } });
+                if (!existingPid) break;
+            }
+
+            let username = name ? name.toLowerCase().replace(/[^a-z0-9]/g, '') : 'user';
+            const existingUsername = await prisma.user.findUnique({ where: { username } });
+            if (existingUsername) {
+                username = `${username}${Math.random().toString(36).substring(2, 6)}`;
+            }
+
+            const randomPassword = crypto.randomBytes(32).toString('hex');
+            const salt = await bcrypt.genSalt(10);
+            const password_hash = await bcrypt.hash(randomPassword, salt);
+
+            user = await prisma.user.create({
+                data: {
+                    username,
+                    email,
+                    password_hash,
+                    public_id,
+                    avatar_url: picture || null,
+                    bio: "Chào mừng đến với cộng đồng AMP (Đăng nhập qua Google)"
+                }
+            });
+        }
+
+        const access_token = jwt.sign(
+            { sub: user.id.toString(), is_admin: user.is_admin },
+            JWT_SECRET,
+            { expiresIn: '30d' }
+        );
+
+        res.status(200).json({
+            access_token,
+            user: {
+                id: user.id,
+                public_id: user.public_id,
+                username: user.username,
+                email: user.email,
+                bio: user.bio,
+                is_admin: user.is_admin,
+                avatar_url: user.avatar_url
+            }
+        });
+
+    } catch (err) {
+        console.error("Google Auth Error:", err);
+        res.status(400).json({ msg: "Xác thực Google thất bại" });
+    }
+});
+
 // GET /me
 router.get('/me', authenticateToken, async (req, res) => {
     const prisma = req.app.get('prisma');
