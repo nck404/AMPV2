@@ -13,6 +13,7 @@
     let mounted = $state(false);
     let errorMsg = $state("");
     let successMsg = $state("");
+    let googleButtonContainer = $state();
 
     async function handleGoogleCredentialResponse(response) {
         errorMsg = "";
@@ -39,16 +40,34 @@
         if (page.url.searchParams.get("registered") === "true") {
             successMsg = "Đăng ký thành công! Hãy đăng nhập ngay.";
         }
+    });
 
-        if (window.google) {
-            window.google.accounts.id.initialize({
-                client_id: PUBLIC_GOOGLE_CLIENT_ID,
-                callback: handleGoogleCredentialResponse
-            });
-            window.google.accounts.id.renderButton(
-                document.getElementById("google-button"),
-                { theme: "outline", size: "large", width: 350, shape: "pill" }
-            );
+    $effect(() => {
+        if (mounted && googleButtonContainer) {
+            const initGoogle = () => {
+                if (window.google) {
+                    window.google.accounts.id.initialize({
+                        client_id: PUBLIC_GOOGLE_CLIENT_ID,
+                        callback: handleGoogleCredentialResponse
+                    });
+                    window.google.accounts.id.renderButton(
+                        googleButtonContainer,
+                        { theme: "outline", size: "large", width: 350, shape: "pill" }
+                    );
+                }
+            };
+
+            if (window.google) {
+                initGoogle();
+            } else {
+                const interval = setInterval(() => {
+                    if (window.google) {
+                        clearInterval(interval);
+                        initGoogle();
+                    }
+                }, 100);
+                return () => clearInterval(interval);
+            }
         }
     });
 
@@ -253,7 +272,7 @@
                 </div>
 
                 <div class="w-full flex justify-center mt-2">
-                    <div id="google-button"></div>
+                    <div bind:this={googleButtonContainer}></div>
                 </div>
 
                 <div class="mt-8 text-center text-muted font-bold">
