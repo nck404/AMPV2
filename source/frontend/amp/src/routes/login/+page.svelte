@@ -46,14 +46,31 @@
         if (mounted && googleButtonContainer) {
             const initGoogle = () => {
                 if (window.google) {
-                    window.google.accounts.id.initialize({
-                        client_id: PUBLIC_GOOGLE_CLIENT_ID,
-                        callback: handleGoogleCredentialResponse
-                    });
-                    window.google.accounts.id.renderButton(
-                        googleButtonContainer,
-                        { theme: "outline", size: "large", width: 350, shape: "pill" }
-                    );
+                    try {
+                        console.log("Google SDK detected. Initializing with Client ID:", PUBLIC_GOOGLE_CLIENT_ID);
+                        if (!PUBLIC_GOOGLE_CLIENT_ID) {
+                            console.warn("PUBLIC_GOOGLE_CLIENT_ID is not defined. Please restart your Vite dev server to reload .env!");
+                        }
+                        window.google.accounts.id.initialize({
+                            client_id: PUBLIC_GOOGLE_CLIENT_ID,
+                            callback: handleGoogleCredentialResponse
+                        });
+                        window.google.accounts.id.renderButton(
+                            googleButtonContainer,
+                            { 
+                                theme: "outline", 
+                                size: "large", 
+                                width: 350, 
+                                shape: "pill",
+                                text: "continue_with"
+                            }
+                        );
+                        console.log("Google Sign-In button rendered successfully.");
+                    } catch (err) {
+                        console.error("Error rendering Google Sign-In button:", err);
+                    }
+                } else {
+                    console.warn("window.google is not available.");
                 }
             };
 
