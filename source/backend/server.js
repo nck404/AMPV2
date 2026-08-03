@@ -14,7 +14,11 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
   "https://tfai.lol",
-  "http://tfai.lol"
+  "http://tfai.lol",
+  "http://amp-web.surge.sh",
+  "https://amp-web.surge.sh",
+  "http://amp0.surge.sh",
+  "https://amp0.surge.sh"
 ];
 
 const corsOptions = {
