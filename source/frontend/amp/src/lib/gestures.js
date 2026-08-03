@@ -14,7 +14,7 @@ function make(name, rules) {
   rules.forEach(([finger, curl, curlW, dir, dirW]) => {
     if (curl !== null && curl !== undefined)
       g.addCurl(finger, curl, curlW ?? 1.0);
-    if (dir !== null && dir !== undefined)
+    if (dir !== null && dir !== undefined && curl !== C.FullCurl)
       g.addDirection(finger, dir, dirW ?? 0.75);
   });
   return g;

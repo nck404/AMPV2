@@ -38,7 +38,7 @@
 
     let detectedLetter = $state(null);
     let stableBuffer = [];
-    const STABLE_FRAMES = 8;
+    const STABLE_FRAMES = 5;
     let cooldown = false;
     let autoSkipTimer = null;
     const AUTO_SKIP_DELAY = 2000;
@@ -369,7 +369,7 @@
                 lm.z * canvasElement.width,
             ]);
             try {
-                const est = gestureEstimator.estimate(keypoints, 8);
+                const est = gestureEstimator.estimate(keypoints, 6);
                 if (est.gestures.length > 0) {
                     const best = est.gestures.reduce((a, b) =>
                         a.score > b.score ? a : b,

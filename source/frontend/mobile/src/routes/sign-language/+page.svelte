@@ -28,7 +28,7 @@
 
     let detectedLetter = $state(null);
     let stableBuffer = [];
-    const STABLE_FRAMES = 8;
+    const STABLE_FRAMES = 5;
     let cooldown = false;
     let autoSkipTimer = null;
     const AUTO_SKIP_DELAY = 1800;
@@ -206,7 +206,7 @@
             drawHand(ctx, results.multiHandLandmarks[0]);
             const keypoints = results.multiHandLandmarks[0].map((lm) => [lm.x * canvasElement.width, lm.y * canvasElement.height, lm.z * canvasElement.width]);
             try {
-                const est = gestureEstimator.estimate(keypoints, 8);
+                const est = gestureEstimator.estimate(keypoints, 6);
                 if (est.gestures.length > 0) {
                     const best = est.gestures.reduce((a, b) => (a.score > b.score ? a : b));
                     processDetection(best.name.toUpperCase());
