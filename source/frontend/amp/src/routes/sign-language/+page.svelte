@@ -319,6 +319,8 @@
         try {
             currentUser = JSON.parse(localStorage.getItem("user"));
         } catch {}
+        Hands = window.Hands;
+        Camera = window.Camera;
         gestureEstimator = new GestureEstimator(allGestureList);
         initMediaPipe();
         fetchProgress();

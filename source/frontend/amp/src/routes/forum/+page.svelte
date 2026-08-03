@@ -37,6 +37,23 @@
                 .substring(0, 150) + "..."
         );
     }
+    let filteredPosts = $derived(
+        posts.filter(post => {
+            if (activeTab === "Mới nhất") return true;
+            if (activeTab === "Xu hướng") {
+                // posts with high upvotes or reactions count
+                const totalReactions = Object.values(post.reactions || {}).reduce((a, b) => a + b, 0);
+                return (post.upvotes + totalReactions) >= 5 || post.comments_count > 0;
+            }
+            if (activeTab === "Giải đáp") {
+                return post.tags.some(tag => tag.toLowerCase().includes("giải đáp") || tag.toLowerCase().includes("hỏi") || tag.toLowerCase().includes("help") || tag.toLowerCase().includes("cứu") || tag.toLowerCase().includes("sao") || tag.toLowerCase().includes("thế nào"));
+            }
+            if (activeTab === "Truyền cảm hứng") {
+                return post.tags.some(tag => tag.toLowerCase().includes("truyền cảm hứng") || tag.toLowerCase().includes("động lực") || tag.toLowerCase().includes("chia sẻ") || tag.toLowerCase().includes("story") || tag.toLowerCase().includes("câu chuyện"));
+            }
+            return true;
+        })
+    );
 </script>
 
 <div class="max-w-5xl mx-auto px-6 py-12">
@@ -91,7 +108,7 @@
                             Đang tải thảo luận...
                         </p>
                     </div>
-                {:else if posts.length === 0}
+                {:else if filteredPosts.length === 0}
                     <div
                         class="py-20 text-center space-y-6 p-12 bg-overlay/10 rounded-[3rem] border-2 border-dashed border-overlay"
                     >
@@ -100,20 +117,19 @@
                         </div>
                         <div class="space-y-2">
                             <h2 class="text-2xl font-black text-rose-text">
-                                Diễn đàn còn trống...
+                                Không tìm thấy bài đăng...
                             </h2>
                             <p class="text-muted max-w-sm mx-auto">
-                                Hãy là người đầu tiên đặt câu hỏi hoặc chia sẻ
-                                kiến thức bổ ích cho cộng đồng!
+                                Không tìm thấy thảo luận phù hợp với chuyên mục này. Hãy viết bài viết mới ngay!
                             </p>
                         </div>
                         <button
                             onclick={() => goto("/forum/create")}
-                            class="button px-10">Bắt đầu ngay</button
+                            class="button px-10">Viết bài</button
                         >
                     </div>
                 {:else}
-                    {#each posts as post, i}
+                    {#each filteredPosts as post, i}
                         <button
                             onclick={() => goto(`/forum/${post.id}`)}
                             in:fly={{ y: 20, delay: i * 100 }}
