@@ -28,7 +28,8 @@ jobs:
       - name: Deploy Mobile to Surge
         run: |
           cd source/frontend/mobile
-          # Deploy the build folder to the domain specified in capacitor.config.json
+          # Duplicate index.html to 200.html to support client-side routing fallback on Surge
+          cp build/index.html build/200.html
           surge ./build amp0.surge.sh
         env:
           SURGE_LOGIN: slaekhoa@gmail.com
@@ -58,6 +59,8 @@ jobs:
       - name: Deploy AMP Web to Surge
         run: |
           cd source/frontend/amp
+          # Duplicate 404.html to 200.html to support client-side routing fallback on Surge
+          cp build/404.html build/200.html
           surge ./build amp-web.surge.sh
         env:
           SURGE_LOGIN: slaekhoa@gmail.com

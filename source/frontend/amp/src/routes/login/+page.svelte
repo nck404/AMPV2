@@ -4,6 +4,7 @@
     import { api } from "$lib/api";
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
+    import { PUBLIC_GOOGLE_CLIENT_ID } from "$env/static/public";
 
     let showPassword = $state(false);
     let email = $state("");
@@ -12,11 +13,78 @@
     let mounted = $state(false);
     let errorMsg = $state("");
     let successMsg = $state("");
+    let googleButtonContainer = $state();
+
+    async function handleGoogleCredentialResponse(response) {
+        errorMsg = "";
+        successMsg = "";
+        loading = true;
+        try {
+            const res = await api.post("/google-login", { token: response.credential });
+            if (res.access_token) {
+                localStorage.setItem("token", res.access_token);
+                localStorage.setItem("user", JSON.stringify(res.user));
+                goto("/profile");
+            } else {
+                errorMsg = res.msg || "Đăng nhập Google thất bại.";
+            }
+        } catch (err) {
+            errorMsg = "Không thể kết nối với máy chủ.";
+        } finally {
+            loading = false;
+        }
+    }
 
     onMount(() => {
         mounted = true;
         if (page.url.searchParams.get("registered") === "true") {
             successMsg = "Đăng ký thành công! Hãy đăng nhập ngay.";
+        }
+    });
+
+    $effect(() => {
+        if (mounted && googleButtonContainer) {
+            const initGoogle = () => {
+                if (window.google) {
+                    try {
+                        console.log("Google SDK detected. Initializing with Client ID:", PUBLIC_GOOGLE_CLIENT_ID);
+                        if (!PUBLIC_GOOGLE_CLIENT_ID) {
+                            console.warn("PUBLIC_GOOGLE_CLIENT_ID is not defined. Please restart your Vite dev server to reload .env!");
+                        }
+                        window.google.accounts.id.initialize({
+                            client_id: PUBLIC_GOOGLE_CLIENT_ID,
+                            callback: handleGoogleCredentialResponse
+                        });
+                        window.google.accounts.id.renderButton(
+                            googleButtonContainer,
+                            { 
+                                theme: "outline", 
+                                size: "large", 
+                                width: 350, 
+                                shape: "pill",
+                                text: "continue_with"
+                            }
+                        );
+                        console.log("Google Sign-In button rendered successfully.");
+                    } catch (err) {
+                        console.error("Error rendering Google Sign-In button:", err);
+                    }
+                } else {
+                    console.warn("window.google is not available.");
+                }
+            };
+
+            if (window.google) {
+                initGoogle();
+            } else {
+                const interval = setInterval(() => {
+                    if (window.google) {
+                        clearInterval(interval);
+                        initGoogle();
+                    }
+                }, 100);
+                return () => clearInterval(interval);
+            }
         }
     });
 
@@ -213,6 +281,16 @@
                         {/if}
                     </button>
                 </form>
+
+                <div class="relative flex py-4 items-center">
+                    <div class="flex-grow border-t border-overlay/20"></div>
+                    <span class="flex-shrink mx-4 text-xs text-muted font-bold uppercase">Hoặc</span>
+                    <div class="flex-grow border-t border-overlay/20"></div>
+                </div>
+
+                <div class="w-full flex justify-center mt-2">
+                    <div bind:this={googleButtonContainer}></div>
+                </div>
 
                 <div class="mt-8 text-center text-muted font-bold">
                     Chưa có tài khoản?
