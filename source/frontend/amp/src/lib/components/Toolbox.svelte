@@ -118,6 +118,11 @@
                 isVisible = true;
                 toggleScreenReader();
             }
+            if (e.ctrlKey && e.key.toLowerCase() === "k") {
+                e.preventDefault();
+                isVisible = true;
+                toggleKeyboard();
+            }
         };
 
         const handleClickOutside = (e) => {
@@ -271,7 +276,7 @@
                 id="tour-keyboard-btn"
                 onclick={toggleKeyboard}
                 class="dock-item group"
-                title="Virtual Keyboard"
+                title="Virtual Keyboard (Ctrl + K)"
             >
                 <div
                     class="icon-box bg-love {showKeyboard

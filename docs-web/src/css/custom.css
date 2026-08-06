@@ -1,0 +1,36 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
+
+:root {
+  --ifm-color-primary: #907aa9;
+  --ifm-color-primary-dark: #816a9a;
+  --ifm-color-primary-darker: #7a6294;
+  --ifm-color-primary-darkest: #654c7d;
+  --ifm-color-primary-light: #9f8bb5;
+  --ifm-color-primary-lighter: #a794bd;
+  --ifm-color-primary-lightest: #beadcff;
+  --ifm-background-color: #faf4ed;
+  --ifm-navbar-background-color: #fffaf3;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --ifm-font-family-base: "Space Grotesk", "Quicksand", "Outfit", "Poppins", sans-serif;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #c4a7e7;
+  --ifm-color-primary-dark: #b291db;
+  --ifm-color-primary-darker: #aa86d5;
+  --ifm-color-primary-darkest: #9168c4;
+  --ifm-color-primary-light: #d0b8ec;
+  --ifm-color-primary-lighter: #d6c0ef;
+  --ifm-color-primary-lightest: #e7daf7;
+  --ifm-background-color: #191724;
+  --ifm-navbar-background-color: #1f1d2e;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}

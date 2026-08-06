@@ -41,7 +41,7 @@
         {
             title: "Bàn phím ảo",
             description:
-                "Hỗ trợ nhập liệu trên màn hình cho người dùng gặp khó khăn với bàn phím vật lý.",
+                "Hỗ trợ nhập liệu trên màn hình cho người dùng gặp khó khăn với bàn phím vật lý (Ctrl+K).",
             selector: "#tour-keyboard-btn",
             placement: "top",
         },
